@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Algorithm Arena Main Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00eeff",
+            "secondary": "#FF007F",
+            "background-light": "#f5f8f8",
+            "background-dark": "#0B0F19",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-display text-slate-100 min-h-screen selection:bg-primary/30 animate-fade-in">
+  <!-- Responsive App Shell -->
+  <div class="flex flex-col lg:flex-row h-screen overflow-hidden">
+    <aside
+      class="w-full lg:w-72 glass lg:border-r border-white/10 flex flex-col z-20 flex-shrink-0 lg:flex-shrink animate-slide-right stagger-1 overflow-hidden">
+      <!-- STATIC HEADER -->
+      <div class="flex flex-col gap-6 p-6 pb-4 shrink-0 border-b border-white/5">
+        <div class="flex items-center justify-between lg:justify-start gap-3">
+          <div
+            class="size-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-background-dark">
+            <span class="material-symbols-outlined font-bold">query_stats</span>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-white leading-none">ARENA</h1>
+            <p class="text-primary text-xs font-medium tracking-widest uppercase">Algorithm Pro</p>
+          </div>
+        </div>
+        <button id="btn-home" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white cursor-pointer transition-all w-full group">
+          <span class="material-symbols-outlined text-xl text-primary group-hover:scale-110 transition-transform">home</span>
+          <span class="text-sm font-semibold">Home Dashboard</span>
+        </button>
+      </div>
+      <!-- SCROLLABLE CONTENT -->
+      <nav class="flex-1 flex flex-col gap-6 p-6 overflow-y-auto custom-scrollbar">
+        <div>
+          <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Sorting Library</p>
+          <div class="flex flex-col gap-2">
+            <div id="btn-quick-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary cursor-pointer hover:brightness-110 hover:scale-105 transition-all">
+              <span class="material-symbols-outlined text-xl">bolt</span>
+              <span class="text-sm font-semibold">Quick Sort</span>
+            </div>
+            <div id="btn-merge-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-secondary">merge_type</span>
+              <span class="text-sm font-medium text-slate-300">Merge Sort</span>
+            </div>
+            <div id="btn-bubble-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-slate-400">bubble_chart</span>
+              <span class="text-sm font-medium text-slate-300">Bubble Sort</span>
+            </div>
+            <div id="btn-heap-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-slate-400">heap_snapshot_thumbnail</span>
+              <span class="text-sm font-medium text-slate-300">Heap Sort</span>
+            </div>
+            <!-- New Algorithms -->
+            <div id="btn-selection-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-indigo-400">design_services</span>
+              <span class="text-sm font-medium text-slate-300">Selection Sort</span>
+            </div>
+            <div id="btn-insertion-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-emerald-400">input</span>
+              <span class="text-sm font-medium text-slate-300">Insertion Sort</span>
+            </div>
+            <div id="btn-tim-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-violet-400">timer</span>
+              <span class="text-sm font-medium text-slate-300">Tim Sort</span>
+            </div>
+            <div id="btn-intro-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-amber-400">psychology</span>
+              <span class="text-sm font-medium text-slate-300">Intro Sort</span>
+            </div>
+            <div id="btn-shell-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-cyan-400">layers</span>
+              <span class="text-sm font-medium text-slate-300">Shell Sort</span>
+            </div>
+            <div id="btn-pdq-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-fuchsia-400">speed</span>
+              <span class="text-sm font-medium text-slate-300">PDQ Sort</span>
+            </div>
+            <div id="btn-dual-pivot-quick-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-rose-400">compare_arrows</span>
+              <span class="text-sm font-medium text-slate-300">Dual Pivot Quick</span>
+            </div>
+            <div id="btn-block-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-teal-400">view_module</span>
+              <span class="text-sm font-medium text-slate-300">Block Sort</span>
+            </div>
+            <div id="btn-dual-fusion-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-xl text-orange-400">all_inclusive</span>
+              <span class="text-sm font-medium text-slate-300">Dual Fusion Sort</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Saved Arenas</p>
+          <div class="flex flex-col gap-2">
+            <div id="btn-recursive-battle" class="flex items-center justify-between px-4 py-2 group cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-2 rounded-full bg-primary"></span>
+                <span class="text-sm text-slate-400 group-hover:text-white transition-colors">Recursive Battle</span>
+              </div>
+              <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">star</span>
+            </div>
+            <div class="flex items-center justify-between px-4 py-2 group cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-2 rounded-full bg-secondary"></span>
+                <span class="text-sm text-slate-400 group-hover:text-white">Worst Case Test</span>
+              </div>
+              <span
+                class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">star</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="p-6 pt-4 border-t border-white/5 shrink-0">
+        <div class="glass p-4 rounded-xl border-primary/20 bg-primary/5 object-bottom">
+          <p class="text-xs text-primary font-bold mb-1 tracking-wider uppercase">Status</p>
+          <p class="text-[10px] text-slate-400 leading-relaxed mb-1 flex items-center gap-2">
+            <span class="size-2 rounded-full bg-green-500 animate-pulse"></span> Visualizer Systems Online
+          </p>
+        </div>
+      </div>
+    </aside>
+    <main class="flex-1 flex flex-col relative overflow-hidden">
+      <!-- HOMEPAGE -->
+      <div id="home-page" class="flex-1 w-full h-full flex flex-col animate-fade-in fade-transition">
+        <!-- Add a header specifically for homepage -->
+        <header class="h-20 glass border-b border-white/10 px-8 flex items-center justify-between z-10">
+          <h2 class="text-lg font-bold flex items-center gap-2">
+            <span class="text-primary">Algorithm</span>
+            <span class="text-slate-500 font-light">Arena</span>
+          </h2>
+          <button id="btn-go-arena"
+            class="h-10 px-6 rounded-lg bg-primary text-background-dark font-bold hover:brightness-110 transition-all cursor-pointer">
+            Go to Arena
+          </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 flex flex-col gap-8 custom-scrollbar">
+          <!-- HERO -->
+          <section class="glass rounded-2xl p-10 border border-primary/20 bg-gradient-to-br from-white/5 to-transparent shadow-lg text-center md:text-left">
+            <div class="flex flex-col max-w-4xl mx-auto items-center md:items-start text-center md:text-left">
+              <h1 class="text-5xl font-black text-white mb-6 tracking-tight leading-tight w-full">
+                Welcome to <span class="text-primary">Algorithm Arena</span>
+              </h1>
+              <p class="text-slate-400 max-w-2xl text-lg leading-relaxed mb-8">
+                Visualize, compare, and benchmark sorting algorithms in real time.
+                Learn how algorithms behave with interactive animations and performance insights.
+              </p>
+              <button id="btn-start"
+                class="px-8 py-3 bg-primary text-background-dark font-bold rounded-lg hover:brightness-110 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(0,238,255,0.3)] cursor-pointer self-center md:self-start">
+                Start Exploring
+              </button>
+            </div>
+          </section>
+
+          <!-- FEATURES -->
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
+            <div class="glass p-6 rounded-xl border border-white/10 hover:border-amber-500/30 transition-colors group cursor-pointer shadow-lg hover:shadow-amber-500/10">
+              <h3 class="text-white font-bold mb-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500 group-hover:scale-110 transition-transform text-xl">bolt</span>
+                Live Visualization
+              </h3>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                Watch sorting algorithms step-by-step with animated bars.
+              </p>
+            </div>
+            <div class="glass p-6 rounded-xl border border-white/10 hover:border-blue-400/30 transition-colors group cursor-pointer shadow-lg hover:shadow-blue-400/10">
+              <h3 class="text-white font-bold mb-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-blue-400 group-hover:scale-110 transition-transform text-xl">bar_chart</span>
+                Performance Metrics
+              </h3>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                Track comparisons, swaps, and time complexity live.
+              </p>
+            </div>
+            <div class="glass p-6 rounded-xl border border-white/10 hover:border-emerald-400/30 transition-colors group cursor-pointer shadow-lg hover:shadow-emerald-400/10">
+              <h3 class="text-white font-bold mb-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-emerald-400 group-hover:scale-110 transition-transform text-xl">science</span>
+                Benchmark Lab
+              </h3>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                Upload custom datasets and test algorithm performance.
+              </p>
+            </div>
+          </section>
+
+          <!-- QUICK STATS -->
+          <section class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto w-full pb-8">
+            <div class="glass p-6 rounded-xl text-center border border-white/5 hover:bg-white/5 transition-colors shadow-lg">
+              <p class="text-4xl font-black text-primary mb-2 tracking-tight">12+</p>
+              <p class="text-xs text-slate-400 font-medium tracking-wide">Algorithms</p>
+            </div>
+            <div class="glass p-6 rounded-xl text-center border border-white/5 hover:bg-white/5 transition-colors shadow-lg">
+              <p class="text-4xl font-black text-secondary mb-2 tracking-tight">Real-Time</p>
+              <p class="text-xs text-slate-400 font-medium tracking-wide">Visualization</p>
+            </div>
+            <div class="glass p-6 rounded-xl text-center border border-white/5 hover:bg-white/5 transition-colors shadow-lg">
+              <p class="text-4xl font-black text-primary mb-2 tracking-tight">Custom</p>
+              <p class="text-xs text-slate-400 font-medium tracking-wide">Input Support</p>
+            </div>
+            <div class="glass p-6 rounded-xl text-center border border-white/5 hover:bg-white/5 transition-colors shadow-lg">
+              <p class="text-4xl font-black text-secondary mb-2 tracking-tight">Advanced</p>
+              <p class="text-xs text-slate-400 font-medium tracking-wide">Benchmarking</p>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ARENA PAGE (Hidden initially) -->
+      <div id="arena-page" class="hidden flex-1 w-full h-full flex flex-col fade-transition">
+      <header
+        class="h-20 glass border-b border-white/10 px-8 flex items-center justify-between z-10 animate-slide-up stagger-2">
+        <div class="hidden md:flex items-center gap-8">
+          <h2 class="text-lg font-bold flex items-center gap-2">
+            <span class="text-primary">Comparison</span>
+            <span class="text-slate-500 font-light">Arena</span>
+          </h2>
+          <div class="flex items-center gap-4 glass rounded-full px-4 py-2 border-white/5">
+            <div class="flex items-center gap-3">
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Speed</span>
+              <input id="slider-speed" type="range"
+                class="w-24 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="1"
+                max="100" value="50">
+            </div>
+            <div class="h-4 w-px bg-white/10 mx-2"></div>
+            <div class="flex items-center gap-3">
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Size</span>
+              <input id="slider-size" type="range"
+                class="w-24 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="10"
+                max="200" value="50">
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between w-full md:w-auto md:justify-end gap-3">
+          <div class="flex items-center gap-2 mr-0 md:mr-4">
+            <button id="btn-replay"
+              class="size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-white transition-all cursor-pointer">
+              <span class="material-symbols-outlined">replay</span>
+            </button>
+            <button id="btn-play"
+              class="h-10 px-6 rounded-lg bg-primary text-background-dark font-bold flex items-center gap-2 hover:brightness-110 transition-all cursor-pointer">
+              <span class="material-symbols-outlined fill-1">play_arrow</span>
+              <span class="hidden sm:inline">Begin Sorting</span>
+            </button>
+            <button id="btn-pause"
+              class="size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-white transition-all cursor-pointer">
+              <span class="material-symbols-outlined">pause</span>
+            </button>
+          </div>
+          <div class="hidden md:flex items-center gap-3 border-l border-white/10 pl-6">
+            <div class="text-right">
+              <p class="text-xs font-bold text-white leading-none">Admin Dev</p>
+              <p class="text-[10px] text-slate-500 font-medium">Lvl 42 Coder</p>
+            </div>
+            <div class="size-10 rounded-full glass border border-primary/30 p-0.5 overflow-hidden">
+              <img class="w-full h-full rounded-full object-cover" data-alt="User avatar with neon profile border"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAFpdZNP-24HZ2pYsAxDwfSk233Q-DmHA9uWZ7Mlxuuk68NZldB1MwpYlVJIpzs0lW-bsn2eLIHky5T8-CPQE4v1NsdiGjQqYWyDDDvPQZxxg-o5b4VVQgR9IPYia83SGzG90TyC7Eh3-6O2BXMi3WFHbTlvKBibAUagM8DAdkhwT1vZQXGhowjIXpixZsnjEib9_i18G83DkPfVc7gBYxowbQ47OW3Hm1hxVEgoD3Yg6hVLweN3UTUTcMAT5v4gqPE5nKyYOtpZrt" />
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="flex-1 flex flex-col md:flex-row overflow-y-auto lg:overflow-hidden p-6 gap-6">
+        <section
+          class="flex-1 flex flex-col gap-4 relative min-h-[400px] animate-scale-in stagger-3 hover:scale-[1.01] transition-transform duration-300">
+          <div class="flex items-center justify-between px-2 cursor-pointer group" id="selector-left">
+            <div class="flex flex-col">
+              <span id="left-algo-label" class="text-primary text-[10px] font-bold uppercase tracking-widest">Algorithm A (Click to
+                Change)</span>
+              <h3 class="text-xl font-bold group-hover:text-primary transition-colors" id="title-left">Quick Sort</h3>
+            </div>
+            <div class="flex gap-4">
+              <div class="text-right">
+                <p class="text-slate-500 text-[10px] uppercase font-bold">Complexity</p>
+                <p class="text-sm font-mono text-primary" id="complexity-left">O(n log n)</p>
+              </div>
+              <div class="text-right">
+                <p class="text-slate-500 text-[10px] uppercase font-bold">Comparisons</p>
+                <p class="text-sm font-mono text-white" id="ops-left">0</p>
+              </div>
+            </div>
+          </div>
+          <div id="arena-left"
+            class="flex-1 glass neon-border-cyan rounded-2xl flex items-end justify-center p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
+              style="background-image: radial-gradient(circle at 50% 120%, rgba(0,238,255,0.15), transparent 70%);">
+            </div>
+            <!-- Bars appended by JS -->
+          </div>
+        </section>
+        <div id="vs-divider-desktop" class="hidden md:block w-px bg-white/10 relative">
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass size-12 rounded-full border-white/10 flex items-center justify-center text-slate-500 font-bold italic z-10">
+            VS</div>
+        </div>
+        <div id="vs-divider-mobile" class="block md:hidden h-px w-full bg-white/10 relative my-4">
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass size-10 rounded-full border-white/10 flex items-center justify-center text-slate-500 font-bold italic z-10 text-xs">
+            VS</div>
+        </div>
+        
+        <!-- NEW SINGLE ALGORITHM CODE SECTION -->
+        <section id="single-code-section"
+          class="hidden flex-1 flex flex-col gap-4 relative min-h-[400px] animate-scale-in stagger-4 hover:scale-[1.01] transition-transform duration-300">
+          <div class="flex items-center justify-between px-2 cursor-pointer group">
+            <div class="flex flex-col">
+              <span class="text-amber-400 text-[10px] font-bold uppercase tracking-widest">Active Execution</span>
+              <h3 class="text-xl font-bold group-hover:text-amber-400 transition-colors">Line-by-Line Tracking</h3>
+            </div>
+            <div class="flex gap-4">
+              <div class="text-right">
+                <p class="text-slate-500 text-[10px] uppercase font-bold">Code Language</p>
+                <p class="text-sm font-mono text-amber-500">JavaScript</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 bg-[#0d1117] border border-white/10 rounded-2xl flex flex-col relative overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar flex-1 overflow-y-auto p-4">
+              <pre id="single-code-display" class="text-sm font-mono leading-7 text-slate-300"></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECONDARY ARENA SECTION -->
+        <section id="arena-right-section"
+          class="flex-1 flex flex-col gap-4 relative min-h-[400px] animate-scale-in stagger-4 hover:scale-[1.01] transition-transform duration-300">
+          <div class="flex items-center justify-between px-2 cursor-pointer group" id="selector-right">
+            <div class="flex flex-col">
+              <span class="text-secondary text-[10px] font-bold uppercase tracking-widest">Algorithm B (Click to
+                Change)</span>
+              <h3 class="text-xl font-bold group-hover:text-secondary transition-colors" id="title-right">Merge Sort
+              </h3>
+            </div>
+            <div class="flex gap-4">
+              <div class="text-right">
+                <p class="text-slate-500 text-[10px] uppercase font-bold">Complexity</p>
+                <p class="text-sm font-mono text-secondary" id="complexity-right">O(n log n)</p>
+              </div>
+              <div class="text-right">
+                <p class="text-slate-500 text-[10px] uppercase font-bold">Comparisons</p>
+                <p class="text-sm font-mono text-white" id="ops-right">0</p>
+              </div>
+            </div>
+          </div>
+          <div id="arena-right"
+            class="flex-1 glass neon-border-pink rounded-2xl flex items-end justify-center p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
+              style="background-image: radial-gradient(circle at 50% 120%, rgba(255,0,127,0.15), transparent 70%);">
+            </div>
+            <!-- Bars appended by JS -->
+          </div>
+        </section>
+      </div>
+      <footer
+        class="h-16 glass border-t border-white/10 px-8 flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase tracking-widest animate-slide-up stagger-5">
+        <div class="flex gap-8">
+          <div class="flex items-center gap-2">
+            <span class="size-2 rounded-full bg-primary animate-pulse hidden md:block"></span>
+            <span id="array-size-display">Array Buffer: 50 Elements</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[14px]">timer</span>
+            <span id="base-speed-display">Base Yield: 50ms</span>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <button class="hover:text-primary transition-colors">Export Logs</button>
+          <span class="text-white/10">|</span>
+          <button class="hover:text-primary transition-colors">Documentation</button>
+        </div>
+      </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Overlay (Hidden by default, add 'hidden' class to toggle) -->
+  <div id="algorithm-modal"
+    class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-background-dark/80 backdrop-blur-md opacity-0 transition-opacity duration-300">
+    <div id="algorithm-modal-content"
+      class="glass w-full max-w-4xl max-h-[90vh] rounded-2xl overflow-y-auto overflow-x-hidden custom-scrollbar shadow-2xl flex flex-col scale-95 opacity-0 transition-all duration-300 relative pointer-events-auto">
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent w-[200%] -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none z-0">
+      </div>
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-10 pt-10 pb-4 relative z-10">
+        <div class="flex items-center gap-3">
+          <div class="h-1 w-12 bg-primary rounded-full"></div>
+          <span class="text-primary text-xs font-bold tracking-[0.2em] uppercase">Algorithm Specification</span>
+        </div>
+        <button id="close-modal-btn"
+          class="text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-lg p-2 flex items-center justify-center cursor-pointer">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <!-- Modal Content -->
+      <div class="px-10 pb-12 relative z-10">
+        <div class="flex flex-col gap-6">
+          <div>
+            <h1 id="algo-title" class="text-white text-6xl font-black leading-tight tracking-[-0.04em]">Quick Sort</h1>
+            <p id="algo-desc" class="text-slate-400 text-lg font-normal leading-relaxed mt-4 max-w-2xl">
+              A highly efficient sorting algorithm that uses a divide-and-conquer strategy to quickly sort items within
+              an array. It works by selecting a 'pivot' element and partitioning the other elements into two sub-arrays.
+            </p>
+          </div>
+          <!-- Specs Grid -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+            <!-- Best Case -->
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col gap-2">
+              <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Best Case</span>
+              <span id="algo-best" class="text-primary text-2xl font-display font-bold">O(n log n)</span>
+              <span class="text-slate-400 text-[10px]">When pivot divides perfectly</span>
+            </div>
+            <!-- Average Case -->
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col gap-2">
+              <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Average Case</span>
+              <span id="algo-avg" class="text-primary text-2xl font-display font-bold">O(n log n)</span>
+              <span class="text-slate-400 text-[10px]">Typical execution scenario</span>
+            </div>
+            <!-- Worst Case -->
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col gap-2">
+              <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Worst Case</span>
+              <span id="algo-worst" class="text-rose-500 text-2xl font-display font-bold">O(n²)</span>
+              <span class="text-slate-400 text-[10px]">When pivot is smallest/largest</span>
+            </div>
+            <!-- Space Complexity -->
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col gap-2">
+              <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Space Complexity</span>
+              <span id="algo-space" class="text-primary text-2xl font-display font-bold">O(log n)</span>
+              <span class="text-slate-400 text-[10px]">Due to recursive stack calls</span>
+            </div>
+          </div>
+          <!-- Tab System -->
+          <div class="flex flex-col gap-4 mt-4">
+            <div class="flex gap-8 border-b border-white/10 pb-2">
+              <button id="tab-overview"
+                class="tab-btn text-primary border-b-2 border-primary pb-2 text-sm font-bold cursor-pointer transition-all">Overview</button>
+              <button id="tab-implementation"
+                class="tab-btn text-slate-500 hover:text-slate-300 border-b-2 border-transparent pb-2 text-sm font-bold cursor-pointer transition-all">Implementation</button>
+            </div>
+
+            <!-- Overview Panel -->
+            <div id="panel-overview" class="tab-panel">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+                <div class="flex flex-col gap-3">
+                  <h4 class="text-white text-sm font-bold">Characteristics</h4>
+                  <ul id="algo-chars" class="text-slate-400 text-sm space-y-2">
+                    <li class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+                      In-place algorithm
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary text-sm">cancel</span>
+                      Not stable (relative order not preserved)
+                    </li>
+                  </ul>
+                </div>
+                <div class="flex flex-col gap-3">
+                  <h4 class="text-white text-sm font-bold">Applications</h4>
+                  <p id="algo-apps" class="text-slate-400 text-sm leading-relaxed">
+                    Used in commercial applications for large scale sorting, internal sorting in libraries, and as a
+                    component of more complex hybrid algorithms.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Implementation Panel (hidden by default) -->
+            <div id="panel-implementation" class="tab-panel hidden">
+              <div class="bg-[#0d1117] rounded-xl border border-white/10 overflow-hidden">
+                <!-- Code Header -->
+                <div class="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm text-amber-400">code</span>
+                    <span id="code-filename" class="text-xs text-slate-400 font-mono">algorithm.js</span>
+                    <span id="code-lang-badge"
+                      class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 ml-2">JavaScript</span>
+                  </div>
+                  <button id="btn-copy-code"
+                    class="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-md px-2 py-1 transition-all">
+                    <span class="material-symbols-outlined text-sm">content_copy</span>
+                    Copy
+                  </button>
+                </div>
+                <!-- Code Body with line numbers -->
+                <div class="overflow-x-auto custom-scrollbar max-h-[400px] overflow-y-auto">
+                  <pre id="algo-code" class="text-sm font-mono leading-6 p-4 text-slate-300" style="tab-size: 4;"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Action Buttons & Benchmark Lab -->
+          <div class="flex flex-col gap-6 mt-6">
+
+            <!-- Benchmark Lab Section -->
+            <div class="glass border-rose-500/20 rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-[50px] pointer-events-none">
+              </div>
+
+              <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+                <span class="material-symbols-outlined text-rose-400">speed</span>
+                <span class="text-rose-400 text-sm font-bold tracking-[0.1em] uppercase">Benchmark Lab</span>
+                <span class="ml-auto text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded-full">REAL-TIME</span>
+              </div>
+
+              <div class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 flex flex-col gap-2">
+                  <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Upload Data Array (.txt,
+                    .csv)</label>
+                  <div class="flex gap-2 items-stretch">
+                    <label
+                      class="flex-1 flex items-center justify-center gap-2 border-2 border-dashed border-white/20 rounded-lg p-3 hover:border-rose-400/50 hover:bg-white/5 transition-all text-sm text-slate-400 cursor-pointer group">
+                      <span
+                        class="material-symbols-outlined text-xl group-hover:text-rose-400 transition-colors">upload_file</span>
+                      <span id="benchmark-file-label" class="group-hover:text-white transition-colors">Select
+                        File...</span>
+                      <input type="file" id="benchmark-file" accept=".txt,.csv" class="hidden" />
+                    </label>
+                    <button id="btn-delete-file"
+                      class="hidden bg-white/5 border border-white/10 text-slate-400 hover:text-rose-400 hover:border-rose-400/50 rounded-lg px-3 transition-all"
+                      title="Remove File">
+                      <span class="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                  </div>
+                </div>
+
+                <button id="btn-run-benchmark"
+                  class="bg-rose-500/90 text-white font-bold h-12 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                  Run Benchmark
+                </button>
+              </div>
+
+              <!-- Benchmark Results Display -->
+              <div id="benchmark-results" class="hidden flex-col gap-3 mt-2">
+                <!-- Row 1: N, Time, Status -->
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Items (N)</p>
+                    <p id="bench-n" class="text-white font-mono font-bold text-lg">0</p>
+                  </div>
+                  <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Execution Time</p>
+                    <div class="flex items-baseline gap-1">
+                      <p id="bench-time" class="text-rose-400 font-mono font-bold text-lg">0.00</p>
+                      <span id="bench-time-unit"
+                        class="text-[10px] text-slate-500 font-bold cursor-pointer hover:text-rose-400 transition-colors select-none"
+                        title="Click to change unit">ms</span>
+                    </div>
+                  </div>
+                  <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Status</p>
+                    <p id="bench-status" class="text-emerald-400 font-bold text-sm mt-1">SUCCESS</p>
+                  </div>
+                </div>
+
+                <!-- Row 2: Comparisons + Theoretical Complexity -->
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Comparisons</p>
+                    <p id="bench-comparisons" class="text-cyan-400 font-mono font-bold text-lg">0</p>
+                  </div>
+                  <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Swaps / Writes</p>
+                    <p id="bench-swaps" class="text-amber-400 font-mono font-bold text-lg">0</p>
+                  </div>
+                </div>
+
+                <!-- Row 3: Actual vs Theoretical Time Comparison -->
+                <div class="bg-black/30 rounded-xl p-4 border border-white/5">
+                  <div class="flex items-center justify-between mb-3">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">⏱ Time Comparison</p>
+                    <div class="flex items-center gap-1">
+                      <!-- Time Unit Selector Buttons -->
+                      <button data-unit="ms"
+                        class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all">ms</button>
+                      <button data-unit="µs"
+                        class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-500 border border-white/10 hover:border-rose-500/30 hover:text-rose-400 transition-all">µs</button>
+                      <button data-unit="ns"
+                        class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-500 border border-white/10 hover:border-rose-500/30 hover:text-rose-400 transition-all">ns</button>
+                      <span class="mx-1 text-white/10">|</span>
+                      <span id="bench-diff-badge"
+                        class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-400">—</span>
+                    </div>
+                  </div>
+
+                  <!-- Side-by-side cards -->
+                  <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div
+                      class="bg-gradient-to-br from-rose-500/10 to-transparent rounded-lg p-3 border border-rose-500/20">
+                      <p class="text-[8px] text-rose-400/70 font-bold uppercase mb-1 tracking-wider">Actual (Measured)
+                      </p>
+                      <div class="flex items-baseline gap-1">
+                        <p id="bench-actual-time" class="text-rose-400 font-mono font-bold text-xl">0.00</p>
+                        <span id="bench-actual-unit" class="text-[10px] text-rose-400/60 font-bold">ms</span>
+                      </div>
+                    </div>
+                    <div
+                      class="bg-gradient-to-br from-cyan-500/10 to-transparent rounded-lg p-3 border border-cyan-500/20">
+                      <p class="text-[8px] text-cyan-400/70 font-bold uppercase mb-1 tracking-wider">Theoretical (Avg)
+                      </p>
+                      <div class="flex items-baseline gap-1">
+                        <p id="bench-theoretical-time" class="text-cyan-400 font-mono font-bold text-xl">0.00</p>
+                        <span id="bench-theoretical-unit" class="text-[10px] text-cyan-400/60 font-bold">ms</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Dual Bar Chart -->
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                      <span class="text-[8px] text-rose-400 font-bold w-14 text-right shrink-0">ACTUAL</span>
+                      <div class="flex-1 h-8 bg-white/5 rounded-md overflow-hidden relative flex items-center">
+                        <div id="bench-bar-actual"
+                          class="h-full rounded-md bg-gradient-to-r from-rose-500 to-rose-400 transition-all duration-1000 ease-out"
+                          style="width: 0%; min-width: 4px"></div>
+                        <span id="bench-bar-actual-label"
+                          class="ml-2 text-[10px] font-mono font-bold text-rose-400 whitespace-nowrap shrink-0"></span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[8px] text-cyan-400 font-bold w-14 text-right shrink-0">THEORY</span>
+                      <div class="flex-1 h-8 bg-white/5 rounded-md overflow-hidden relative flex items-center">
+                        <div id="bench-bar-theory"
+                          class="h-full rounded-md bg-gradient-to-r from-cyan-500 to-cyan-400 transition-all duration-1000 ease-out"
+                          style="width: 0%; min-width: 4px"></div>
+                        <span id="bench-bar-theory-label"
+                          class="ml-2 text-[10px] font-mono font-bold text-cyan-400 whitespace-nowrap shrink-0"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Best / Avg / Worst theoretical times -->
+                  <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/5">
+                    <div class="text-center">
+                      <p class="text-[7px] text-emerald-500/70 font-bold uppercase">Best Case</p>
+                      <p id="bench-theory-best" class="text-emerald-400 font-mono font-bold text-xs mt-0.5">—</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-[7px] text-amber-500/70 font-bold uppercase">Avg Case</p>
+                      <p id="bench-theory-avg" class="text-amber-400 font-mono font-bold text-xs mt-0.5">—</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-[7px] text-rose-500/70 font-bold uppercase">Worst Case</p>
+                      <p id="bench-theory-worst" class="text-rose-400 font-mono font-bold text-xs mt-0.5">—</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini shimmer bar -->
+                <div class="h-2 w-full bg-white/5 rounded-full block overflow-hidden relative">
+                  <div id="bench-bar-visual"
+                    class="h-full bg-gradient-to-r from-rose-500/40 to-cyan-500/40 w-full origin-left transition-transform duration-1000">
+                    <div
+                      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full -translate-x-full animate-[shimmer_2s_infinite]">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <button id="btn-start-visualization"
+              class="w-full bg-primary text-background-dark font-bold h-12 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <span class="material-symbols-outlined">play_arrow</span>
+              Start Area Visualization
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Background Decoration (Glassmorphic blobs) -->
+      <div class="absolute -top-24 -left-24 size-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none z-0">
+      </div>
+      <div
+        class="absolute -bottom-24 -right-24 size-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none z-0">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
