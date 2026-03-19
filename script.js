@@ -1013,7 +1013,10 @@ document.addEventListener('DOMContentLoaded', () => {
         benchBarTheory: document.getElementById('bench-bar-theory'),
         benchBarActualLabel: document.getElementById('bench-bar-actual-label'),
         benchBarTheoryLabel: document.getElementById('bench-bar-theory-label'),
-        btnStartVis: document.getElementById('btn-start-visualization')
+        btnStartVis: document.getElementById('btn-start-visualization'),
+        // Mobile slider mirrors
+        sliderSpeedMobile: document.getElementById('slider-speed-mobile'),
+        sliderSizeMobile: document.getElementById('slider-size-mobile'),
     };
 
     // Initialize UI Text
@@ -1049,7 +1052,25 @@ document.addEventListener('DOMContentLoaded', () => {
     UI.sliderSpeed.addEventListener('input', () => {
         let delay = 101 - parseInt(UI.sliderSpeed.value);
         UI.speedDisplay.textContent = `Base Yield: ${delay}ms`;
+        if (UI.sliderSpeedMobile) UI.sliderSpeedMobile.value = UI.sliderSpeed.value;
     });
+
+    // Mobile slider mirrors
+    if (UI.sliderSizeMobile) {
+        UI.sliderSizeMobile.addEventListener('input', () => {
+            UI.sliderSize.value = UI.sliderSizeMobile.value;
+            if (STATE.isPlaying) stopSorting();
+            generateArray();
+            renderInitialArenas();
+        });
+    }
+    if (UI.sliderSpeedMobile) {
+        UI.sliderSpeedMobile.addEventListener('input', () => {
+            UI.sliderSpeed.value = UI.sliderSpeedMobile.value;
+            let delay = 101 - parseInt(UI.sliderSpeedMobile.value);
+            UI.speedDisplay.textContent = `Base Yield: ${delay}ms`;
+        });
+    }
 
     UI.btnPlay.addEventListener('click', togglePlay);
 
@@ -2149,7 +2170,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnRecursiveBattle = document.getElementById('btn-recursive-battle');
     const btnHome = document.getElementById('btn-home');
 
+    /* ---- Mobile sidebar drawer ---- */
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const btnHamburgerHome = document.getElementById('btn-hamburger-home');
+    const btnHamburgerArena = document.getElementById('btn-hamburger-arena');
+    const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+    const btnToggleControls = document.getElementById('btn-toggle-controls');
+    const mobileControlsPanel = document.getElementById('mobile-controls-panel');
+
+    function openSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.add('is-open');
+        if (overlay) overlay.classList.add('is-visible');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+    }
+
+    function closeSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.remove('is-open');
+        if (overlay) overlay.classList.remove('is-visible');
+        document.body.style.overflow = '';
+    }
+
+    if (btnHamburgerHome)  btnHamburgerHome.addEventListener('click',  openSidebar);
+    if (btnHamburgerArena) btnHamburgerArena.addEventListener('click', openSidebar);
+    if (btnCloseSidebar)   btnCloseSidebar.addEventListener('click',   closeSidebar);
+    if (overlay)           overlay.addEventListener('click',           closeSidebar);
+
+    /* ---- Mobile controls panel toggle ---- */
+    if (btnToggleControls && mobileControlsPanel) {
+        btnToggleControls.addEventListener('click', () => {
+            mobileControlsPanel.classList.toggle('is-open');
+        });
+    }
+
+    /* ---- Page navigation ---- */
     function showArena() {
+        closeSidebar();
         if (homePage && arenaPage) {
             homePage.classList.add('hidden');
             homePage.classList.remove('flex');
@@ -2159,6 +2217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showHome() {
+        closeSidebar();
         if (homePage && arenaPage) {
             arenaPage.classList.add('hidden');
             arenaPage.classList.remove('flex');
@@ -2168,7 +2227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnGoArena) btnGoArena.addEventListener('click', showArena);
-    if (btnStart) btnStart.addEventListener('click', showArena);
+    if (btnStart)   btnStart.addEventListener('click',   showArena);
     if (btnRecursiveBattle) {
         btnRecursiveBattle.addEventListener('click', () => {
             STATE.mode = 'compare';
@@ -2185,12 +2244,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const labelLeft = document.getElementById('left-algo-label');
             const selectorLeft = document.getElementById('selector-left');
             if (labelLeft) labelLeft.textContent = "Algorithm A (Click to Change)";
-            if (selectorLeft) {
-                selectorLeft.classList.add('cursor-pointer', 'group');
-            }
+            if (selectorLeft) selectorLeft.classList.add('cursor-pointer', 'group');
 
             showArena();
         });
     }
     if (btnHome) btnHome.addEventListener('click', showHome);
+
+    /* ---- Keyboard: Escape closes sidebar ---- */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSidebar();
+    });
 });

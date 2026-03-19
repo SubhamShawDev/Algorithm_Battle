@@ -1,3 +1,6 @@
+/* ============================================================
+   GLASS & NEON EFFECTS
+   ============================================================ */
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
@@ -21,48 +24,58 @@
   transition: all 0.3s ease;
 }
 
-body {
-  background-color: #0B0F19;
+/* ============================================================
+   BASE
+   ============================================================ */
+html, body {
+  height: 100%;
+  overflow: hidden;
 }
 
+body {
+  background-color: #0B0F19;
+  /* respect safe areas on notched phones */
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes slideRight {
   from { transform: translateX(-50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(0);     opacity: 1; }
 }
 
 @keyframes slideUp {
   from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
 @keyframes scaleIn {
   from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes sidebarSlideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
 }
 
-.animate-slide-right {
-  animation: slideRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
 
-.animate-slide-up {
-  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
+.animate-fade-in    { animation: fadeIn    1s    cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-right{ animation: slideRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+.animate-slide-up   { animation: slideUp   0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+.animate-scale-in   { animation: scaleIn   0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
 
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }
@@ -70,35 +83,152 @@ body {
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
+/* ============================================================
+   MOBILE SIDEBAR DRAWER (off-canvas)
+   ============================================================ */
+
+/* On large screens the sidebar is always visible in normal flow */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: relative !important;
+    transform: translateX(0) !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+  }
+  #sidebar-overlay {
+    display: none !important;
+  }
 }
 
-/* Custom Scrollbar for Sidebar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+/* On smaller screens the sidebar is a fixed off-canvas drawer */
+@media (max-width: 1023px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 300px;
+    max-width: 85vw;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 200;
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    /* safe-area on the left for landscape notched phones */
+    padding-left: env(safe-area-inset-left);
+    /* kill the entry animation so sidebar starts fully hidden */
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  #sidebar.is-open {
+    transform: translateX(0);
+  }
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
+/* Overlay backdrop */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+#sidebar-overlay.is-visible {
+  opacity: 1;
+  pointer-events: all;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+/* ============================================================
+   MOBILE CONTROLS PANEL (speed / size sliders)
+   ============================================================ */
+#mobile-controls-panel {
+  /* Start fully collapsed; CSS-only approach: max-height transition */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
 }
 
-/* Removed inline styles */
-.algo-code-snippet {
-  tab-size: 4;
+#mobile-controls-panel.is-open {
+  max-height: 140px;
 }
+
+/* ============================================================
+   TOUCH-FRIENDLY TARGETS  (44px minimum)
+   ============================================================ */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   ARENA BARS
+   ============================================================ */
+/* Ensure bars never collapse smaller than 1px on tight layouts */
+.sort-bar {
+  min-width: 1px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+.custom-scrollbar::-webkit-scrollbar       { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Hide scrollbar on mobile to avoid gutter layout shift */
+@media (max-width: 1023px) {
+  .custom-scrollbar::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+/* ============================================================
+   CODE & BENCH UTILITIES
+   ============================================================ */
+.algo-code-snippet { tab-size: 4; }
 
 .bench-progress-bar {
   width: 0%;
   min-width: 4px;
+}
+
+/* ============================================================
+   FOOTER SAFE-AREA INSET (iPhone home bar)
+   ============================================================ */
+footer {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+/* ============================================================
+   RESPONSIVE MODAL TYPOGRAPHY
+   ============================================================ */
+@media (max-width: 640px) {
+  #algo-title {
+    font-size: 2.25rem !important; /* text-4xl */
+    line-height: 1.1 !important;
+  }
+}
+
+/* ============================================================
+   ARENA PAGE: smaller min-height on phones
+   ============================================================ */
+@media (max-width: 639px) {
+  .arena-section {
+    min-height: 260px !important;
+  }
+}
+
+/* ============================================================
+   PREVENT OVERSCROLL BOUNCE (iOS rubber-band)
+   ============================================================ */
+#home-page, #arena-page {
+  overscroll-behavior: contain;
 }
