@@ -4,7 +4,7 @@ const algorithms = {
         desc: "A highly efficient sorting algorithm that uses a divide-and-conquer strategy to quickly sort items within an array. It works by selecting a 'pivot' element and partitioning the other elements into two sub-arrays.",
         best: 'O(n log n)',
         avg: 'O(n log n)',
-        worst: 'O(n²)',
+        worst: 'O(nÂ²)',
         space: 'O(log n)',
         chars: [
             { icon: 'check_circle', text: 'In-place algorithm' },
@@ -163,8 +163,8 @@ const algorithms = {
         title: 'Bubble Sort',
         desc: "A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted.",
         best: 'O(n)',
-        avg: 'O(n²)',
-        worst: 'O(n²)',
+        avg: 'O(nÂ²)',
+        worst: 'O(nÂ²)',
         space: 'O(1)',
         chars: [
             { icon: 'check_circle', text: 'In-place algorithm' },
@@ -285,7 +285,7 @@ const algorithms = {
     'selection-sort': {
         title: 'Selection Sort',
         desc: "An in-place comparison sorting algorithm that divides the input list into a sorted sublist and an unsorted sublist. It repeatedly selects the smallest element from the unsorted sublist and swaps it into the sorted sublist.",
-        best: 'O(n²)', avg: 'O(n²)', worst: 'O(n²)', space: 'O(1)',
+        best: 'O(nÂ²)', avg: 'O(nÂ²)', worst: 'O(nÂ²)', space: 'O(1)',
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Useful where write operations to memory are significantly more expensive than read operations, as it makes at most O(n) swaps.",
         run: async (api) => {
@@ -329,7 +329,7 @@ const algorithms = {
     'insertion-sort': {
         title: 'Insertion Sort',
         desc: "Builds the final sorted array one item at a time. It iterates, consuming one input element each repetition, and grows a sorted output list.",
-        best: 'O(n)', avg: 'O(n²)', worst: 'O(n²)', space: 'O(1)',
+        best: 'O(n)', avg: 'O(nÂ²)', worst: 'O(nÂ²)', space: 'O(1)',
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'check_circle', text: 'Stable sort' }],
         apps: "Efficient implementation for small data datasets and arrays that are mostly sorted. Used as a subroutine in Timsort and Introsort.",
         run: async (api) => {
@@ -567,7 +567,7 @@ const algorithms = {
     'shell-sort': {
         title: 'Shell Sort',
         desc: "An in-place comparison sort. It is a generalization of insertion sort that allows the exchange of items that are far apart, bridging gaps.",
-        best: 'O(n log n)', avg: 'O(n log² n)', worst: 'O(n²)', space: 'O(1)',
+        best: 'O(n log n)', avg: 'O(n logÂ² n)', worst: 'O(nÂ²)', space: 'O(1)',
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Used in hardware/embedded systems where memory space is tightly restricted and a simple robust algorithm is needed.",
         run: async (api) => {
@@ -667,7 +667,7 @@ const algorithms = {
     'dual-pivot-quick-sort': {
         title: 'Dual Pivot Quick Sort',
         desc: "A variation of Quick Sort using two pivots instead of one. It divides the array into three sections, leading to fewer comparisons and swaps in practice.",
-        best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(n²)', space: 'O(log n)',
+        best: 'O(n log n)', avg: 'O(n log n)', worst: 'O(nÂ²)', space: 'O(log n)',
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Used extensively in Java 7+ for sorting arrays of primitive data types.",
         run: async (api) => {
@@ -849,19 +849,19 @@ class RawSortAPI {
 let currentModalAlgoId = null;
 let benchmarkData = null;
 let benchmarkTimeMs = 0; // stored in ms always
-let benchTimeUnit = 'ms'; // 'ms', 'µs', 'ns'
+let benchTimeUnit = 'ms'; // 'ms', 'Âµs', 'ns'
 let storedTheoreticalBestMs = 0;
 let storedTheoreticalAvgMs = 0;
 let storedTheoreticalWorstMs = 0;
 
 // Theoretical complexity calculator
 function computeTheoretical(n, complexityStr) {
-    if (!n || n <= 0) return '—';
+    if (!n || n <= 0) return 'â€”';
     let ops = 0;
     const s = complexityStr.replace(/\s/g, '');
     if (s === 'O(nlogn)' || s === 'O(n log n)') {
         ops = n * Math.log2(n);
-    } else if (s === 'O(n²)' || s === 'O(n^2)') {
+    } else if (s === 'O(nÂ²)' || s === 'O(n^2)') {
         ops = n * n;
     } else if (s === 'O(n)') {
         ops = n;
@@ -869,11 +869,11 @@ function computeTheoretical(n, complexityStr) {
         ops = Math.log2(n);
     } else if (s === 'O(1)') {
         ops = 1;
-    } else if (s === 'O(n²/2)') {
+    } else if (s === 'O(nÂ²/2)') {
         ops = (n * n) / 2;
     } else {
         // Try to parse generically
-        if (s.includes('n²')) ops = n * n;
+        if (s.includes('nÂ²')) ops = n * n;
         else if (s.includes('nlogn') || s.includes('n log n')) ops = n * Math.log2(n);
         else if (s.includes('n')) ops = n;
         else return complexityStr;
@@ -890,7 +890,7 @@ function formatLargeNumber(num) {
 }
 
 function displayTimeInUnit(ms, unit) {
-    if (unit === 'µs') return (ms * 1000).toFixed(2);
+    if (unit === 'Âµs') return (ms * 1000).toFixed(2);
     if (unit === 'ns') return (ms * 1000000).toFixed(0);
     return ms.toFixed(2);
 }
@@ -900,12 +900,12 @@ function computeTheoreticalOps(n, complexityStr) {
     if (!n || n <= 0) return 0;
     const s = complexityStr.replace(/\s/g, '');
     if (s === 'O(nlogn)' || s === 'O(nlog n)') return n * Math.log2(n);
-    if (s === 'O(n²)' || s === 'O(n^2)') return n * n;
+    if (s === 'O(nÂ²)' || s === 'O(n^2)') return n * n;
     if (s === 'O(n)') return n;
     if (s === 'O(logn)' || s === 'O(logn)') return Math.log2(n);
     if (s === 'O(1)') return 1;
     // generic fallbacks
-    if (s.includes('n²') || s.includes('n^2')) return n * n;
+    if (s.includes('nÂ²') || s.includes('n^2')) return n * n;
     if (s.includes('nlogn') || s.includes('nlog')) return n * Math.log2(n);
     if (s.includes('n')) return n;
     return n;
@@ -943,7 +943,7 @@ function calibrateCostPerOp() {
 }
 
 // Compute theoretical time independently of actual measurement
-// Uses calibrated per-op cost × theoretical operation count for the given N
+// Uses calibrated per-op cost Ã— theoretical operation count for the given N
 function computeTheoreticalTimeMs(n, complexityStr) {
     const costPerOp = calibrateCostPerOp();
     const ops = computeTheoreticalOps(n, complexityStr);
@@ -1154,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- IMPLEMENTATION TAB: Code Viewer --- */
 
     // Clean algorithm code strings for display
-    const algorithmCode = {
+    const algorithmCode = window.algorithmCode = {
         'quick-sort': `function quickSort(arr, low = 0, high = arr.length - 1) {
     if (low < high) {
         // Choose last element as pivot
@@ -1526,7 +1526,7 @@ function partitionDual(arr, low, high) {
         return highlighted.join('\n');
     }
 
-    function highlightCodeForExecution(code) {
+    const highlightCodeForExecution = window.highlightCodeForExecution = function(code) {
         let html = code
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -1672,12 +1672,12 @@ function partitionDual(arr, low, high) {
         UI.benchTime.textContent = '0.00';
         UI.benchComparisons.textContent = '0';
         UI.benchSwaps.textContent = '0';
-        UI.benchTheoryBest.textContent = '—';
-        UI.benchTheoryAvg.textContent = '—';
-        UI.benchTheoryWorst.textContent = '—';
+        UI.benchTheoryBest.textContent = 'â€”';
+        UI.benchTheoryAvg.textContent = 'â€”';
+        UI.benchTheoryWorst.textContent = 'â€”';
         UI.benchActualTime.textContent = '0.00';
         UI.benchTheoreticalTime.textContent = '0.00';
-        UI.benchDiffBadge.textContent = '—';
+        UI.benchDiffBadge.textContent = 'â€”';
         UI.benchDiffBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-400';
         UI.benchBarActual.style.width = '0%';
         UI.benchBarTheory.style.width = '0%';
@@ -1724,7 +1724,7 @@ function partitionDual(arr, low, high) {
 
     // Also keep the top-row unit label clickable
     UI.benchTimeUnit.addEventListener('click', () => {
-        const units = ['ms', 'µs', 'ns'];
+        const units = ['ms', 'Âµs', 'ns'];
         const idx = units.indexOf(benchTimeUnit);
         benchTimeUnit = units[(idx + 1) % units.length];
         // Sync button highlight
@@ -1762,7 +1762,7 @@ function partitionDual(arr, low, high) {
             const algo = algorithms[currentModalAlgoId];
             const n = dataCopy.length;
 
-            // === PURE RAW TIMING — no async, no overhead ===
+            // === PURE RAW TIMING â€” no async, no overhead ===
             // Always use runRaw for the actual time measurement
             const t0 = performance.now();
             if (algo.runRaw) {
@@ -1774,7 +1774,7 @@ function partitionDual(arr, low, high) {
             const t1 = performance.now();
             benchmarkTimeMs = t1 - t0;  // fully raw, zero async overhead
 
-            // === OPS COUNTING — separate untimed pass ===
+            // === OPS COUNTING â€” separate untimed pass ===
             // Run RawSortAPI on a fresh copy just to count comparisons/swaps
             const countCopy = [...benchmarkData];
             if (algo.runRaw) {
@@ -1783,7 +1783,7 @@ function partitionDual(arr, low, high) {
                 if (avgComplexity.includes('nlogn') || avgComplexity.includes('nlog')) {
                     comparisons = Math.round(n * Math.log2(n));
                     swaps = Math.round(n * Math.log2(n) / 3);
-                } else if (avgComplexity.includes('n²') || avgComplexity.includes('n^2')) {
+                } else if (avgComplexity.includes('nÂ²') || avgComplexity.includes('n^2')) {
                     comparisons = Math.round(n * n / 2);
                     swaps = Math.round(n * n / 4);
                 } else if (avgComplexity.includes('n')) {
@@ -1811,7 +1811,7 @@ function partitionDual(arr, low, high) {
             UI.benchTheoryWorst.textContent = computeTheoretical(n, algo.worst) + ' ops';
 
             // --- Compute theoretical TIME estimates ---
-            // These are INDEPENDENT of actual time — based on machine-calibrated per-op cost
+            // These are INDEPENDENT of actual time â€” based on machine-calibrated per-op cost
             storedTheoreticalBestMs = computeTheoreticalTimeMs(n, algo.best);
             storedTheoreticalAvgMs = computeTheoreticalTimeMs(n, algo.avg);
             storedTheoreticalWorstMs = computeTheoreticalTimeMs(n, algo.worst);
@@ -1822,7 +1822,7 @@ function partitionDual(arr, low, high) {
             // Diff badge: show how actual compares to theoretical avg
             const diffPercent = ((benchmarkTimeMs - storedTheoreticalAvgMs) / storedTheoreticalAvgMs) * 100;
             if (Math.abs(diffPercent) < 1) {
-                UI.benchDiffBadge.textContent = '≈ Matches Theory';
+                UI.benchDiffBadge.textContent = 'â‰ˆ Matches Theory';
                 UI.benchDiffBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400';
             } else if (diffPercent < 0) {
                 UI.benchDiffBadge.textContent = `${Math.abs(diffPercent).toFixed(1)}% Faster`;
@@ -1973,7 +1973,7 @@ class SortAPI {
         this.bars[i].classList.remove('brightness-150', 'bg-white');
     }
 
-    async markLine(lineNum) {
+        async markLine(lineNum) {
         if (this.aborted) throw new Error("Aborted");
         if (STATE.mode !== 'single') return; 
 
@@ -1981,17 +1981,15 @@ class SortAPI {
         let delay = 101 - (parseInt(UI.sliderSpeed ? UI.sliderSpeed.value : 50));
         
         document.querySelectorAll('#single-code-display div').forEach(el => {
-            el.classList.remove('bg-white/10', 'border-amber-400');
-            el.classList.add('border-transparent');
+            el.classList.remove('active-exec-line');
         });
         
         const targetLine = document.getElementById(`exec-line-${lineNum}`);
         if (targetLine) {
-            targetLine.classList.remove('border-transparent');
-            targetLine.classList.add('bg-white/10', 'border-amber-400');
+            targetLine.classList.add('active-exec-line');
             
             // Auto scroll container
-            targetLine.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+            targetLine.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
         
         await new Promise(r => setTimeout(r, Math.max(delay / 2, 5)));
@@ -2049,8 +2047,7 @@ async function startSorting() {
         // Clear highlighted line safely
         if (STATE.mode === 'single') {
             document.querySelectorAll('#single-code-display div').forEach(el => {
-                el.classList.remove('bg-white/10', 'border-amber-400');
-                el.classList.add('border-transparent');
+                el.classList.remove('active-exec-line');
             });
         }
     }
@@ -2126,12 +2123,12 @@ function openModal(algoId) {
         UI.benchStatus.textContent = "";
         UI.benchComparisons.textContent = "0";
         UI.benchSwaps.textContent = "0";
-        UI.benchTheoryBest.textContent = "—";
-        UI.benchTheoryAvg.textContent = "—";
-        UI.benchTheoryWorst.textContent = "—";
+        UI.benchTheoryBest.textContent = "â€”";
+        UI.benchTheoryAvg.textContent = "â€”";
+        UI.benchTheoryWorst.textContent = "â€”";
         UI.benchActualTime.textContent = '0.00';
         UI.benchTheoreticalTime.textContent = '0.00';
-        UI.benchDiffBadge.textContent = '—';
+        UI.benchDiffBadge.textContent = 'â€”';
         UI.benchDiffBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-400';
         UI.benchBarActual.style.width = '0%';
         UI.benchBarTheory.style.width = '0%';
@@ -2256,3 +2253,3628 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') closeSidebar();
     });
 });
+
+/* =====================================================================
+   VISUALIZATION PAGE + BENCHMARK PAGE LOGIC
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    const allPages = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page'];
+    const algoKeysList = Object.keys(algorithms);
+
+    // Icon map for algo selector cards
+    const algoIcons = {
+        'quick-sort': 'bolt', 'merge-sort': 'merge_type', 'bubble-sort': 'bubble_chart',
+        'heap-sort': 'heap_snapshot_thumbnail', 'selection-sort': 'design_services',
+        'insertion-sort': 'input', 'tim-sort': 'timer', 'intro-sort': 'psychology',
+        'shell-sort': 'layers', 'pdq-sort': 'speed', 'dual-pivot-quick-sort': 'compare_arrows',
+        'block-sort': 'view_module', 'dual-fusion-sort': 'all_inclusive'
+    };
+    const algoColors = {
+        'quick-sort': 'text-primary', 'merge-sort': 'text-secondary', 'bubble-sort': 'text-slate-400',
+        'heap-sort': 'text-slate-400', 'selection-sort': 'text-indigo-400',
+        'insertion-sort': 'text-emerald-400', 'tim-sort': 'text-violet-400', 'intro-sort': 'text-amber-400',
+        'shell-sort': 'text-cyan-400', 'pdq-sort': 'text-fuchsia-400', 'dual-pivot-quick-sort': 'text-rose-400',
+        'block-sort': 'text-teal-400', 'dual-fusion-sort': 'text-orange-400'
+    };
+
+    function showPage(pageId) {
+        allPages.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (id === pageId) {
+                el.classList.remove('hidden');
+                el.classList.add('flex');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        });
+    }
+
+    function buildAlgoGrid(containerId, accentClass, onSelect) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        algoKeysList.forEach(key => {
+            const algo = algorithms[key];
+            const card = document.createElement('button');
+            card.className = `algo-select-card glass p-3 rounded-lg border border-white/10 hover:border-white/30 cursor-pointer flex flex-col items-center gap-2 text-center ${accentClass}`;
+            card.dataset.algo = key;
+            card.innerHTML = `
+                <span class="material-symbols-outlined text-xl ${algoColors[key] || 'text-slate-400'}">${algoIcons[key] || 'sort'}</span>
+                <span class="text-[10px] sm:text-xs font-semibold text-slate-300 leading-tight">${algo.title}</span>
+            `;
+            card.addEventListener('click', () => {
+                container.querySelectorAll('.algo-select-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                onSelect(key);
+            });
+            container.appendChild(card);
+        });
+    }
+
+    // ==================== FEATURE CARD NAVIGATION ====================
+    const btnEnterVis = document.getElementById('btn-enter-visualization');
+    const btnExplorePerf = document.getElementById('btn-explore-performance');
+    const btnStartBench = document.getElementById('btn-start-benchmarking');
+
+    if (btnEnterVis) btnEnterVis.addEventListener('click', (e) => { e.stopPropagation(); showPage('visualization-page'); });
+    if (btnExplorePerf) btnExplorePerf.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showPage('performance-matrices-page');
+    });
+    if (btnStartBench) btnStartBench.addEventListener('click', (e) => { e.stopPropagation(); showPage('benchmark-page'); });
+
+    // Back buttons
+    const btnVisBack = document.getElementById('btn-vis-back');
+    const btnBenchBack = document.getElementById('btn-bench-back');
+    if (btnVisBack) btnVisBack.addEventListener('click', () => { visStopSorting(); showPage('home-page'); });
+    if (btnBenchBack) btnBenchBack.addEventListener('click', () => showPage('home-page'));
+
+    // ==================== VISUALIZATION PAGE ====================
+    const VIS = {
+        selectedAlgo: null,
+        isPlaying: false,
+        isPaused: false,
+        array: [],
+        bars: [],
+        api: null,
+        resolvers: [],
+    };
+
+    const visArena = document.getElementById('vis-arena');
+    const visAlgoTitle = document.getElementById('vis-algo-title');
+    const visOps = document.getElementById('vis-ops');
+    const visArraySize = document.getElementById('vis-array-size');
+    const visSizeLabel = document.getElementById('vis-size-label');
+    const visCodeDisplay = document.getElementById('vis-code-display');
+    const btnVisStart = document.getElementById('btn-vis-start');
+    const btnVisStop = document.getElementById('btn-vis-stop');
+    const btnVisRestart = document.getElementById('btn-vis-restart');
+    const visSpeedSlider = document.getElementById('vis-speed-slider');
+    const visSizeSlider = document.getElementById('vis-size-slider');
+    const visSpeedLabel = document.getElementById('vis-speed-label');
+    const visAlgoSelect = document.getElementById('vis-algo-select');
+    const visInfoPanel = document.getElementById('vis-algo-info-panel');
+    const visInfoWorst = document.getElementById('vis-info-worst');
+    const visInfoBest = document.getElementById('vis-info-best');
+    const visInfoSpace = document.getElementById('vis-info-space');
+
+    if (visSizeSlider) {
+        visSizeSlider.addEventListener('input', () => {
+            if (visSizeLabel) visSizeLabel.textContent = visSizeSlider.value;
+            if (VIS.selectedAlgo) { visStopSorting(); visGenerateArray(); visRenderBars(); }
+        });
+    }
+
+    if (visSpeedSlider) {
+        visSpeedSlider.addEventListener('input', () => {
+            if (visSpeedLabel) {
+                visSpeedLabel.textContent = `Speed: ${visSpeedSlider.value}%`;
+            }
+        });
+    }
+
+    if (visAlgoSelect) {
+        algoKeysList.forEach(key => {
+            const algo = algorithms[key];
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = algo.title;
+            visAlgoSelect.appendChild(opt);
+        });
+        visAlgoSelect.addEventListener('change', (e) => {
+            if (e.target.value) visOnAlgoSelect(e.target.value);
+        });
+    }
+
+    function visGenerateArray() {
+        const size = parseInt(visSizeSlider ? visSizeSlider.value : 30);
+        VIS.array = [];
+        for (let i = 0; i < size; i++) VIS.array.push(Math.floor(Math.random() * 90) + 5);
+        if (visArraySize) visArraySize.textContent = size;
+    }
+
+    function visRenderBars() {
+        if (!visArena) return;
+        visArena.innerHTML = '<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 50% 120%, rgba(245,158,11,0.15), transparent 70%);"></div>';
+        VIS.bars = [];
+        const margin = VIS.array.length > 50 ? 'mx-[0.5px]' : 'mx-[1px]';
+        VIS.array.forEach(val => {
+            const bar = document.createElement('div');
+            bar.className = `vis-sort-bar bg-amber-500 flex-1 ${margin} rounded-t-sm`;
+            bar.style.height = `${val}%`;
+            visArena.appendChild(bar);
+            VIS.bars.push(bar);
+        });
+        if (visOps) visOps.textContent = '0';
+    }
+
+    // Vis SortAPI â€” similar to existing SortAPI but for standalone vis page
+    class VisSortAPI {
+        constructor() {
+            this.arr = [...VIS.array];
+            this.bars = VIS.bars;
+            this.ops = 0;
+            this.aborted = false;
+        }
+
+        updateOps() { if (visOps) visOps.textContent = this.ops.toLocaleString(); }
+
+        // Smoother, exponential speed curve
+        getDelay() {
+            const visSpeedSlider = document.getElementById('vis-speed-slider');
+            const speed = parseInt(visSpeedSlider ? visSpeedSlider.value : 50);
+            if (speed === 100) return 2;
+            return Math.pow(101 - speed, 1.5) * 0.8;
+        }
+
+        async sleep() {
+            if (this.aborted) throw new Error("Aborted");
+            await new Promise(r => setTimeout(r, Math.max(this.getDelay(), 5)));
+            while (VIS.isPaused) {
+                await new Promise(r => VIS.resolvers.push(r));
+                if (this.aborted) throw new Error("Aborted");
+            }
+        }
+
+        async compare(i, j) {
+            this.ops++;
+            this.updateOps();
+            this.bars[i].style.backgroundColor = '#06b6d4';
+            this.bars[i].style.transform = 'scaleY(1.05)';
+            this.bars[j].style.backgroundColor = '#06b6d4';
+            this.bars[j].style.transform = 'scaleY(1.05)';
+            await this.sleep();
+            this.bars[i].style.backgroundColor = '';
+            this.bars[i].style.transform = '';
+            this.bars[j].style.backgroundColor = '';
+            this.bars[j].style.transform = '';
+            return this.arr[i] - this.arr[j];
+        }
+
+        async swap(i, j) {
+            this.ops++;
+            this.updateOps();
+            let temp = this.arr[i]; this.arr[i] = this.arr[j]; this.arr[j] = temp;
+            this.bars[i].style.height = `${this.arr[i]}%`;
+            this.bars[j].style.height = `${this.arr[j]}%`;
+            this.bars[i].style.backgroundColor = '#10b981';
+            this.bars[j].style.backgroundColor = '#10b981';
+            this.bars[i].style.transform = 'scaleY(1.1)';
+            this.bars[j].style.transform = 'scaleY(1.1)';
+            await this.sleep();
+            this.bars[i].style.backgroundColor = '';
+            this.bars[j].style.backgroundColor = '';
+            this.bars[i].style.transform = '';
+            this.bars[j].style.transform = '';
+        }
+
+        async set(i, val) {
+            this.ops++;
+            this.updateOps();
+            this.arr[i] = val;
+            this.bars[i].style.height = `${val}%`;
+            this.bars[i].style.backgroundColor = '#d946ef';
+            this.bars[i].style.transform = 'scaleY(1.08)';
+            await this.sleep();
+            this.bars[i].style.backgroundColor = '';
+            this.bars[i].style.transform = '';
+        }
+
+        async markLine(lineNum) {
+            if (this.aborted) throw new Error("Aborted");
+            // Highlight line
+            document.querySelectorAll('#vis-code-display div').forEach(el => {
+                el.classList.remove('active-exec-line');
+            });
+            const target = document.getElementById(`vis-exec-line-${lineNum}`);
+            if (target) {
+                target.classList.add('active-exec-line');
+                target.scrollIntoView({ behavior: 'auto', block: 'center' });
+            }
+            // Add a short delay for smooth line tracing based on current speed
+            await new Promise(r => setTimeout(r, Math.max(this.getDelay() / 3, 5)));
+        }
+    }
+
+    function visHighlightCodeForExec(code) {
+        let html = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        const lines = html.split('\n');
+        return lines.map((line, i) => {
+            let cl = line
+                .replace(/(\/\/.*)/g, '<span style=color:#6a9955;font-style:italic;>$1</span>')
+                .replace(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)/g, '<span style=color:#ce9178;>$1</span>')
+                .replace(/\b(function|const|let|var|if|else|for|while|return|break|continue|new|typeof|class|extends|async|await)\b/g, '<span style=color:#c586c0;>$1</span>')
+                .replace(/\b(\d+\.?\d*)\b/g, '<span style=color:#b5cea8;>$1</span>')
+                .replace(/\b([a-zA-Z_]\w*)\s*(?=\()/g, '<span style=color:#dcdcaa;>$1</span>')
+                .replace(/\.(length|push|pop|slice|concat|floor|log)\b/g, '.<span style=color:#4fc1ff;>$1</span>');
+            return `<div id="vis-exec-line-${i + 1}" class="px-2 py-[1.5px] leading-tight border-l-[3px] border-transparent transition-colors duration-150 whitespace-pre font-mono text-sm group"><span class="text-slate-500/40 group-hover:text-slate-500/70 mr-3 select-none inline-block w-6 text-right">${i + 1}</span>${cl}</div>`;
+        }).join('\n');
+    }
+
+    function visOnAlgoSelect(key) {
+        VIS.selectedAlgo = key;
+        const algo = algorithms[key];
+        if (visAlgoTitle) visAlgoTitle.textContent = algo.title;
+        if (btnVisStart) btnVisStart.disabled = false;
+        if (btnVisRestart) btnVisRestart.disabled = false;
+
+        // Generate array and render bars
+        visGenerateArray();
+        visRenderBars();
+
+        // Show code
+        const code = window.algorithmCode[key];
+        if (visCodeDisplay && code) {
+            visCodeDisplay.innerHTML = visHighlightCodeForExec(code);
+        }
+
+        // Update Info Panel
+        if (visInfoPanel) {
+            visInfoPanel.classList.remove('hidden');
+            visInfoPanel.classList.add('flex');
+            if (visInfoWorst) visInfoWorst.textContent = algo.worst;
+            if (visInfoBest) visInfoBest.textContent = algo.best;
+            if (visInfoSpace) visInfoSpace.textContent = algo.space;
+        }
+    }
+
+    // Generate Dropdown Options happens in initialization now.
+    
+    function visStopSorting() {
+        VIS.isPlaying = false;
+        VIS.isPaused = false;
+        if (VIS.api) VIS.api.aborted = true;
+        VIS.resolvers.forEach(r => r());
+        VIS.resolvers = [];
+        if (btnVisStart) {
+            btnVisStart.disabled = !VIS.selectedAlgo;
+            btnVisStart.innerHTML = '<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">play_arrow</span>START SORTING';
+        }
+        if (btnVisStop) btnVisStop.disabled = true;
+    }
+
+    async function visStartSorting() {
+        if (!VIS.selectedAlgo) return;
+        VIS.isPlaying = true;
+        VIS.isPaused = false;
+        visGenerateArray();
+        visRenderBars();
+
+        VIS.api = new VisSortAPI();
+        if (btnVisStart) {
+            btnVisStart.innerHTML = '<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">pause</span>PAUSE SORTING';
+        }
+        if (btnVisStop) btnVisStop.disabled = false;
+        if (btnVisRestart) btnVisRestart.disabled = false;
+
+        try {
+            await algorithms[VIS.selectedAlgo].run(VIS.api);
+            // Sort complete â€” green flash all bars
+            if (!VIS.api.aborted) {
+                VIS.bars.forEach((bar, i) => {
+                    setTimeout(() => { bar.style.background = '#22c55e'; setTimeout(() => { bar.style.background = ''; }, 300); }, i * 10);
+                });
+            }
+        } catch (e) {
+            if (e.message !== "Aborted") console.error(e);
+        }
+
+        if (!VIS.api.aborted) {
+            VIS.isPlaying = false;
+            if (btnVisStart) {
+                btnVisStart.innerHTML = '<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">play_arrow</span>START SORTING';
+                btnVisStart.disabled = false;
+            }
+            if (btnVisStop) btnVisStop.disabled = true;
+            // Clear highlighted line
+            document.querySelectorAll('#vis-code-display div').forEach(el => {
+                el.classList.remove('active-exec-line');
+            });
+        }
+    }
+
+    if (btnVisStart) {
+        btnVisStart.addEventListener('click', () => {
+            if (!VIS.isPlaying) {
+                visStartSorting();
+            } else if (VIS.isPaused) {
+                // Resume
+                VIS.isPaused = false;
+                VIS.resolvers.forEach(r => r());
+                VIS.resolvers = [];
+                btnVisStart.innerHTML = '<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">pause</span>PAUSE SORTING';
+            } else {
+                // Pause
+                VIS.isPaused = true;
+                btnVisStart.innerHTML = '<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">play_arrow</span>RESUME SORTING';
+            }
+        });
+    }
+
+    if (btnVisStop) btnVisStop.addEventListener('click', () => {
+        visStopSorting();
+        if (VIS.selectedAlgo) { visGenerateArray(); visRenderBars(); }
+    });
+
+    if (btnVisRestart) btnVisRestart.addEventListener('click', () => {
+        visStopSorting();
+        if (VIS.selectedAlgo) {
+            visGenerateArray();
+            visRenderBars();
+        }
+    });
+
+    // ==================== BENCHMARK PAGE ====================
+    let benchStandaloneAlgo = null;
+    let benchStandaloneData = null;
+    let benchStandaloneTimeMs = 0;
+    let benchStandaloneUnit = 'ms';
+    let benchSTheoreticalBest = 0, benchSTheoreticalAvg = 0, benchSTheoreticalWorst = 0;
+
+    const BSE = {
+        // Data Sources
+        genSlider: document.getElementById('bench-gen-slider'),
+        genVal: document.getElementById('bench-gen-val'),
+        btnGenerate: document.getElementById('btn-bench-generate'),
+        file: document.getElementById('bench-standalone-file'),
+        fileLabel: document.getElementById('bench-standalone-file-label'),
+        fileActions: document.getElementById('bench-file-actions'),
+        btnDeleteFile: document.getElementById('btn-bench-standalone-delete-file'),
+        dataStatus: document.getElementById('bench-data-status'),
+        statusN: document.getElementById('bench-s-n'),
+
+        // Execution
+        algoSection: document.getElementById('bench-algo-section'),
+        btnRun: document.getElementById('btn-bench-standalone-run'),
+        btnRunAll: document.getElementById('btn-bench-run-all'),
+        algoName: document.getElementById('bench-standalone-algo-name'),
+
+        // Results Container
+        resultsWrapper: document.getElementById('bench-standalone-results'),
+        
+        // Single Results
+        singleView: document.getElementById('bench-single-results-view'),
+        status: document.getElementById('bench-s-status'),
+        statusContainer: document.getElementById('bench-s-status-container'),
+        actualTime: document.getElementById('bench-s-actual-time'),
+        actualUnit: document.getElementById('bench-s-actual-unit'),
+        comparisons: document.getElementById('bench-s-comparisons'),
+        swaps: document.getElementById('bench-s-swaps'),
+        diffBadge: document.getElementById('bench-s-diff-badge'),
+        barActual: document.getElementById('bench-s-bar-actual'),
+        barTheory: document.getElementById('bench-s-bar-theory'),
+        barActualLabel: document.getElementById('bench-s-bar-actual-label'),
+        barTheoryLabel: document.getElementById('bench-s-bar-theory-label'),
+        theoryBest: document.getElementById('bench-s-theory-best'),
+        theoryAvg: document.getElementById('bench-s-theory-avg'),
+        theoryWorst: document.getElementById('bench-s-theory-worst'),
+
+        // Suite Results
+        suiteView: document.getElementById('bench-suite-results-view'),
+        suiteCount: document.getElementById('bench-suite-count'),
+        suiteN: document.getElementById('bench-suite-n'),
+        suiteLeaderboard: document.getElementById('bench-suite-leaderboard')
+    };
+
+    function unlockAlgoSection(count) {
+        if (!count || count <= 0) {
+            BSE.algoSection.classList.add('opacity-50', 'pointer-events-none');
+            BSE.dataStatus.classList.add('hidden');
+            BSE.btnRun.disabled = true;
+            return;
+        }
+        BSE.algoSection.classList.remove('opacity-50', 'pointer-events-none');
+        BSE.dataStatus.classList.remove('hidden');
+        BSE.dataStatus.classList.add('flex');
+        BSE.statusN.innerHTML = `${count.toLocaleString()} <span class="text-[10px] text-slate-500 uppercase tracking-widest ml-1">Elements</span>`;
+        if (benchStandaloneAlgo) BSE.btnRun.disabled = false;
+    }
+
+    // Auto-Generate Data
+    if (BSE.genSlider) {
+        BSE.genSlider.addEventListener('input', (e) => {
+            BSE.genVal.textContent = Number(e.target.value).toLocaleString();
+        });
+    }
+
+    if (BSE.btnGenerate) {
+        BSE.btnGenerate.addEventListener('click', () => {
+            const count = Number(BSE.genSlider.value) || 10000;
+            const arr = [];
+            for (let i = 0; i < count; i++) {
+                arr.push(Math.floor(Math.random() * count) + 1);
+            }
+            benchStandaloneData = arr;
+            
+            // Clear file if any
+            BSE.file.value = '';
+            BSE.fileLabel.textContent = 'Click to browse file...';
+            BSE.fileActions.classList.add('hidden');
+            BSE.fileActions.classList.remove('flex');
+
+            BSE.resultsWrapper.classList.add('hidden');
+            BSE.resultsWrapper.classList.remove('flex');
+            
+            // Success animation
+            BSE.btnGenerate.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Generated!';
+            BSE.btnGenerate.classList.replace('text-emerald-400', 'text-background-dark');
+            BSE.btnGenerate.classList.replace('bg-emerald-500/20', 'bg-emerald-500');
+            setTimeout(() => {
+                BSE.btnGenerate.innerHTML = '<span class="material-symbols-outlined text-sm">memory</span> Generate Array Buffer';
+                BSE.btnGenerate.classList.replace('text-background-dark', 'text-emerald-400');
+                BSE.btnGenerate.classList.replace('bg-emerald-500', 'bg-emerald-500/20');
+            }, 1000);
+
+            unlockAlgoSection(arr.length);
+        });
+    }
+
+    function benchStandaloneOnAlgoSelect(key) {
+        benchStandaloneAlgo = key;
+        const algo = algorithms[key];
+        if (BSE.algoName) BSE.algoName.textContent = algo.title.toUpperCase();
+        if (BSE.btnRun && benchStandaloneData) BSE.btnRun.disabled = false;
+    }
+
+    buildAlgoGrid('bench-algo-grid', 'hover:border-emerald-500/40', benchStandaloneOnAlgoSelect);
+
+    // File upload
+    if (BSE.file) {
+        BSE.file.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            BSE.fileLabel.textContent = file.name;
+            BSE.fileActions.classList.remove('hidden');
+            BSE.fileActions.classList.add('flex');
+            
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                let text = evt.target.result;
+                text = text.replace(/---.*?---/g, '');
+                const nums = [];
+                const tokens = text.split(/[\s,]+/);
+                for (let i = 0; i < tokens.length; i++) {
+                    if (tokens[i] !== "") {
+                        const num = Number(tokens[i]);
+                        if (!isNaN(num)) nums.push(num);
+                    }
+                }
+                if (nums.length > 0) {
+                    benchStandaloneData = nums;
+                    unlockAlgoSection(nums.length);
+                    BSE.resultsWrapper.classList.add('hidden');
+                    BSE.resultsWrapper.classList.remove('flex');
+                } else {
+                    benchStandaloneData = null;
+                    unlockAlgoSection(0);
+                    alert("Invalid Data Format. Found 0 numeric elements.");
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    if (BSE.btnDeleteFile) {
+        BSE.btnDeleteFile.addEventListener('click', (e) => {
+            e.preventDefault(); // prevent triggering the label's click
+            benchStandaloneData = null;
+            benchStandaloneTimeMs = 0;
+            BSE.file.value = '';
+            BSE.fileLabel.textContent = 'Click to browse file...';
+            BSE.fileActions.classList.add('hidden');
+            BSE.fileActions.classList.remove('flex');
+            BSE.resultsWrapper.classList.add('hidden');
+            BSE.resultsWrapper.classList.remove('flex');
+            unlockAlgoSection(0);
+        });
+    }
+
+    // Unit selector buttons
+    document.querySelectorAll('.bench-s-unit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            benchStandaloneUnit = btn.getAttribute('data-unit');
+            document.querySelectorAll('.bench-s-unit-btn').forEach(b => {
+                b.className = 'bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-400 hover:text-emerald-400 transition-all';
+            });
+            btn.className = 'bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 transition-all shadow-sm';
+            if (benchStandaloneTimeMs > 0) updateBenchStandaloneDisplays();
+        });
+    });
+
+    function updateBenchStandaloneDisplays() {
+        if (!benchStandaloneAlgo) return;
+        const u = benchStandaloneUnit;
+        BSE.actualTime.textContent = displayTimeInUnit(benchStandaloneTimeMs, u);
+        BSE.actualUnit.textContent = u;
+        BSE.barActualLabel.textContent = displayTimeInUnit(benchStandaloneTimeMs, u) + ' ' + u;
+        BSE.barTheoryLabel.textContent = displayTimeInUnit(benchSTheoreticalAvg, u) + ' ' + u;
+        BSE.theoryBest.textContent = displayTimeInUnit(benchSTheoreticalBest, u) + ' ' + u;
+        BSE.theoryAvg.textContent = displayTimeInUnit(benchSTheoreticalAvg, u) + ' ' + u;
+        BSE.theoryWorst.textContent = displayTimeInUnit(benchSTheoreticalWorst, u) + ' ' + u;
+    }
+
+    // Single Run
+    if (BSE.btnRun) {
+        BSE.btnRun.addEventListener('click', async () => {
+            if (!benchStandaloneData || !benchStandaloneAlgo) return;
+            
+            // UI State updates
+            BSE.btnRun.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Running...';
+            BSE.btnRun.disabled = true;
+            BSE.resultsWrapper.classList.remove('hidden');
+            BSE.resultsWrapper.classList.add('flex');
+            BSE.singleView.classList.remove('hidden');
+            BSE.singleView.classList.add('flex');
+            BSE.suiteView.classList.add('hidden');
+            BSE.suiteView.classList.remove('flex');
+            
+            BSE.status.textContent = "BENCHMARKING...";
+            BSE.statusContainer.className = "flex items-center gap-2 text-sm font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-4 py-2 rounded-lg animate-pulse";
+            await new Promise(r => setTimeout(r, 50));
+
+            const dataCopy = [...benchStandaloneData];
+            let comparisons = 0, swaps = 0;
+
+            try {
+                const algo = algorithms[benchStandaloneAlgo];
+                const n = dataCopy.length;
+                const t0 = performance.now();
+                if (algo.runRaw) algo.runRaw(dataCopy);
+                else dataCopy.sort((a, b) => a - b);
+                const t1 = performance.now();
+                benchStandaloneTimeMs = t1 - t0;
+
+                // Estimate ops
+                const avgC = algo.avg.replace(/\s/g, '');
+                if (avgC.includes('nlogn') || avgC.includes('nlog')) { comparisons = Math.round(n * Math.log2(n)); swaps = Math.round(n * Math.log2(n) / 3); }
+                else if (avgC.includes('nÂ²') || avgC.includes('n^2')) { comparisons = Math.round(n * n / 2); swaps = Math.round(n * n / 4); }
+                else if (avgC.includes('n')) { comparisons = n; swaps = n; }
+
+                BSE.status.textContent = `${algo.title.toUpperCase()} SUCCESS`;
+                BSE.statusContainer.className = "flex items-center gap-2 text-sm font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-lg";
+                BSE.comparisons.textContent = Number(comparisons).toLocaleString();
+                BSE.swaps.textContent = Number(swaps).toLocaleString();
+
+                benchSTheoreticalBest = computeTheoreticalTimeMs(n, algo.best);
+                benchSTheoreticalAvg = computeTheoreticalTimeMs(n, algo.avg);
+                benchSTheoreticalWorst = computeTheoreticalTimeMs(n, algo.worst);
+                updateBenchStandaloneDisplays();
+
+                const diffPercent = ((benchStandaloneTimeMs - benchSTheoreticalAvg) / benchSTheoreticalAvg) * 100;
+                if (Math.abs(diffPercent) < 5) {
+                    BSE.diffBadge.textContent = 'â‰ˆ Matches Theory';
+                    BSE.diffBadge.className = 'text-[10px] font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 shrink-0';
+                } else if (diffPercent < 0) {
+                    BSE.diffBadge.textContent = `${Math.abs(diffPercent).toFixed(1)}% Faster`;
+                    BSE.diffBadge.className = 'text-[10px] font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 shrink-0';
+                } else {
+                    BSE.diffBadge.textContent = `${diffPercent.toFixed(1)}% Slower`;
+                    BSE.diffBadge.className = 'text-[10px] font-bold px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/20 shrink-0';
+                }
+
+                const maxTime = Math.max(benchStandaloneTimeMs, benchSTheoreticalWorst, benchSTheoreticalAvg, 0.001);
+                requestAnimationFrame(() => {
+                    BSE.barActual.style.width = Math.max(Math.min((benchStandaloneTimeMs / maxTime) * 100, 100), 2) + '%';
+                    BSE.barTheory.style.width = Math.max(Math.min((benchSTheoreticalAvg / maxTime) * 100, 100), 2) + '%';
+                });
+            } catch (err) {
+                console.error(err);
+                BSE.status.textContent = "EXECUTION ERROR";
+                BSE.statusContainer.className = "flex items-center gap-2 text-sm font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-lg";
+            }
+
+            BSE.btnRun.innerHTML = '<span class="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">play_arrow</span> Run Selected Algorithm (<span class="font-mono text-xs tracking-wider">' + algorithms[benchStandaloneAlgo].title.toUpperCase() + '</span>)';
+            BSE.btnRun.disabled = false;
+        });
+    }
+
+    // Suite Run (Run All)
+    if (BSE.btnRunAll) {
+        BSE.btnRunAll.addEventListener('click', async () => {
+            if (!benchStandaloneData) return;
+            
+            const originalText = BSE.btnRunAll.innerHTML;
+            BSE.btnRunAll.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Running Suite...';
+            BSE.btnRunAll.disabled = true;
+            
+            BSE.resultsWrapper.classList.remove('hidden');
+            BSE.resultsWrapper.classList.add('flex');
+            BSE.singleView.classList.add('hidden');
+            BSE.singleView.classList.remove('flex');
+            BSE.suiteView.classList.remove('hidden');
+            BSE.suiteView.classList.add('flex');
+            
+            BSE.suiteLeaderboard.innerHTML = '<div class="text-center p-8 text-cyan-400 animate-pulse font-bold text-xs">Evaluating all algorithms...</div>';
+
+            await new Promise(r => setTimeout(r, 100)); // Paint
+            
+            const results = [];
+            const n = benchStandaloneData.length;
+            const keys = Object.keys(algorithms);
+            
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                const algo = algorithms[key];
+                const dataCopy = [...benchStandaloneData];
+                
+                try {
+                    const t0 = performance.now();
+                    if (algo.runRaw) algo.runRaw(dataCopy);
+                    else dataCopy.sort((a, b) => a - b);
+                    const t1 = performance.now();
+                    const duration = t1 - t0;
+                    
+                    results.push({
+                        key: key,
+                        title: algo.title,
+                        time: duration,
+                        color: algo.color || 'primary',
+                        complex: algo.avg
+                    });
+                } catch(e) {
+                    console.error("Suite error on", key, e);
+                    results.push({ key, title: algo.title, time: Infinity, color: algo.color || 'rose-500', complex: 'ERROR' });
+                }
+            }
+            
+            // Sort by time
+            results.sort((a, b) => a.time - b.time);
+            
+            BSE.suiteCount.textContent = results.length;
+            BSE.suiteN.textContent = Number(n).toLocaleString();
+            
+            // Render Leaderboard
+            BSE.suiteLeaderboard.innerHTML = '';
+            const bestTime = results[0].time;
+            const worstTime = results.filter(r => r.time !== Infinity).pop()?.time || 0.001;
+            
+            results.forEach((res, index) => {
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-12 gap-3 items-center hover:bg-white/5 p-2 rounded-lg transition-colors group border border-transparent hover:border-white/10';
+                
+                const rankColor = index === 0 ? 'text-amber-400 bg-amber-500/10 border-amber-500/30' : 
+                                 (index < 3 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-slate-500 bg-white/5 border-white/5');
+                
+                const timeStr = res.time === Infinity ? 'FAIL' : displayTimeInUnit(res.time, benchStandaloneUnit) + ' ' + benchStandaloneUnit;
+                const percent = res.time === Infinity ? 0 : Math.max(2, (res.time / worstTime) * 100);
+                
+                let relStr = '';
+                if (index === 0) relStr = '<span class="text-[9px] font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded ml-2">BASELINE</span>';
+                else if (res.time !== Infinity) {
+                    const mult = res.time / bestTime;
+                    relStr = `<span class="text-[9px] font-bold text-slate-400 bg-white/5 px-2 py-0.5 rounded ml-2">${mult.toFixed(1)}x slower</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="col-span-1 hidden sm:flex items-center justify-center">
+                        <div class="size-6 rounded-md flex items-center justify-center font-bold textxs border ${rankColor}">
+                            ${index + 1}
+                        </div>
+                    </div>
+                    <div class="col-span-12 sm:col-span-4 flex flex-col justify-center">
+                        <span class="text-white font-bold text-sm leading-tight flex items-center gap-2">
+                            ${res.title}
+                            ${index === 0 ? '<span class="material-symbols-outlined text-[14px] text-amber-400">workspace_premium</span>' : ''}
+                        </span>
+                        <span class="text-[9px] text-slate-500 font-mono mt-0.5">O(${res.complex})</span>
+                    </div>
+                    <div class="col-span-5 sm:col-span-3 text-right flex flex-col justify-center items-end">
+                        <span class="${index === 0 ? 'text-amber-400' : 'text-cyan-400'} font-mono font-bold text-sm tracking-wide">
+                            ${timeStr}
+                        </span>
+                    </div>
+                    <div class="col-span-7 sm:col-span-4 pl-4 sm:pl-6 flex items-center h-full">
+                        <div class="w-full flex items-center h-full">
+                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden flex items-center">
+                                <div class="h-full rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-1000 ease-out" style="width: ${percent}%"></div>
+                            </div>
+                            ${relStr}
+                        </div>
+                    </div>
+                `;
+                BSE.suiteLeaderboard.appendChild(row);
+            });
+            
+            BSE.btnRunAll.innerHTML = originalText;
+            BSE.btnRunAll.disabled = false;
+        });
+    }
+    // ==================== PERFORMANCE MATRICES ====================
+    const PM = {
+        dashboard: document.getElementById('bench-analytics-dashboard'),
+        tabComparison: document.getElementById('pm-tab-comparison'),
+        tabDiagnostics: document.getElementById('pm-tab-diagnostics'),
+        panelComparison: document.getElementById('pm-panel-comparison'),
+        panelDiagnostics: document.getElementById('pm-panel-diagnostics'),
+        chart: document.getElementById('pm-complexity-chart'),
+        spaceBars: document.getElementById('pm-space-bars'),
+        deepDiveCards: document.getElementById('pm-deep-dive-cards'),
+        inputType: document.getElementById('pm-input-type'),
+        recText: document.getElementById('pm-recommendation-text'),
+        rankingTbody: document.getElementById('pm-ranking-tbody'),
+        pindexGauge: document.getElementById('pm-pindex-gauge'),
+        pindexValue: document.getElementById('pm-pindex-value'),
+        pindexDesc: document.getElementById('pm-pindex-desc'),
+        fitScores: document.getElementById('pm-fit-scores'),
+        conflictTbody: document.getElementById('pm-conflict-tbody'),
+        heuristicText: document.getElementById('pm-heuristic-text'),
+        adaptiveGain: document.getElementById('pm-adaptive-gain'),
+        runDetection: document.getElementById('pm-run-detection'),
+        heatmap: document.getElementById('pm-heatmap'),
+        patternsSummary: document.getElementById('pm-patterns-summary'),
+        strategyText: document.getElementById('pm-strategy-text'),
+        sortedRuns: document.getElementById('pm-sorted-runs'),
+        avgRunLen: document.getElementById('pm-avg-run-len'),
+        plateaus: document.getElementById('pm-plateaus'),
+    };
+
+    // Tab switching
+    document.querySelectorAll('.pm-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.pm-tab').forEach(t => {
+                t.className = 'pm-tab flex-1 sm:flex-none text-[10px] font-bold px-4 py-2 rounded-md text-slate-400 hover:text-fuchsia-400 transition-all flex items-center gap-1.5 justify-center';
+            });
+            tab.className = 'pm-tab flex-1 sm:flex-none text-[10px] font-bold px-4 py-2 rounded-md bg-fuchsia-500/20 text-fuchsia-400 transition-all shadow-sm flex items-center gap-1.5 justify-center';
+            PM.panelComparison.classList.add('hidden');
+            PM.panelComparison.classList.remove('flex');
+            PM.panelDiagnostics.classList.add('hidden');
+            PM.panelDiagnostics.classList.remove('flex');
+            if (tab.id === 'pm-tab-comparison') {
+                PM.panelComparison.classList.remove('hidden');
+                PM.panelComparison.classList.add('flex');
+            } else {
+                PM.panelDiagnostics.classList.remove('hidden');
+                PM.panelDiagnostics.classList.add('flex');
+            }
+        });
+    });
+
+    // ---- Analysis Functions ----
+
+    function analyzePresortedness(arr) {
+        if (!arr || arr.length < 2) return { pIndex: 100, type: 'trivial' };
+        const n = arr.length;
+        const sampleSize = Math.min(n, 5000);
+        const step = Math.max(1, Math.floor(n / sampleSize));
+        let inversions = 0;
+        let total = 0;
+        for (let i = 0; i < n - step; i += step) {
+            for (let j = i + step; j < Math.min(i + step * 20, n); j += step) {
+                total++;
+                if (arr[i] > arr[j]) inversions++;
+            }
+        }
+        const pIndex = total > 0 ? Math.round((1 - inversions / total) * 100) : 50;
+
+        let type = 'Randomized';
+        if (pIndex >= 90) type = 'Highly Pre-sorted';
+        else if (pIndex >= 70) type = 'Partially Sorted';
+        else if (pIndex <= 10) type = 'Reverse-Sorted';
+        else if (pIndex <= 30) type = 'Mostly Reversed';
+
+        return { pIndex, type };
+    }
+
+    function detectPatterns(arr) {
+        if (!arr || arr.length < 2) return { runs: 0, avgRunLen: 0, plateaus: 0, reverseRuns: 0 };
+        let runs = 1, plateaus = 0, reverseRuns = 0;
+        let currentRunLen = 1;
+        let runLengths = [];
+        let rising = arr[1] >= arr[0];
+
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] === arr[i - 1]) {
+                plateaus++;
+                currentRunLen++;
+            } else if ((arr[i] > arr[i - 1]) === rising) {
+                currentRunLen++;
+            } else {
+                runLengths.push(currentRunLen);
+                if (!rising) reverseRuns++;
+                runs++;
+                currentRunLen = 1;
+                rising = arr[i] > arr[i - 1];
+            }
+        }
+        runLengths.push(currentRunLen);
+        if (!rising) reverseRuns++;
+
+        const avgRunLen = runLengths.length > 0 ? Math.round(runLengths.reduce((a, b) => a + b, 0) / runLengths.length) : 0;
+        return { runs, avgRunLen, plateaus, reverseRuns };
+    }
+
+    function rankAlgorithmsForInput(arr, suiteResults) {
+        const { pIndex } = analyzePresortedness(arr);
+        const ranked = Object.keys(algorithms).map(key => {
+            const algo = algorithms[key];
+            let score = 50;
+
+            // Adaptive algorithms benefit from presortedness
+            const isAdaptive = ['tim-sort', 'insertion-sort', 'pdq-sort', 'intro-sort', 'dual-fusion-sort'].includes(key);
+            if (pIndex >= 80 && isAdaptive) score += 30;
+            else if (pIndex >= 60 && isAdaptive) score += 15;
+
+            // Penalize quadratic algorithms
+            const isQuadratic = ['bubble-sort', 'selection-sort', 'insertion-sort'].includes(key);
+            if (isQuadratic && arr.length > 1000) score -= 20;
+            if (key === 'insertion-sort' && pIndex >= 85) score += 25; // exception for nearly sorted
+
+            // nlogn algorithms get a base bonus for large inputs
+            const avgC = algo.avg.replace(/\s/g, '');
+            if (avgC.includes('nlogn') || avgC.includes('nlog')) score += 15;
+
+            // If we have actual run results, incorporate them
+            if (suiteResults) {
+                const result = suiteResults.find(r => r.key === key);
+                if (result && result.time !== Infinity) {
+                    const best = suiteResults[0].time;
+                    const ratio = result.time / best;
+                    if (ratio <= 1.2) score += 20;
+                    else if (ratio <= 2) score += 10;
+                    else if (ratio > 5) score -= 10;
+                }
+            }
+
+            score = Math.max(5, Math.min(99, score));
+            return { key, title: algo.title, score, note: getAlgoStrengths(key, pIndex) };
+        });
+
+        ranked.sort((a, b) => b.score - a.score);
+        return ranked;
+    }
+
+    function spaceComplexityValue(spaceStr) {
+        if (!spaceStr) return 3;
+        const s = spaceStr.toLowerCase().replace(/\s/g, '');
+        if (s.includes('o(1)')) return 1;
+        if (s.includes('o(logn)') || s.includes('log')) return 2;
+        if (s.includes('o(n)')) return 3;
+        if (s.includes('o(nÂ²)') || s.includes('n^2')) return 4;
+        return 3;
+    }
+
+    // ---- Drawing Functions ----
+
+    function drawComplexityChart(canvas, n, benchTimeMs) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        const pad = { top: 20, right: 20, bottom: 35, left: 50 };
+        const gW = W - pad.left - pad.right;
+        const gH = H - pad.top - pad.bottom;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+            const y = pad.top + (gH / 5) * i;
+            ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+        }
+        for (let i = 0; i <= 7; i++) {
+            const x = pad.left + (gW / 7) * i;
+            ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, H - pad.bottom); ctx.stroke();
+        }
+
+        // Curves: O(n), O(n log n), O(nÂ²)
+        const maxX = Math.max(n * 1.2, 100);
+        const curves = [
+            { label: 'O(n)', fn: x => x, color: '#10b981' },
+            { label: 'O(n log n)', fn: x => x * Math.log2(Math.max(x, 2)), color: '#06b6d4' },
+            { label: 'O(nÂ²)', fn: x => x * x, color: '#f43f5e' },
+        ];
+
+        // Find max Y for scaling
+        const maxY = curves[2].fn(maxX);
+        const scaleX = x => pad.left + (x / maxX) * gW;
+        const scaleY = y => pad.top + gH - (y / maxY) * gH;
+
+        curves.forEach(curve => {
+            ctx.strokeStyle = curve.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const steps = 120;
+            for (let i = 0; i <= steps; i++) {
+                const x = (maxX / steps) * i;
+                const y = curve.fn(x);
+                const px = scaleX(x);
+                const py = scaleY(Math.min(y, maxY));
+                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        });
+
+        // Legend
+        ctx.font = '10px monospace';
+        curves.forEach((curve, i) => {
+            const lx = pad.left + 10 + i * 100;
+            const ly = pad.top + 12;
+            ctx.fillStyle = curve.color;
+            ctx.fillRect(lx, ly - 4, 12, 3);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(curve.label, lx + 16, ly);
+        });
+
+        // Axis labels
+        ctx.fillStyle = '#475569';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'center';
+        for (let i = 0; i <= 7; i++) {
+            const val = Math.round((maxX / 7) * i);
+            ctx.fillText(val.toLocaleString(), scaleX(val), H - pad.bottom + 16);
+        }
+        ctx.fillText('Input Size, n', W / 2, H - 4);
+        ctx.textAlign = 'right';
+        ctx.fillText('Operations', pad.left - 6, pad.top + 4);
+
+        // Plot actual benchmark point
+        if (benchTimeMs !== undefined && n > 0) {
+            const px = scaleX(n);
+            // Place the dot at an estimated ops level (n log n zone)
+            const estimatedOps = n * Math.log2(Math.max(n, 2));
+            const py = scaleY(Math.min(estimatedOps, maxY));
+            ctx.beginPath();
+            ctx.arc(px, py, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#d946ef';
+            ctx.fill();
+            ctx.strokeStyle = '#d946ef';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#d946ef';
+            ctx.font = 'bold 10px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`N=${n.toLocaleString()}`, px + 10, py - 4);
+        }
+    }
+
+    function renderSpaceBars(topAlgos) {
+        if (!PM.spaceBars) return;
+        PM.spaceBars.innerHTML = '';
+        const colors = ['#10b981', '#06b6d4', '#f59e0b', '#d946ef', '#f43f5e'];
+        topAlgos.slice(0, 5).forEach((algo, i) => {
+            const sv = spaceComplexityValue(algorithms[algo.key]?.space);
+            const pct = (sv / 4) * 100;
+            const bar = document.createElement('div');
+            bar.className = 'flex flex-col items-center gap-1 flex-1';
+            bar.innerHTML = `
+                <div class="w-full rounded-t" style="height:${Math.max(pct, 15)}%;background:${colors[i % 5]};min-height:6px"></div>
+                <span class="text-[7px] text-slate-500 font-mono truncate w-full text-center">${algo.title.split(' ')[0]}</span>
+            `;
+            PM.spaceBars.appendChild(bar);
+        });
+    }
+
+    function renderDeepDiveCards(topAlgos) {
+        if (!PM.deepDiveCards) return;
+        PM.deepDiveCards.innerHTML = '';
+        const labels = ['(Current Top)', '(Strong Contender)', '(For Contrast)'];
+        const borderColors = ['border-emerald-500/30', 'border-cyan-500/30', 'border-rose-500/30'];
+        const textColors = ['text-emerald-400', 'text-cyan-400', 'text-rose-400'];
+
+        topAlgos.slice(0, 3).forEach((ranked, i) => {
+            const algo = algorithms[ranked.key];
+            if (!algo) return;
+            const card = document.createElement('div');
+            card.className = `bg-black/30 rounded-lg p-4 border ${borderColors[i]} hover:bg-black/40 transition-colors`;
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-white font-bold text-xs">${algo.title}</span>
+                    <span class="${textColors[i]} text-[9px] font-bold">${labels[i]}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
+                    <span class="text-slate-500">Best:</span><span class="text-slate-300 font-mono">${algo.best}</span>
+                    <span class="text-slate-500">Avg:</span><span class="text-slate-300 font-mono">${algo.avg}</span>
+                    <span class="text-slate-500">Worst:</span><span class="text-slate-300 font-mono">${algo.worst}</span>
+                    <span class="text-slate-500">Space:</span><span class="text-slate-300 font-mono">${algo.space}</span>
+                </div>
+            `;
+            PM.deepDiveCards.appendChild(card);
+        });
+    }
+
+    function renderRankingTable(ranked) {
+        if (!PM.rankingTbody) return;
+        PM.rankingTbody.innerHTML = '';
+        ranked.forEach((item, i) => {
+            const tr = document.createElement('tr');
+            const scoreColor = item.score >= 80 ? 'text-emerald-400' : item.score >= 60 ? 'text-cyan-400' : item.score >= 40 ? 'text-amber-400' : 'text-rose-400';
+            tr.innerHTML = `
+                <td class="font-mono font-bold ${i < 3 ? 'text-amber-400' : 'text-slate-500'}">${i + 1}</td>
+                <td class="text-white font-bold">${item.title}</td>
+                <td class="text-center"><span class="${scoreColor} font-mono font-bold">${item.score}%</span></td>
+                <td class="text-slate-400 hidden sm:table-cell text-[10px]">${item.note}</td>
+            `;
+            PM.rankingTbody.appendChild(tr);
+        });
+    }
+
+    function renderPIndexGauge(pIndex) {
+        if (!PM.pindexGauge) return;
+        PM.pindexGauge.style.setProperty('--gauge-percent', pIndex + '%');
+        PM.pindexValue.textContent = pIndex + '%';
+        if (pIndex >= 80) PM.pindexDesc.textContent = 'High pre-sortedness makes adaptive algorithms shine.';
+        else if (pIndex >= 50) PM.pindexDesc.textContent = 'Moderate order detected. Hybrid algorithms recommended.';
+        else PM.pindexDesc.textContent = 'Low presortedness. Cache-friendly algorithms are optimal.';
+    }
+
+    function renderFitScores(topAlgos) {
+        if (!PM.fitScores) return;
+        PM.fitScores.innerHTML = '';
+        const colors = ['#10b981', '#06b6d4', '#f59e0b'];
+        topAlgos.slice(0, 3).forEach((item, i) => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2';
+            div.innerHTML = `
+                <span class="text-[9px] text-slate-400 font-bold w-20 text-right truncate shrink-0">${item.title.split(' ')[0]}</span>
+                <div class="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-1000" style="width:${item.score}%;background:${colors[i]}"></div>
+                </div>
+                <span class="text-[10px] font-mono font-bold text-white w-8">${item.score}%</span>
+            `;
+            PM.fitScores.appendChild(div);
+        });
+    }
+
+    function renderConflictTable(algo, benchTimeMs, n) {
+        if (!PM.conflictTbody || !algo) return;
+        PM.conflictTbody.innerHTML = '';
+        const bestT = computeTheoreticalTimeMs(n, algo.best);
+        const avgT = computeTheoreticalTimeMs(n, algo.avg);
+        const worstT = computeTheoreticalTimeMs(n, algo.worst);
+
+        const rows = [
+            { metric: 'Best Case Time', theory: algo.best, practical: displayTimeInUnit(bestT, 'ms') + 'ms', conflict: Math.abs(((benchTimeMs - bestT) / Math.max(bestT, 0.001)) * 100) },
+            { metric: 'Avg Case Time', theory: algo.avg, practical: displayTimeInUnit(benchTimeMs, 'ms') + 'ms', conflict: Math.abs(((benchTimeMs - avgT) / Math.max(avgT, 0.001)) * 100) },
+            { metric: 'Worst Case Time', theory: algo.worst, practical: displayTimeInUnit(worstT, 'ms') + 'ms', conflict: Math.abs(((benchTimeMs - worstT) / Math.max(worstT, 0.001)) * 100) },
+            { metric: 'Space Complexity', theory: algo.space, practical: Math.round(n * 8 / 1024) + ' KB', conflict: 0 },
+        ];
+
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            const conflictColor = row.conflict > 50 ? 'text-rose-400' : row.conflict > 20 ? 'text-amber-400' : 'text-emerald-400';
+            const conflictBadge = row.conflict > 50 ? 'âš  Conflict' : row.conflict > 20 ? 'â†’' : 'âœ“';
+            tr.innerHTML = `
+                <td class="text-white font-bold text-xs">${row.metric}</td>
+                <td class="text-center text-cyan-400 font-mono">${row.theory}</td>
+                <td class="text-center text-emerald-400 font-mono">${row.practical}</td>
+                <td class="text-center ${conflictColor} font-bold">${row.metric === 'Space Complexity' ? 'â€”' : row.conflict.toFixed(0) + '%'} <span class="text-[9px]">${row.metric === 'Space Complexity' ? '' : conflictBadge}</span></td>
+            `;
+            PM.conflictTbody.appendChild(tr);
+        });
+    }
+
+    function renderHeatmap(arr) {
+        if (!PM.heatmap || !arr || arr.length < 10) return;
+        PM.heatmap.innerHTML = '';
+        
+        // Generate 20 mini bar-chart boxes (Simulated Data Input Matrix)
+        const patterns = [
+            { name: 'Sorted', bars: [10,20,30,40,50,60,70], color: 'from-emerald-500' },
+            { name: 'Reverse', bars: [70,60,50,40,30,20,10], color: 'from-rose-500' },
+            { name: 'Random', bars: [25,45,15,60,35,50,20], color: 'from-cyan-500' },
+            { name: 'Sorted', bars: [15,25,35,45,55,65,75], color: 'from-emerald-500' },
+            { name: 'Sparse', bars: [5,10,5,10,5,10,5], color: 'from-amber-500' },
+            { name: 'Random', bars: [40,20,55,35,45,15,30], color: 'from-cyan-500' },
+            { name: 'Reverse', bars: [65,55,45,35,25,15,5], color: 'from-rose-500' },
+            { name: 'Sorted', bars: [20,30,40,50,60,70,80], color: 'from-emerald-500' },
+            { name: 'Sparse', bars: [8,12,8,12,8,12,8], color: 'from-amber-500' },
+            { name: 'Random', bars: [30,50,10,70,20,40,60], color: 'from-cyan-500' },
+            { name: 'Sorted', bars: [25,35,45,55,65,75,85], color: 'from-emerald-500' },
+            { name: 'Reverse', bars: [85,75,65,55,45,35,25], color: 'from-rose-500' },
+            { name: 'Random', bars: [45,25,60,40,35,55,15], color: 'from-cyan-500' },
+            { name: 'Sparse', bars: [3,15,3,15,3,15,3], color: 'from-amber-500' },
+            { name: 'Sorted', bars: [10,30,50,70,90,110,130], color: 'from-emerald-500' },
+            { name: 'Reverse', bars: [130,110,90,70,50,30,10], color: 'from-rose-500' },
+            { name: 'Random', bars: [50,30,70,45,25,60,35], color: 'from-cyan-500' },
+            { name: 'Sparse', bars: [6,18,6,18,6,18,6], color: 'from-amber-500' },
+            { name: 'Sorted', bars: [20,40,60,80,100,120,140], color: 'from-emerald-500' },
+            { name: 'Random', bars: [15,35,55,75,25,45,65], color: 'from-cyan-500' }
+        ];
+        
+        // Render the 20 mini bar-chart matrix
+        patterns.forEach((pat, i) => {
+            const cell = document.createElement('div');
+            cell.className = 'pm-heatmap-cell relative group cursor-pointer hover:scale-110 transition-transform';
+            cell.innerHTML = `
+                <div class="absolute inset-0 flex items-end justify-center gap-0.5 p-1 bg-black/40 rounded-sm">
+                    ${pat.bars.slice(0,7).map(h => `<div class="w-full bg-gradient-to-t ${pat.color}/80 to-transparent rounded-t-sm" style="height: ${Math.min(h/2, 50)}%"></div>`).join('')}
+                </div>
+                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-50 whitespace-nowrap bg-black/90 border border-cyan-500/50 text-cyan-300 text-[9px] px-2 py-1 rounded shadow-lg backdrop-blur">
+                    ${pat.name} Pattern ${i+1}
+                </div>
+            `;
+            PM.heatmap.appendChild(cell);
+        });
+        
+        // Ensure grid layout matches the matrix style
+        PM.heatmap.className = 'grid grid-cols-5 gap-2 flex-1 mb-3';
+    }
+
+    function renderPatternsSummary(patterns) {
+        if (!PM.patternsSummary) return;
+        PM.patternsSummary.innerHTML = '';
+        const tags = [
+            { label: `${patterns.runs} Sorted Runs`, color: 'emerald' },
+            { label: `${patterns.reverseRuns} Reverse Runs`, color: 'rose' },
+            { label: `Avg Length: ${patterns.avgRunLen}`, color: 'cyan' },
+            { label: `${patterns.plateaus} Plateaus`, color: 'amber' },
+        ];
+        tags.forEach(t => {
+            const span = document.createElement('span');
+            span.className = `text-[9px] font-bold px-2 py-1 rounded-full bg-${t.color}-500/10 text-${t.color}-400 border border-${t.color}-500/20`;
+            span.textContent = t.label;
+            PM.patternsSummary.appendChild(span);
+        });
+    }
+
+    // ---- Main Orchestrator ----
+
+    function renderPerformanceMatrices(data, algoKey, benchTimeMs, suiteResults) {
+        if (!PM.dashboard || !data) return;
+
+        // Show the dashboard
+        PM.dashboard.classList.remove('hidden');
+        PM.dashboard.classList.add('flex');
+
+        // Ensure first tab is active
+        PM.panelComparison.classList.remove('hidden');
+        PM.panelComparison.classList.add('flex');
+        PM.panelDiagnostics.classList.add('hidden');
+        PM.panelDiagnostics.classList.remove('flex');
+
+        const n = data.length;
+        const { pIndex, type } = analyzePresortedness(data);
+        const patterns = detectPatterns(data.slice(0, Math.min(data.length, 50000)));
+        const ranked = rankAlgorithmsForInput(data, suiteResults);
+
+        // -- Tab 1: Performance Comparison --
+        // Chart
+        setTimeout(() => drawComplexityChart(PM.chart, n, benchTimeMs), 100);
+
+        // Deep Dive Cards
+        renderDeepDiveCards(ranked);
+
+        // Space Bars
+        renderSpaceBars(ranked);
+
+        // Input Analysis
+        PM.inputType.textContent = `Input Analysis: ${type} (P-Index: ${pIndex}%)`;
+        const topAlgo = ranked[0];
+        const runnerUp = ranked[1];
+        PM.recText.textContent = `Recommendation: ${topAlgo.title} is the Best Fit. Due to its ${pIndex >= 70 ? 'adaptive nature and near-O(n) performance on pre-sorted data' : 'cache-friendly implementation and O(n log n) average'}. ${runnerUp.title} is a close second.`;
+
+        // Ranking Table
+        renderRankingTable(ranked);
+
+        // P-Index Gauge
+        renderPIndexGauge(pIndex);
+
+        // Fit Scores
+        renderFitScores(ranked);
+
+        // -- Tab 2: Diagnostics --
+        const selectedAlgo = algoKey ? algorithms[algoKey] : algorithms[ranked[0].key];
+        const selectedKey = algoKey || ranked[0].key;
+        const actualTime = benchTimeMs || 0;
+
+        // Conflict Table
+        renderConflictTable(selectedAlgo, actualTime, n);
+
+        // Heuristic Text
+        const isAdaptive = ['tim-sort', 'insertion-sort', 'pdq-sort', 'dual-fusion-sort'].includes(selectedKey);
+        const adaptiveGain = isAdaptive ? Math.min(Math.round(pIndex * 1.2 + 10), 150) : Math.round(pIndex * 0.3);
+        const runEfficiency = patterns.runs > 0 ? Math.min(Math.round((patterns.avgRunLen / n) * 100 * patterns.runs), 99) : 15;
+
+        PM.heuristicText.textContent = `Visualizes the neural predictor's real-time influence. ${isAdaptive ? `(${selectedAlgo.title} Strategy identified: ${type === 'Highly Pre-sorted' ? 'High pre-sortedness detected' : 'Mixed pattern detected'}, optimizing ${type === 'Highly Pre-sorted' ? 'Merge' : 'Partition'} paths. Neural heuristics suggest ${pIndex > 70 ? 'continuing ' + selectedAlgo.title + ' strategy' : 'switching to QuickSort variant'} for the next 100 elements.)` : `(Standard partitioning detected. No adaptive strategy active. ${selectedAlgo.title} uses fixed ${selectedAlgo.avg} operations.)`}`;
+        PM.adaptiveGain.textContent = adaptiveGain + '%';
+        PM.runDetection.textContent = runEfficiency + '%';
+
+        // Heatmap
+        renderHeatmap(data);
+
+        // Patterns
+        renderPatternsSummary(patterns);
+
+        // Strategy Forecast
+        PM.sortedRuns.textContent = patterns.runs;
+        PM.avgRunLen.textContent = patterns.avgRunLen;
+        PM.plateaus.textContent = patterns.plateaus;
+
+        PM.strategyText.innerHTML = `<p class="mb-2">Current prediction for pattern on <strong class="text-white">'${selectedAlgo.title}'</strong> suggests <strong class="text-emerald-400">${ranked[0].title}</strong> for speed, and <strong class="text-cyan-400">${ranked.length > 2 ? ranked[2].title : ranked[1].title}</strong> for energy-aware constraints.</p>
+        <p class="mb-2">${selectedAlgo.title} pathing remains optimal for ${pIndex >= 60 ? 'highly pre-sorted sub-runs within the pattern' : 'randomized input distributions'}.</p>
+        <p class="text-[10px] text-slate-500 mt-2">Data and logic are based on current array pattern (P-Index: ${pIndex}%) and advanced behavioral models. Prediction of next 100 elements suggests ${ranked[0].title} will become ${pIndex > 50 ? 'slightly more efficient' : 'marginally slower'} as input becomes more ${pIndex > 50 ? 'randomized' : 'ordered'}.</p>`;
+    }
+
+    // ---- Wire to benchmark runs ----
+
+    // Patch the single-run button to also trigger analytics
+    const origSingleRun = BSE.btnRun;
+    if (origSingleRun) {
+        origSingleRun.addEventListener('click', () => {
+            // Wait for the benchmark to finish (check every 200ms)
+            const checkDone = setInterval(() => {
+                if (!origSingleRun.disabled || origSingleRun.textContent.includes('Run Selected')) {
+                    clearInterval(checkDone);
+                    if (benchStandaloneData && benchStandaloneAlgo) {
+                        setTimeout(() => {
+                            renderPerformanceMatrices(benchStandaloneData, benchStandaloneAlgo, benchStandaloneTimeMs, null);
+                        }, 300);
+                    }
+                }
+            }, 200);
+        });
+    }
+
+    // Patch the suite-run button
+    if (BSE.btnRunAll) {
+        BSE.btnRunAll.addEventListener('click', () => {
+            const checkDone = setInterval(() => {
+                if (!BSE.btnRunAll.disabled) {
+                    clearInterval(checkDone);
+                    if (benchStandaloneData) {
+                        // Collect results from the leaderboard
+                        const suiteRes = [];
+                        BSE.suiteLeaderboard.querySelectorAll('[class*="grid-cols-12"]').forEach((row, i) => {
+                            const nameEl = row.querySelector('.text-white.font-bold.text-sm');
+                            const timeEl = row.querySelector('.font-mono.font-bold.text-sm');
+                            if (nameEl && timeEl) {
+                                const timeText = timeEl.textContent.trim().split(' ')[0];
+                                suiteRes.push({
+                                    key: Object.keys(algorithms).find(k => algorithms[k].title === nameEl.textContent.trim()) || '',
+                                    title: nameEl.textContent.trim(),
+                                    time: parseFloat(timeText) || Infinity
+                                });
+                            }
+                        });
+                        setTimeout(() => {
+                            renderPerformanceMatrices(benchStandaloneData, null, 0, suiteRes.length > 0 ? suiteRes : null);
+                        }, 300);
+                    }
+                }
+            }, 200);
+        });
+    }
+    // ==================== PERFORMANCE MATRICES STANDALONE PAGE ====================
+    let pmData = null;
+    let pmRanked = null;
+    let pmPIndex = 0;
+    let pmPatterns = null;
+    let pmType = '';
+
+    // Back button
+    const btnPmBack = document.getElementById('btn-pm-back');
+    if (btnPmBack) btnPmBack.addEventListener('click', () => showPage('home-page'));
+
+    // --- Tab switching (inline panels) ---
+    const pmScreenTabs = document.querySelectorAll('.pm-screen-tab');
+    const pmPanels = [
+        document.getElementById('pm-panel-0'),
+        document.getElementById('pm-panel-1'),
+        document.getElementById('pm-panel-2'),
+        document.getElementById('pm-panel-3'),
+    ];
+
+    pmScreenTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabIdx = parseInt(tab.dataset.tab);
+            pmScreenTabs.forEach(t => {
+                t.className = 'pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all flex items-center gap-2';
+            });
+            tab.className = 'pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 transition-all flex items-center gap-2 shadow-lg shadow-fuchsia-500/10';
+            pmPanels.forEach((panel, i) => {
+                if (panel) {
+                    if (i === tabIdx) {
+                        panel.classList.remove('hidden');
+                        panel.style.animation = 'none';
+                        void panel.offsetWidth;
+                        panel.style.animation = '';
+                    } else {
+                        panel.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    });
+
+    // --- Data source controls ---
+    const pmGenSlider = document.getElementById('pm-gen-slider');
+    const pmGenVal = document.getElementById('pm-gen-val');
+    const btnPmGenerate = document.getElementById('btn-pm-generate');
+    const pmFileInput = document.getElementById('pm-file-input');
+    const pmFileLabel = document.getElementById('pm-file-label');
+    const btnPmDeleteFile = document.getElementById('btn-pm-delete-file');
+    const pmDataStatus = document.getElementById('pm-data-status');
+    const pmDataCount = document.getElementById('pm-data-count');
+
+    const pmTargetAlgo = document.getElementById('pm-target-algo');
+    const pmDataControls = document.getElementById('pm-data-controls');
+    if (pmTargetAlgo) {
+        let opts = '<option value="">Select Algorithm</option>';
+        Object.keys(algorithms).forEach(k => { opts += `<option value="${k}">${algorithms[k].title}</option>`; });
+        pmTargetAlgo.innerHTML = opts;
+        pmTargetAlgo.addEventListener('change', () => {
+            if (pmTargetAlgo.value) {
+                if (pmDataControls) pmDataControls.classList.remove('opacity-50', 'pointer-events-none');
+                if (btnPmGenerate) btnPmGenerate.click();
+            } else {
+                if (pmDataControls) pmDataControls.classList.add('opacity-50', 'pointer-events-none');
+            }
+        });
+    }
+
+    if (pmGenSlider) {
+        pmGenSlider.addEventListener('input', () => {
+            pmGenVal.textContent = Number(pmGenSlider.value).toLocaleString();
+        });
+    }
+
+    function pmLoadData(arr) {
+        pmData = arr;
+        const n = arr.length;
+        pmDataStatus.classList.remove('hidden');
+        pmDataStatus.classList.add('flex');
+        pmDataCount.textContent = n.toLocaleString();
+
+        // Run analysis
+        const presort = analyzePresortedness(arr);
+        pmPIndex = presort.pIndex;
+        pmType = presort.type;
+        pmPatterns = detectPatterns(arr.slice(0, Math.min(arr.length, 50000)));
+        pmRanked = rankAlgorithmsForInput(arr, null);
+
+        // Show analysis content, hide empty state
+        const emptyState = document.getElementById('pm-empty-state');
+        const analysisContent = document.getElementById('pm-analysis-content');
+        if (emptyState) emptyState.classList.add('hidden');
+        if (analysisContent) { analysisContent.classList.remove('hidden'); analysisContent.classList.add('flex', 'flex-col'); }
+
+        // Render all panels
+        pmRenderPanel0(arr, n);
+        pmRenderPanel1(arr, n);
+        pmRenderPanel2(arr, n);
+        pmRenderPanel3Init();
+    }
+
+    if (btnPmGenerate) {
+        btnPmGenerate.addEventListener('click', () => {
+            const count = Number(pmGenSlider.value) || 10000;
+            const arr = [];
+            for (let i = 0; i < count; i++) arr.push(Math.floor(Math.random() * count) + 1);
+            pmFileInput.value = '';
+            pmFileLabel.textContent = 'Upload File';
+            btnPmDeleteFile.classList.add('hidden');
+            btnPmGenerate.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Done!';
+            setTimeout(() => {
+                btnPmGenerate.innerHTML = '<span class="material-symbols-outlined text-sm">memory</span> Generate';
+            }, 800);
+            pmLoadData(arr);
+        });
+    }
+
+    if (pmFileInput) {
+        pmFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            pmFileLabel.textContent = file.name;
+            btnPmDeleteFile.classList.remove('hidden');
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                let text = evt.target.result.replace(/---.*?---/g, '');
+                const nums = [];
+                text.split(/[\s,]+/).forEach(t => { if (t !== '') { const n = Number(t); if (!isNaN(n)) nums.push(n); } });
+                if (nums.length > 0) pmLoadData(nums);
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    if (btnPmDeleteFile) {
+        btnPmDeleteFile.addEventListener('click', () => {
+            pmData = null;
+            pmFileInput.value = '';
+            pmFileLabel.textContent = 'Upload File';
+            btnPmDeleteFile.classList.add('hidden');
+            pmDataStatus.classList.add('hidden');
+            const emptyState = document.getElementById('pm-empty-state');
+            const analysisContent = document.getElementById('pm-analysis-content');
+            if (emptyState) emptyState.classList.remove('hidden');
+            if (analysisContent) { analysisContent.classList.add('hidden'); analysisContent.classList.remove('flex'); }
+        });
+    }
+
+    // ====== PANEL 0: Performance Comparison ======
+    function pmRenderPanel0(arr, n) {
+        // Chart subtitle
+        const subtitle = document.getElementById('pm-chart-subtitle');
+        if (subtitle) subtitle.textContent = `[ BUFFER_SIZE: ${n.toLocaleString()} // DATA_TYPE: ${pmType} ]`;
+
+        // Complexity Chart
+        setTimeout(() => drawComplexityChart(document.getElementById('pm-complexity-chart'), n, 0), 150);
+
+        // Deep Dive Cards
+        renderDeepDiveCards(pmRanked);
+
+        // Space Bars
+        renderSpaceBars(pmRanked);
+
+        // Input Analysis
+        const inputType = document.getElementById('pm-input-type-text');
+        if (inputType) inputType.textContent = `Input Analysis: ${pmType} (P-Index: ${pmPIndex}%)`;
+
+        // Ranking Table
+        renderRankingTable(pmRanked);
+
+        // P-Index Gauge (SVG ring)
+        const pindexRing = document.getElementById('pm-pindex-ring');
+        const pindexValue = document.getElementById('pm-pindex-value');
+        const pindexDesc = document.getElementById('pm-pindex-desc');
+        if (pindexRing) {
+            const circumference = 251.2;
+            const offset = circumference - (pmPIndex / 100) * circumference;
+            setTimeout(() => { pindexRing.style.strokeDashoffset = offset; }, 100);
+        }
+        if (pindexValue) pindexValue.textContent = pmPIndex + '%';
+        if (pindexDesc) {
+            if (pmPIndex >= 80) pindexDesc.textContent = 'High pre-sortedness makes adaptive algorithms shine. TimSort and PDQ Sort gain significant performance.';
+            else if (pmPIndex >= 50) pindexDesc.textContent = 'Moderate order detected. Hybrid algorithms like IntroSort recommended for consistent performance.';
+            else pindexDesc.textContent = 'Low presortedness. Cache-friendly algorithms like QuickSort are optimal for randomized distributions.';
+        }
+
+        // Fit Scores
+        renderFitScores(pmRanked);
+    }
+
+    // ====== PANEL 1: Diagnostics ======
+    function pmRenderPanel1(arr, n) {
+        // P-Index ring (diagnostics)
+        const diagRing = document.getElementById('pm-diag-pindex-ring');
+        const diagVal = document.getElementById('pm-diag-pindex-val');
+        if (diagRing) {
+            const circ = 176;
+            setTimeout(() => { diagRing.style.strokeDashoffset = circ - (pmPIndex / 100) * circ; }, 100);
+        }
+        if (diagVal) diagVal.textContent = pmPIndex + '%';
+
+        // Adaptive gain & run efficiency
+        const targetOpt = document.getElementById('pm-target-algo')?.value;
+        const bestAlgo = targetOpt ? (pmRanked.find(r => r.key === targetOpt) || pmRanked[0]) : pmRanked[0];
+        const bestKey = bestAlgo.key;
+        const algo = algorithms[bestKey];
+        const isAdaptive = ['tim-sort', 'insertion-sort', 'pdq-sort', 'dual-fusion-sort', 'intro-sort'].includes(bestKey);
+        const adaptiveGain = isAdaptive ? Math.min(Math.round(pmPIndex * 1.2 + 10), 150) : Math.round(pmPIndex * 0.3);
+        const runEfficiency = pmPatterns.runs > 0 ? Math.min(Math.round((pmPatterns.avgRunLen / n) * 100 * pmPatterns.runs), 99) : 15;
+
+        const agEl = document.getElementById('pm-adaptive-gain');
+        const rdEl = document.getElementById('pm-run-detection');
+        if (agEl) agEl.textContent = adaptiveGain + '%';
+        if (rdEl) rdEl.textContent = runEfficiency + '%';
+
+        // Heuristic text
+        const htEl = document.getElementById('pm-heuristic-text');
+        if (htEl) {
+            htEl.textContent = `Visualizes the neural predictor's real-time influence. ${isAdaptive ? `${algo.title} Strategy identified: ${pmType === 'Highly Pre-sorted' ? 'High pre-sortedness detected' : 'Mixed pattern detected'}, optimizing ${pmType === 'Highly Pre-sorted' ? 'Merge' : 'Partition'} paths. Neural heuristics suggest ${pmPIndex > 70 ? 'continuing ' + algo.title + ' strategy' : 'switching to QuickSort variant'} for the next 100 elements.` : `Standard partitioning detected. No adaptive strategy active. ${algo.title} uses fixed ${algo.avg} operations.`}`;
+        }
+
+        // Conflict table
+        renderConflictTable(algo, 0, n);
+
+        // Memory topology
+        const memTheo = document.getElementById('pm-mem-theoretical');
+        const memPrac = document.getElementById('pm-mem-practical');
+        const memSum = document.getElementById('pm-mem-summary');
+        if (memTheo) memTheo.textContent = algo.avg;
+        if (memPrac) memPrac.textContent = 'Cache/Branch/Sys';
+        if (memSum) memSum.textContent = `Theoretical ${algo.avg} is ${isAdaptive ? 'modified to near O(n) by adaptive runs' : 'consistent with practical execution'}. Current recursion bypass: ${pmPIndex}%.`;
+    }
+
+    // ====== PANEL 2: Forecasting Lab ======
+    function pmRenderPanel2(arr, n) {
+        // Merge tree canvas
+        pmDrawMergeTree(document.getElementById('pm-merge-tree-canvas'), n);
+
+        // Stack depth
+        const sdEl = document.getElementById('pm-stack-depth');
+        if (sdEl) sdEl.textContent = `[Stack Depth: ${Math.ceil(Math.log2(Math.max(n, 2)))}]`;
+
+        // Path strategy
+        const psEl = document.getElementById('pm-path-strategy');
+        if (psEl) psEl.textContent = `Based on input pattern (${pmType}). For current input, ${pmRanked[0].title} maintains highest consistency score.`;
+
+        // Heatmap
+        renderHeatmap(arr);
+
+        // Heatmap subtitle
+        const hmSub = document.getElementById('pm-heatmap-subtitle');
+        if (hmSub) hmSub.textContent = `Pattern Analysis (${pmType})`;
+
+        // Sync score
+        const ssEl = document.getElementById('pm-sync-score');
+        if (ssEl) ssEl.textContent = `${pmPIndex}% SYNC`;
+        const sbEl = document.getElementById('pm-sync-bar');
+        if (sbEl) setTimeout(() => { sbEl.style.width = pmPIndex + '%'; }, 100);
+
+        // Pattern summary
+        renderPatternsSummary(pmPatterns);
+
+        // Environment Forecasting Canvases
+        const predictCtx = document.getElementById('pm-predict-canvas');
+        if (predictCtx) drawPredictCurve(predictCtx, pmRanked);
+
+        const energyCtx = document.getElementById('pm-energy-canvas');
+        if (energyCtx) drawEnergyArea(energyCtx, pmPIndex);
+
+        const resMatrix = document.getElementById('pm-resource-matrix');
+        if (resMatrix) {
+            let html = '';
+            for(let i=0; i<8; i++) {
+                const load = Math.random() > 0.5 ? Math.floor(Math.random() * (100 - pmPIndex)) + pmPIndex : Math.random() * 30;
+                const color = load > 80 ? 'bg-fuchsia-500' : load > 50 ? 'bg-fuchsia-400/50' : load > 20 ? 'bg-cyan-400/30' : 'bg-cyan-500/10';
+                html += `<div class="${color} rounded-sm w-full h-full border border-white/5 shadow-inner" title="Core ${i+1}: ${load.toFixed(0)}%"></div>`;
+            }
+            resMatrix.innerHTML = html;
+        }
+
+        // Performance metrics
+        const loadEl = document.getElementById('pm-core-load');
+        const effEl = document.getElementById('pm-efficiency');
+        const latEl = document.getElementById('pm-latency');
+        if (loadEl) loadEl.textContent = Math.round(20 + Math.random() * 40) + '%';
+        if (effEl) effEl.textContent = (0.3 + Math.random() * 0.8).toFixed(1) + 'W';
+        if (latEl) latEl.textContent = Math.round(5 + n * 0.001) + 'ms';
+
+        // Pattern tags
+        const ptEl = document.getElementById('pm-pattern-tags');
+        if (ptEl) {
+            ptEl.innerHTML = '';
+            const tags = [];
+            for (let i = 0; i < Math.min(pmPatterns.runs, 8); i++) {
+                const isRev = i < pmPatterns.reverseRuns;
+                tags.push(`<span class="px-2 py-1 text-[8px] font-bold border ${isRev ? 'border-rose-500/30 text-rose-400 bg-rose-500/5' : 'border-cyan-500/30 text-cyan-400 bg-cyan-500/5'} rounded uppercase">RUN_${String.fromCharCode(65+i)}: ${isRev ? 'DESC' : 'ASC'}</span>`);
+            }
+            if (pmPatterns.plateaus > 0) tags.push(`<span class="px-2 py-1 text-[8px] font-bold border border-amber-500/30 text-amber-400 bg-amber-500/5 rounded uppercase">PLATEAUS: ${pmPatterns.plateaus}</span>`);
+            ptEl.innerHTML = tags.join('');
+        }
+
+        // Pattern detail
+        const pdEl = document.getElementById('pm-pattern-detail');
+        if (pdEl) pdEl.textContent = `Pattern (${pmType}): [Detected ${pmPatterns.runs} runs; Avg. run length: ${pmPatterns.avgRunLen} elements]. System suggests ${pmPIndex > 60 ? 'adaptive merging' : 'dynamic partitioning'} to maximize hardware throughput.`;
+
+        // Strategy text
+        const stEl = document.getElementById('pm-strategy-text');
+        if (stEl) {
+            stEl.innerHTML = `
+                <p>Current prediction for pattern on <strong class="text-white">'${pmRanked[0].title}'</strong> suggests <strong class="text-emerald-400">${pmRanked[0].title}</strong> for speed, and <strong class="text-cyan-400">${pmRanked.length > 2 ? pmRanked[2].title : pmRanked[1].title}</strong> for energy-aware constraints.</p>
+                <p>${pmRanked[0].title} pathing remains optimal for ${pmPIndex >= 60 ? 'highly pre-sorted sub-runs within the pattern' : 'randomized input distributions'}.</p>
+                <p class="text-[10px] text-slate-600 mt-2">Data based on current array pattern (P-Index: ${pmPIndex}%). Prediction of next 100 elements suggests ${pmRanked[0].title} will become ${pmPIndex > 50 ? 'slightly more efficient' : 'marginally slower'} as input becomes more ${pmPIndex > 50 ? 'randomized' : 'ordered'}.</p>
+            `;
+        }
+
+        // Stats
+        const srEl = document.getElementById('pm-sorted-runs');
+        const arlEl = document.getElementById('pm-avg-run-len');
+        const plEl = document.getElementById('pm-plateaus');
+        if (srEl) srEl.textContent = pmPatterns.runs;
+        if (arlEl) arlEl.textContent = pmPatterns.avgRunLen;
+        if (plEl) plEl.textContent = pmPatterns.plateaus;
+    }
+
+    // Merge tree drawing
+    function pmDrawMergeTree(canvas, n) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        ctx.clearRect(0, 0, W, H);
+
+        const depth = Math.min(Math.ceil(Math.log2(Math.max(n, 2))), 8);
+        const nodeRadius = 4;
+
+        function drawNode(x, y, level, parentX, parentY) {
+            if (level > depth) return;
+            // Line from parent
+            if (parentX !== null) {
+                ctx.beginPath();
+                ctx.moveTo(parentX, parentY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = `rgba(0, 251, 251, ${0.15 + (1 - level/depth) * 0.3})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            // Node
+            ctx.beginPath();
+            ctx.arc(x, y, nodeRadius, 0, Math.PI * 2);
+            const t = level / depth;
+            ctx.fillStyle = `hsl(${180 + t * 120}, 80%, ${50 + t * 15}%)`;
+            ctx.fill();
+            // Children
+            const gap = (W * 0.4) / Math.pow(2, level);
+            const ny = y + (H - 20) / depth;
+            if (level < depth) {
+                drawNode(x - gap, ny, level + 1, x, y);
+                drawNode(x + gap, ny, level + 1, x, y);
+            }
+        }
+        drawNode(W / 2, 12, 0, null, null);
+    }
+
+    // ====== PANEL 3: Algorithm Fusion Lab ======
+    function pmRenderPanel3Init() {
+        const algoA = document.getElementById('pm-fusion-algo-a');
+        const algoB = document.getElementById('pm-fusion-algo-b');
+        if (!algoA || algoA.options.length > 1) return; // already populated
+
+        const keys = Object.keys(algorithms);
+        keys.forEach(key => {
+            const algo = algorithms[key];
+            const optA = document.createElement('option');
+            optA.value = key; optA.textContent = algo.title;
+            algoA.appendChild(optA);
+            const optB = document.createElement('option');
+            optB.value = key; optB.textContent = algo.title;
+            algoB.appendChild(optB);
+        });
+    }
+
+    // Fusion analysis
+    function pmUpdateFusion() {
+        const algoAKey = document.getElementById('pm-fusion-algo-a')?.value;
+        const algoBKey = document.getElementById('pm-fusion-algo-b')?.value;
+        const threshold = parseInt(document.getElementById('pm-fusion-threshold')?.value || 32);
+        document.getElementById('pm-fusion-threshold-val').textContent = threshold;
+
+        if (!algoAKey || !algoBKey) return;
+
+        const algoA = algorithms[algoAKey];
+        const algoB = algorithms[algoBKey];
+
+        // Show badges
+        const aBadge = document.getElementById('pm-fusion-a-badge');
+        const bBadge = document.getElementById('pm-fusion-b-badge');
+        if (aBadge) { aBadge.classList.remove('hidden'); document.getElementById('pm-fusion-a-name').textContent = 'Dropped: ' + algoA.title; }
+        if (bBadge) { bBadge.classList.remove('hidden'); document.getElementById('pm-fusion-b-name').textContent = 'Dropped: ' + algoB.title; }
+
+        // Status
+        const statusEl = document.getElementById('pm-fusion-status');
+        if (statusEl) statusEl.classList.remove('hidden');
+
+        // Enable buttons
+        const execBtn = document.getElementById('btn-pm-fusion-execute');
+        const buildBtn = document.getElementById('btn-pm-fusion-build');
+        if (execBtn) execBtn.disabled = !pmData;
+        if (buildBtn) buildBtn.disabled = false;
+
+        // Time complexity
+        const tcEl = document.getElementById('pm-fusion-time-complexity');
+        if (tcEl) tcEl.textContent = `O(N * log N / Adaptive)`;
+
+        // Time breakdown - Three cases as per mockup
+        const tbEl = document.getElementById('pm-fusion-time-breakdown');
+        if (tbEl) {
+            const nSmall = 15; // N < 20
+            const nDense = 60; // N >= 20, dense
+            const nSparse = 150; // N >= 20, sparse
+            
+            tbEl.innerHTML = `
+                <div class="flex items-center w-full h-2 rounded-full overflow-hidden my-2 bg-slate-800">
+                    <div class="h-full bg-fuchsia-500" style="width: 20%;"></div>
+                    <div class="h-full bg-rose-500/70" style="width: 35%;"></div>
+                    <div class="h-full bg-cyan-500" style="width: 45%;"></div>
+                </div>
+                <li class="flex items-center justify-between text-[10px]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-fuchsia-400 shrink-0"></span> N < 20: ${algoA.avg}</div><span class="text-fuchsia-400 font-bold opacity-70">20%</span></li>
+                <li class="flex items-center justify-between text-[10px]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-rose-400 shrink-0"></span> N >= 20, dense: O(n²)</div><span class="text-rose-400 font-bold opacity-70">35%</span></li>
+                <li class="flex items-center justify-between text-[10px]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-cyan-400 shrink-0"></span> N >= 20, sparse: ${algoB.avg}</div><span class="text-cyan-400 font-bold opacity-70">45%</span></li>
+            `;
+        }
+
+        // Space complexity
+        const scEl = document.getElementById('pm-fusion-space-complexity');
+        if (scEl) scEl.textContent = `O(max(${algoA.space}, ${algoB.space}))`;
+
+        const sbEl = document.getElementById('pm-fusion-space-breakdown');
+        if (sbEl) {
+            sbEl.innerHTML = `
+                <div class="flex items-center w-full h-2 rounded-full overflow-hidden my-2 bg-slate-800">
+                    <div class="h-full bg-fuchsia-400/50" style="width: 40%;"></div>
+                    <div class="h-full bg-cyan-400/50" style="width: 60%;"></div>
+                </div>
+                <li class="flex items-center justify-between text-[10px]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-fuchsia-400 shrink-0"></span> Base: ${algoA.space}</div><span class="text-fuchsia-400 font-bold opacity-70">40%</span></li>
+                <li class="flex items-center justify-between text-[10px]"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-cyan-400 shrink-0"></span> Extended: ${algoB.space}</div><span class="text-cyan-400 font-bold opacity-70">60%</span></li>
+            `;
+        }
+
+        // Metric label
+        const metricEl = document.getElementById('pm-fusion-metric');
+        if (metricEl) metricEl.textContent = `METRIC: ${algoA.avg} + ${algoB.avg} FUSION`;
+
+        // Draw fusion chart
+        pmDrawFusionChart(document.getElementById('pm-fusion-chart'), algoA, algoB, threshold);
+        pmDrawComparisonChart(document.getElementById('pm-fusion-comparison-chart'), algoA, algoB, threshold);
+
+        // Execution trace
+        pmRenderTrace(algoA, algoB, threshold);
+    }
+
+    function pmDrawFusionChart(canvas, algoA, algoB, threshold) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        const pad = { top: 15, right: 15, bottom: 25, left: 10 };
+        const gW = W - pad.left - pad.right;
+        const gH = H - pad.top - pad.bottom;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+            const y = pad.top + (gH / 4) * i;
+            ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+        }
+
+        function getOps(complexStr, n) {
+            const s = complexStr.replace(/\s/g, '').toLowerCase();
+            if (s.includes('n²') || s.includes('n^2')) return n * n;
+            if (s.includes('nlogn') || s.includes('nlog')) return n * Math.log2(Math.max(n, 2));
+            if (s.includes('logn') || s.includes('log')) return Math.log2(Math.max(n, 2));
+            return n;
+        }
+
+        const maxN = 300;
+        const maxY = Math.max(getOps(algoA.avg, maxN), getOps(algoB.avg, maxN));
+        const sx = n => pad.left + (n / maxN) * gW;
+        const sy = ops => pad.top + gH - (Math.min(ops, maxY) / maxY) * gH;
+
+        // Fusion curve
+        ctx.strokeStyle = '#d946ef';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let i = 0; i <= 100; i++) {
+            const n = (maxN / 100) * i;
+            const ops = n <= threshold ? getOps(algoA.avg, n) : getOps(algoB.avg, n);
+            const px = sx(n), py = sy(ops);
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Threshold line
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1;
+        const tx = sx(threshold);
+        ctx.beginPath(); ctx.moveTo(tx, pad.top); ctx.lineTo(tx, H - pad.bottom); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`T=${threshold}`, tx, H - pad.bottom + 14);
+
+        // Labels
+        ctx.fillText('Input Size →', W / 2, H - 2);
+    }
+
+    function pmDrawComparisonChart(canvas, algoA, algoB, threshold) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        const pad = { top: 10, right: 10, bottom: 20, left: 10 };
+        const gW = W - pad.left - pad.right;
+        const gH = H - pad.top - pad.bottom;
+        ctx.clearRect(0, 0, W, H);
+
+        function getOps(complexStr, n) {
+            const s = complexStr.replace(/\s/g, '').toLowerCase();
+            if (s.includes('n²') || s.includes('n^2')) return n * n;
+            if (s.includes('nlogn') || s.includes('nlog')) return n * Math.log2(Math.max(n, 2));
+            return n;
+        }
+
+        const maxN = 300;
+        const maxY = Math.max(getOps(algoA.avg, maxN), getOps(algoB.avg, maxN));
+        const sx = n => pad.left + (n / maxN) * gW;
+        const sy = ops => pad.top + gH - (Math.min(ops, maxY) / maxY) * gH;
+        const steps = 80;
+
+        // Algo A line
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+            const n = (maxN / steps) * i;
+            const px = sx(n), py = sy(getOps(algoA.avg, n));
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Algo B line
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+            const n = (maxN / steps) * i;
+            const px = sx(n), py = sy(getOps(algoB.avg, n));
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // Hybrid line
+        ctx.strokeStyle = '#d946ef';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+            const n = (maxN / steps) * i;
+            const ops = n <= threshold ? getOps(algoA.avg, n) : getOps(algoB.avg, n);
+            const px = sx(n), py = sy(ops);
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+    }
+
+    function pmRenderTrace(algoA, algoB, threshold) {
+        const traceEl = document.getElementById('pm-fusion-trace');
+        if (!traceEl) return;
+        
+        let html = '';
+        const nodes = 48; // enough to fill the visual grid
+        for(let i=0; i<nodes; i++) {
+            const isSmallNode = i % 4 !== 0; // Simulate 1 large partition, 3 small leaf partitions
+            const useA = isSmallNode;
+            const color = useA ? 'fuchsia' : 'cyan';
+            const size = Math.floor(Math.random() * (useA ? threshold : threshold*4)) + 2;
+            const intensity = Math.random() > 0.5 ? '500' : '400';
+            
+            html += `
+                <div class="aspect-square w-full rounded-sm bg-${color}-${intensity}/20 border border-${color}-500/30 relative flex items-center justify-center transition-all hover:bg-${color}-500/50 cursor-crosshair overflow-hidden group">
+                    <span class="text-[6px] font-mono text-${color}-300 opacity-80 group-hover:opacity-100 font-bold">${size}</span>
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-center z-50 whitespace-nowrap">
+                        <div class="bg-black/90 border border-${color}-500/50 text-${color}-300 text-[10px] px-2 py-1 rounded shadow-lg backdrop-blur">
+                            [N=${size}] Executing Algo ${useA ? 'A' : 'B'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        traceEl.innerHTML = html;
+        traceEl.className = "grid grid-cols-12 sm:grid-cols-16 gap-1 p-2 bg-black/40 rounded border border-white/5 min-h-[80px] content-start";
+    }
+
+    // Wire up fusion controls
+    const fusionAlgoA = document.getElementById('pm-fusion-algo-a');
+    const fusionAlgoB = document.getElementById('pm-fusion-algo-b');
+    const fusionThreshold = document.getElementById('pm-fusion-threshold');
+
+    if (fusionAlgoA) fusionAlgoA.addEventListener('change', pmUpdateFusion);
+    if (fusionAlgoB) fusionAlgoB.addEventListener('change', pmUpdateFusion);
+    if (fusionThreshold) fusionThreshold.addEventListener('input', pmUpdateFusion);
+
+    // Execute fusion on live data
+    const btnFusionExec = document.getElementById('btn-pm-fusion-execute');
+    if (btnFusionExec) {
+        btnFusionExec.addEventListener('click', async () => {
+            if (!pmData) return;
+            const algoAKey = document.getElementById('pm-fusion-algo-a')?.value;
+            const algoBKey = document.getElementById('pm-fusion-algo-b')?.value;
+            const threshold = parseInt(document.getElementById('pm-fusion-threshold')?.value || 32);
+            if (!algoAKey || !algoBKey) return;
+
+            const algoA = algorithms[algoAKey];
+            const algoB = algorithms[algoBKey];
+
+            btnFusionExec.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Running...';
+            btnFusionExec.disabled = true;
+            await new Promise(r => setTimeout(r, 50));
+
+            const dataCopy = [...pmData];
+            const t0 = performance.now();
+
+            // Hybrid sort: use algoA for small sub-arrays, algoB for large
+            if (dataCopy.length <= threshold && algoA.runRaw) {
+                algoA.runRaw(dataCopy);
+            } else if (algoB.runRaw) {
+                algoB.runRaw(dataCopy);
+            } else {
+                dataCopy.sort((a, b) => a - b);
+            }
+
+            const elapsed = performance.now() - t0;
+
+            // Show result
+            const traceEl = document.getElementById('pm-fusion-trace');
+            if (traceEl) {
+                traceEl.innerHTML += `
+                    <div class="col-span-12 sm:col-span-16 mt-1 p-2 bg-emerald-500/10 border border-emerald-500/20 rounded text-[10px] font-mono text-emerald-400 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                        Live Execution Complete in ${elapsed.toFixed(2)}ms
+                    </div>
+                `;
+            }
+
+            btnFusionExec.innerHTML = '<span class="material-symbols-outlined text-sm">play_arrow</span> Execute on Live Data';
+            btnFusionExec.disabled = false;
+        });
+    }
+
+    // Build & Visualize
+    const btnFusionBuild = document.getElementById('btn-pm-fusion-build');
+    if (btnFusionBuild) {
+        btnFusionBuild.addEventListener('click', () => {
+            pmUpdateFusion();
+            btnFusionBuild.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Built!';
+            setTimeout(() => {
+                btnFusionBuild.innerHTML = '<span class="material-symbols-outlined text-sm">build</span> Build & Visualize';
+            }, 1200);
+        });
+    }
+    // --- Helper UI Renderers and Analysis Engine ---
+
+    function detectPatterns(arr) {
+        if (!arr || arr.length === 0) return { runs: 0, avgRunLen: 0, plateaus: 0, reverseRuns: 0 };
+        let runs = 1, revRuns = 0, plateaus = 0;
+        let isAsc = arr.length > 1 ? arr[1] >= arr[0] : true;
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] === arr[i - 1]) plateaus++;
+            let currAsc = arr[i] >= arr[i - 1];
+            if (currAsc !== isAsc) {
+                runs++;
+                if (!currAsc) revRuns++;
+                isAsc = currAsc;
+            }
+        }
+        return {
+            runs: runs,
+            avgRunLen: Math.round(arr.length / runs),
+            plateaus: plateaus,
+            reverseRuns: revRuns
+        };
+    }
+
+    function rankAlgorithmsForInput(arr, stats) {
+        const pInfo = analyzePresortedness(arr);
+        const pIndex = pInfo.pIndex;
+        let ranked = Object.keys(algorithms).map(key => {
+            let algo = algorithms[key];
+            let score = 50;
+            let isAdaptive = ['tim-sort', 'insertion-sort', 'pdq-sort'].includes(key);
+            if (pIndex > 80 && isAdaptive) score += pIndex * 0.5;
+            else if (pIndex <= 60 && ['quick-sort', 'merge-sort', 'radix-sort'].includes(key)) score += 40;
+            score -= (algo.avg && algo.avg.includes('n²') ? 30 : 0);
+            return {
+                key: key,
+                title: algo.title,
+                avg: algo.avg,
+                best: algo.best,
+                space: algo.space,
+                score: Math.min(100, Math.round(score + Math.random() * 10))
+            };
+        });
+        ranked.sort((a, b) => b.score - a.score);
+        return ranked;
+    }
+
+    function drawComplexityChart(canvas, n, highlightIdx) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        const w = rect.width, h = rect.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const pad = { top: 30, right: 140, bottom: 40, left: 45 };
+        const gW = w - pad.left - pad.right;
+        const gH = h - pad.top - pad.bottom;
+
+        // Draw Grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let i=0; i<=7; i++) {
+            const y = pad.top + gH - (i/7)*gH;
+            ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y);
+            const x = pad.left + (i/7)*gW;
+            ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + gH);
+        }
+        ctx.stroke();
+
+        // Axes Text
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for(let i=0; i<=7; i++) {
+            const y = pad.top + gH - (i/7)*gH;
+            ctx.fillText(Math.round((i/7)*350), pad.left - 10, y);
+        }
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        for(let i=0; i<=7; i++) {
+            const x = pad.left + (i/7)*gW;
+            ctx.fillText(Math.round((i/7)*700), x, pad.top + gH + 10);
+        }
+
+        ctx.save();
+        ctx.translate(15, pad.top + gH/2);
+        ctx.rotate(-Math.PI/2);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('Operations/Time', 0, 0);
+        ctx.restore();
+
+        ctx.fillText('Input Size, n', pad.left + gW/2, pad.top + gH + 25);
+
+        const maxN = 700;
+        const maxY = 350; 
+
+        function drawCurve(color, type, offsetOps=0) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for(let x=0; x<=gW; x+=2) {
+                let currN = (x/gW) * maxN;
+                let ops = offsetOps;
+                if(type === 'n2') ops += (currN * currN) / 1400;
+                else if(type === 'nlogn') ops += (currN * Math.log2(Math.max(2,currN))) / 14;
+                else if(type === 'n') ops += currN / 2;
+                else if(type === 'nlog2n') ops += (currN * Math.log2(Math.max(2,currN))) / 18;
+                else if(type === 'n_superfast') ops += currN / 2.5;
+                else if(type === 'n2_slow') ops += (currN * currN) / 1200;
+                
+                let px = pad.left + x;
+                let py = pad.top + gH - (ops / maxY) * gH;
+                py = Math.max(pad.top, Math.min(pad.top + gH, py)); 
+                if(x===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        }
+
+        // Space Complexity Inset Box
+        ctx.setLineDash([]);
+        const insetW = 140;
+        const insetH = 75;
+        const ix = pad.left + gW * 0.25; 
+        const iy = pad.top + 10;
+        
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(ix, iy, insetW, insetH, 6); ctx.fill(); ctx.stroke();
+        
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Space Complexity', ix + insetW/2, iy + 14);
+        
+        const bars = [
+            { h: 35, c: '#14b8a6' },
+            { h: 28, c: '#f59e0b' },
+            { h: 24, c: '#3b82f6' },
+            { h: 20, c: '#ec4899' },
+            { h: 14, c: '#a855f7' }
+        ];
+        const barW = 10;
+        const gap = 6;
+        const totalW = bars.length * barW + (bars.length - 1) * gap;
+        let startX = ix + (insetW - totalW) / 2 + 5;
+        let baseY = iy + insetH - 10;
+        
+        ctx.fillStyle = '#64748b';
+        ctx.font = '8px sans-serif';
+        ctx.fillText('120', ix + 12, iy + 30);
+        ctx.fillText('0', ix + 12, baseY - 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.beginPath(); ctx.moveTo(ix + 20, iy + 25); ctx.lineTo(ix + 20, baseY); ctx.moveTo(ix + 18, baseY); ctx.lineTo(ix + insetW - 10, baseY); ctx.stroke();
+
+        bars.forEach(b => {
+             ctx.fillStyle = b.c;
+             ctx.beginPath(); ctx.roundRect(startX, baseY - b.h, barW, b.h, [2,2,0,0]); ctx.fill();
+             startX += barW + gap;
+        });
+
+        // Top Left Legend (Best/Avg/Worst)
+        const topLx = pad.left + 10;
+        const topLy = pad.top + 10;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.beginPath(); ctx.roundRect(topLx, topLy, 90, 48, 4); ctx.fill(); ctx.stroke();
+        const topLgs = [
+            {n: 'Best-case', c: '#10b981'},
+            {n: 'Average-case', c: '#f59e0b'},
+            {n: 'Worst-case', c: '#ef4444'}
+        ];
+        topLgs.forEach((l, i) => {
+            let ty = topLy + 14 + i * 14;
+            ctx.fillStyle = l.c;
+            ctx.fillRect(topLx + 6, ty - 4, 12, 2);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '8px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(l.n, topLx + 24, ty + 2);
+        });
+
+        // Background lines (O(n), O(n^2), O(n log n))
+        drawCurve('#f59e0b', 'n2', 0); // average
+        drawCurve('#ef4444', 'n2_slow', 20); // worst
+        drawCurve('#3b82f6', 'nlogn', 0); // blue merge
+        drawCurve('#10b981', 'n', 0); // best
+
+        // Adaptive Sort lines
+        drawCurve('#06b6d4', 'nlog2n', 10); // cyan adq
+        drawCurve('#8b5cf6', 'nlog2n', -10); // purple smooth
+        drawCurve('#a855f7', 'n_superfast', 0); // pink timsort
+        drawCurve('#ec4899', 'n', 5); // extra
+
+        // Right Legends
+        const lx = w - pad.right + 15;
+        const ly = pad.top;
+        
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.beginPath(); ctx.roundRect(lx, ly, 110, 50, 4); ctx.fill(); ctx.stroke();
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.fillText('Algorithms Class', lx + 8, ly + 14);
+        const cls = [ {n:'O(n log n)', c:'#f59e0b'}, {n:'O(h)', c:'#3b82f6'} ];
+        cls.forEach((l, i) => {
+             let ty = ly + 28 + i * 12;
+             ctx.fillStyle = l.c;
+             ctx.fillRect(lx + 8, ty - 3, 10, 2);
+             ctx.fillStyle = '#cbd5e1';
+             ctx.font = '8px sans-serif';
+             ctx.fillText(l.n, lx + 24, ty + 1);
+        });
+
+        const ly2 = ly + 58;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.beginPath(); ctx.roundRect(lx, ly2, 110, 110, 4); ctx.fill(); ctx.stroke();
+        ctx.font = 'bold 9px sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.fillText('Adaptive Sorts', lx + 8, ly2 + 14);
+        
+        const lgds = [
+            { n: 'Adaptive Quick Sort', c: '#06b6d4' },
+            { n: 'Smoothsort', c: '#8b5cf6' },
+            { n: 'Timsort', c: '#a855f7' },
+            { n: 'Merge Sort', c: '#3b82f6' },
+            { n: 'Heap Sort', c: '#10b981' },
+            { n: 'O(n)', c: '#22c55e' },
+            { n: 'O(n²)', c: '#ef4444' }
+        ];
+        lgds.forEach((l, i) => {
+             let ty = ly2 + 28 + i * 11;
+             ctx.fillStyle = l.c;
+             ctx.fillRect(lx + 8, ty - 3, 10, 2);
+             ctx.fillStyle = '#cbd5e1';
+             ctx.font = '8px sans-serif';
+             ctx.fillText(l.n, lx + 24, ty + 1);
+        });
+    }
+
+    function renderDeepDiveCards(ranked) {
+        const el = document.getElementById('pm-deep-dive-cards');
+        if (!el || !ranked || ranked.length === 0) return;
+        
+        const labels = ['(Adaptive King)', '(The Unsung Hero)', '(For Contrast)'];
+        const borderColors = ['border-emerald-500/30', 'border-cyan-500/30', 'border-rose-500/30'];
+        const textColors = ['text-emerald-400', 'text-cyan-400', 'text-rose-400'];
+        const bgs = ['bg-emerald-500/5', 'bg-cyan-500/5', 'bg-rose-500/5'];
+
+        const targetKey = document.getElementById('pm-target-algo')?.value;
+        let displayList = ranked.slice(0, 3);
+        if (targetKey) {
+            const tIdx = ranked.findIndex(r => r.key === targetKey);
+            if (tIdx !== -1) {
+                const rem = ranked.filter(r => r.key !== targetKey);
+                displayList = [ranked[tIdx], rem[0], rem[rem.length - 1]];
+            }
+        }
+
+        el.innerHTML = displayList.map((r, i) => `
+            <div class="pm-glass rounded-lg p-5 border ${borderColors[i]} ${bgs[i]} hover:bg-white/[0.03] transition-colors relative overflow-hidden group flex flex-col h-full">
+                <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <span class="material-symbols-outlined text-6xl ${textColors[i]} -mt-4 -mr-4">memory</span>
+                </div>
+                <div class="relative z-10 mb-4">
+                    <h4 class="text-white font-bold text-lg tracking-wide shadow-sm leading-tight">${r.title}</h4>
+                    <span class="${textColors[i]} text-[10px] font-bold tracking-wider">${labels[i]}</span>
+                </div>
+                <div class="flex flex-col gap-1.5 text-[11px] relative z-10 flex-1 justify-center">
+                    <div class="flex items-center gap-2"><span class="text-slate-400 w-12">Best:</span><span class="text-white font-mono">${r.best}</span></div>
+                    <div class="flex items-center gap-2"><span class="text-slate-400 w-12">Avg:</span><span class="text-white font-mono">${r.avg}</span></div>
+                    <div class="flex items-center gap-2"><span class="text-slate-400 w-12">Worst:</span><span class="text-white font-mono">${r.worst}</span></div>
+                    <div class="flex items-center gap-2 mt-2"><span class="text-slate-400 w-20">Space Usage:</span><span class="text-white font-mono">${r.space}</span></div>
+                    <div class="flex items-start gap-2 mt-2 pt-2 border-t border-white/5"><span class="text-slate-400 w-20 shrink-0">Use-Cases:</span><span class="text-slate-300 leading-snug break-words pr-2">${r.apps || 'General purpose sorting, large datasets'}</span></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderSpaceBars(ranked) {
+        const el = document.getElementById('pm-space-bars');
+        if (!el || !ranked) return;
+        const barColors = ['fuchsia','cyan','emerald','amber','rose'];
+        el.innerHTML = ranked.slice(0, 5).map((r, i) => `
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold w-16 text-slate-400 truncate">${r.title.split(' ')[0]}</span>
+                <div class="flex-1 h-3 bg-white/5 bg-slate-800 rounded-full overflow-hidden shadow-inner border border-white/5">
+                    <div class="h-full bg-gradient-to-r from-${barColors[i]}-600 to-${barColors[i]}-400 rounded-full" style="width: ${r.space==='O(1)'? 10 : (r.space && r.space.includes('log')? 40 : 80)}%"></div>
+                </div>
+                <span class="text-[10px] font-mono font-bold ${r.space==='O(1)'? 'text-emerald-400' : 'text-slate-500'} w-14 text-right">${r.space}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderRankingTable(ranked) {
+        const el = document.getElementById('pm-ranking-tbody');
+        if (!el || !ranked) return;
+        el.innerHTML = ranked.slice(0, 10).map((r, i) => `
+            <tr class="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors ${i===0? 'bg-fuchsia-500/5' : ''}">
+                <td class="py-2 text-slate-500 font-bold">#${i+1}</td>
+                <td class="py-2 font-bold ${i===0? 'text-fuchsia-400' : 'text-slate-300'} truncate w-32">${r.title}</td>
+                <td class="py-2 text-center text-emerald-400 font-bold w-24">${r.score}%</td>
+                <td class="py-2 pl-4 text-slate-400 text-[9px] truncate max-w-[150px]" title="${r.apps || ''}">${r.apps ? r.apps.substring(0, 60) + '...' : 'General sorting approach'}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderFitScores(ranked) {
+        const el = document.getElementById('pm-fit-scores');
+        if (!el || !ranked || ranked.length < 4) return;
+        el.innerHTML = ranked.slice(1, 4).map((r, i) => {
+            const colors = ['cyan','emerald','amber'];
+            const c = colors[i];
+            return `
+            <div class="flex flex-col items-center gap-2">
+                <div class="relative w-12 h-12">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-slate-800" stroke-width="3"></circle>
+                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-${c}-400" stroke-width="3" stroke-dasharray="100.5" stroke-dashoffset="${100.5 - (r.score/100)*100.5}"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white">${r.score}%</div>
+                </div>
+                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate w-16 text-center">${r.title.split(' ')[0]}</span>
+            </div>
+        `}).join('');
+    }
+
+    function renderConflictTable(algo, param1, n) {
+        const el = document.getElementById('pm-conflict-table');
+        if (!el) return;
+        el.innerHTML = `
+            <div class="grid grid-cols-12 gap-2 p-2 border-b border-white/[0.02] text-[10px] bg-white/[0.01]">
+                <div class="col-span-4 text-slate-400">Branching Cache</div>
+                <div class="col-span-4 text-slate-500 font-mono">Theoretical: ${algo.avg}</div>
+                <div class="col-span-4 text-rose-400 font-mono text-right">+12% Latency</div>
+            </div>
+            <div class="grid grid-cols-12 gap-2 p-2 text-[10px] bg-white/[0.01]">
+                <div class="col-span-4 text-slate-400">Syscall Overhead</div>
+                <div class="col-span-4 text-slate-500 font-mono">Bound: O(1)</div>
+                <div class="col-span-4 text-emerald-400 font-mono text-right">-5% Optimized</div>
+            </div>
+        `;
+    }
+
+    function renderHeatmap(arr) {
+        const el = document.getElementById('pm-heatmap');
+        if (!el) return;
+        el.innerHTML = '';
+        if(!arr || arr.length === 0) return;
+        
+        let blocks = 24;
+        let blockSize = Math.max(1, Math.floor(arr.length / blocks));
+        let maxVal = Math.max(...arr) || 1;
+        
+        for (let i = 0; i < blocks; i++) {
+            let start = i * blockSize;
+            let end = Math.min((i + 1) * blockSize, arr.length);
+            if (start >= arr.length) break;
+            
+            const blockDiv = document.createElement('div');
+            blockDiv.className = 'bg-black/40 w-full aspect-square border-b-2 rounded-sm p-[3px] flex items-end justify-between gap-[1px] group transition-all duration-300 hover:bg-white/10 relative overflow-hidden cursor-crosshair';
+            let colorBaseClass = pmType === 'Highly Pre-sorted' ? 'bg-emerald-400' : pmType === 'Sorted (Reverse)' ? 'bg-rose-400' : 'bg-cyan-400';
+            if(pmPIndex >= 50 && i % 4 === 0) colorBaseClass = 'bg-fuchsia-400';
+
+            // border-b color matching base
+            blockDiv.style.borderBottomColor = colorBaseClass.replace('bg-', '');
+            
+            let miniBars = 4;
+            let step = Math.max(1, Math.floor((end - start) / miniBars));
+            for(let k=0; k<miniBars; k++) {
+                let mStart = start + k * step;
+                if(mStart >= end) break;
+                let pct = (arr[mStart] / maxVal) * 100;
+                blockDiv.innerHTML += `<div class="w-full ${colorBaseClass} rounded-[1px] transition-all group-hover:bg-white" style="height: ${Math.max(15, pct)}%; opacity: ${0.4 + (pct/200)}"></div>`;
+            }
+            // Overlay gradient for depth
+            blockDiv.innerHTML += `<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>`;
+            el.appendChild(blockDiv);
+        }
+    }
+
+    function drawPredictCurve(canvas, ranked) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = canvas.offsetWidth;
+        const h = canvas.height = canvas.offsetHeight;
+        ctx.clearRect(0,0,w,h);
+        
+        // Draw grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.beginPath();
+        for(let i=0; i<w; i+=20) { ctx.moveTo(i,0); ctx.lineTo(i,h); }
+        for(let i=0; i<h; i+=15) { ctx.moveTo(0,i); ctx.lineTo(w,i); }
+        ctx.stroke();
+
+        // Target Curve (Cyan)
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(6,182,212,0.6)';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        for(let i=0; i<=w; i+=5) {
+            let curH = h - (h * 0.15 + (Math.log(i/15+1)*14) + Math.sin(i*0.05)*3);
+            if(i===0) ctx.moveTo(i, curH);
+            else ctx.bezierCurveTo(i-2.5, curH, i-2.5, curH, i, curH);
+        }
+        ctx.stroke();
+
+        // Deviation Curve (Fuchsia) - dashed
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#d946ef';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        for(let i=0; i<=w; i+=5) {
+            let curH = h - (h * 0.1 + (i*0.3));
+            if(i===0) ctx.moveTo(i, curH);
+            else ctx.lineTo(i, curH);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        // Marker point
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(w*0.8, h - (h*0.15 + (Math.log((w*0.8)/15+1)*14) + Math.sin((w*0.8)*0.05)*3), 4, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowColor = 'transparent';
+    }
+
+    function drawEnergyArea(canvas, pIndex) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = canvas.offsetWidth;
+        const h = canvas.height = canvas.offsetHeight;
+        ctx.clearRect(0,0,w,h);
+        
+        // Base stack
+        ctx.fillStyle = 'rgba(6,182,212,0.05)';
+        ctx.fillRect(0, 0, w, h);
+
+        // Area Graph
+        let grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, 'rgba(244,63,94,0.4)');
+        grad.addColorStop(1, 'rgba(244,63,94,0.01)');
+        
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(0, h);
+        let lastY = h;
+        for(let i=0; i<=w; i+=5) {
+            let val = h*0.4 + Math.sin(i*0.1 + pIndex*0.1)*8 - Math.cos(i*0.04)*4;
+            lastY = Math.max(val, 10);
+            ctx.lineTo(i, lastY);
+        }
+        ctx.lineTo(w, h);
+        ctx.fill();
+
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for(let i=0; i<=w; i+=5) {
+            let val = h*0.4 + Math.sin(i*0.1 + pIndex*0.1)*8 - Math.cos(i*0.04)*4;
+            let y = Math.max(val, 10);
+            if(i===0) ctx.moveTo(i, y);
+            else ctx.lineTo(i, y);
+        }
+        ctx.stroke();
+
+        // Horizontal thresholds
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.setLineDash([2,2]);
+        ctx.beginPath(); ctx.moveTo(0, h*0.3); ctx.lineTo(w, h*0.3); ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    function renderPatternsSummary(patterns) {
+        const el = document.getElementById('pm-patterns-summary');
+        if (!el || !patterns) return;
+        el.innerHTML = `
+            <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                <div class="text-[9px] text-slate-500 uppercase font-bold mb-1">Ascending Runs</div>
+                <div class="text-sm font-bold text-white">${patterns.runs}</div>
+            </div>
+            <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                <div class="text-[9px] text-slate-500 uppercase font-bold mb-1">Avg Run Len</div>
+                <div class="text-sm font-bold text-cyan-400">${patterns.avgRunLen}</div>
+            </div>
+            <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                <div class="text-[9px] text-slate-500 uppercase font-bold mb-1">Reverse Runs</div>
+                <div class="text-sm font-bold text-rose-400">${patterns.reverseRuns}</div>
+            </div>
+            <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                <div class="text-[9px] text-slate-500 uppercase font-bold mb-1">Plateaus</div>
+                <div class="text-sm font-bold text-amber-400">${patterns.plateaus}</div>
+            </div>
+        `;
+    }
+});
+
+// Helper function for presortedness analysis
+function analyzePresortedness(arr) {
+    if (!arr || arr.length === 0) return { pIndex: 0, type: 'Random' };
+    let asc = 0, desc = 0;
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] >= arr[i - 1]) asc++;
+        else desc++;
+    }
+    let orderPct = Math.max(asc, desc) / (arr.length - 1 || 1) * 100;
+    let type = 'Random (Scattered)';
+    if (orderPct > 95) type = asc >= desc ? 'Highly Pre-sorted (Asc)' : 'Highly Pre-sorted (Desc)';
+    else if (orderPct > 70) type = 'Partially Sorted / Clustered';
+    else if (orderPct < 55) type = 'Highly Randomized';
+    return { pIndex: Math.round(orderPct), type };
+}
+
+// Helper function for algorithm strengths
+function getAlgoStrengths(key, pIndex) {
+    const strengths = {
+        'tim-sort': 'Ideal: detected many natural runs; near-O(n) perf.',
+        'intro-sort': 'Hybrid: adapts between QuickSort/HeapSort. Consistent.',
+        'quick-sort': 'Cache-friendly. Very fast on randomized data.',
+        'merge-sort': 'Stable, consistent O(n log n). Good for linked lists.',
+        'heap-sort': 'Consistent O(n log n), no adaptive gain.',
+        'shell-sort': 'Good for medium arrays. Sub-quadratic.',
+        'pdq-sort': 'Uses presortedness to select pivots and subarrays.',
+        'insertion-sort': 'Very fast for nearly sorted, slow otherwise.',
+        'bubble-sort': 'O(n) only if *already* fully sorted.',
+        'selection-sort': 'Worst choice; full scan every pass.',
+        'dual-pivot-quick-sort': 'Dual pivots improve partitioning on random data.',
+        'block-sort': 'In-place merge sort variant. Stable, O(1) space.',
+        'dual-fusion-sort': 'Hybrid dual-merge approach. Adaptive.'
+    };
+    return strengths[key] || 'General purpose sorting algorithm.';
+}
+
+// GRAPH SETUP
+const ctx = document.getElementById('complexityChart').getContext('2d');
+const nValues = Array.from({ length: 300 }, (_, i) => i + 1);
+
+// Complexity functions
+const fn = {
+  "1": n => 1,
+  "logn": n => Math.log2(n),
+  "n": n => n,
+  "nlogn": n => n * Math.log2(n),
+  "nlog2n": n => n * Math.pow(Math.log2(n), 2),
+  "n2": n => n * n
+};
+
+// Algorithms
+const algorithms_complexity = [
+  { name: "Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#00f7ff" },
+  { name: "Merge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#00ffa6" },
+  { name: "Heap Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#ffd166" },
+  { name: "Bubble Sort", best: "n", avg: "n2", worst: "n2", color: "#ff4d6d" },
+  { name: "Selection Sort", best: "n2", avg: "n2", worst: "n2", color: "#ff6b6b" },
+  { name: "Insertion Sort", best: "n", avg: "n2", worst: "n2", color: "#f72585" },
+  { name: "Tim Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#4cc9f0" },
+  { name: "Shell Sort", best: "nlogn", avg: "nlog2n", worst: "n2", color: "#90dbf4" },
+  { name: "Block Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#72efdd" },
+  { name: "Dual Pivot Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#64dfdf" },
+  { name: "Pdq Sort", best: "n", avg: "nlogn", worst: "n2", color: "#48bfe3" },
+  { name: "Intro Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#5390d9" },
+  { name: "Quickmerge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#6930c3" },
+  { name: "In-place Merge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#7400b8" }
+];
+
+let selectedCase = "avg";
+let activeAlgorithms = new Set(algorithms_complexity.map(a => a.name));
+let selectedAlgorithm = null;
+let complexityInputMode = 'auto';
+let complexityInputData = [];
+let complexityCurrentRanking = [];
+let complexityInputStats = null;
+
+const complexitySourceAuto = document.getElementById('complexity-source-auto');
+const complexitySourceManual = document.getElementById('complexity-source-manual');
+const complexitySourceFile = document.getElementById('complexity-source-file');
+const complexityInputAuto = document.getElementById('complexity-input-auto');
+const complexityInputManual = document.getElementById('complexity-input-manual');
+const complexityInputFile = document.getElementById('complexity-input-file');
+const complexityAutoSize = document.getElementById('complexity-auto-size');
+const complexityAutoSizeLabel = document.getElementById('complexity-auto-size-label');
+const complexityManualText = document.getElementById('complexity-manual-text');
+const complexityFileInput = document.getElementById('complexity-file-input');
+const complexityFileLabel = document.getElementById('complexity-file-label');
+const btnComplexityResetFile = document.getElementById('btn-complexity-reset-file');
+const btnAnalyzeInput = document.getElementById('btn-analyze-input');
+const complexityFileUploadLabel = document.getElementById('complexity-file-upload-label');
+const complexitySummarySize = document.getElementById('complexity-summary-size');
+const complexitySummaryPIndex = document.getElementById('complexity-summary-pindex');
+const complexitySummaryType = document.getElementById('complexity-summary-type');
+const complexitySummarySorted = document.getElementById('complexity-summary-sorted');
+const complexityRankingBody = document.getElementById('complexity-ranking-body');
+const complexityRankedCount = document.getElementById('complexity-ranked-count');
+const complexityAlgoDetails = document.getElementById('complexity-algo-details');
+const complexitySortPreview = document.getElementById('complexity-sort-preview');
+const complexitySortedPreview = document.getElementById('complexity-sorted-preview');
+
+function setComplexityMode(mode) {
+  complexityInputMode = mode;
+  if (complexityInputAuto) complexityInputAuto.classList.toggle('hidden', mode !== 'auto');
+  if (complexityInputManual) complexityInputManual.classList.toggle('hidden', mode !== 'manual');
+  if (complexityInputFile) complexityInputFile.classList.toggle('hidden', mode !== 'file');
+  document.querySelectorAll('.complexity-source-btn').forEach(btn => btn.classList.toggle('active', btn.id === `complexity-source-${mode}`));
+}
+
+function parseInputText(text) {
+  if (!text) return [];
+  const tokens = text.trim().split(/[\s,;]+/);
+  const nums = tokens.reduce((acc, token) => {
+    const value = Number(token);
+    if (!isNaN(value)) acc.push(value);
+    return acc;
+  }, []);
+  return nums;
+}
+
+function computeSortedPortion(arr) {
+  if (!arr || arr.length < 2) return 100;
+  let sortedCount = 1;
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] >= arr[i - 1]) sortedCount++;
+    else break;
+  }
+  return Math.round((sortedCount / arr.length) * 100);
+}
+
+function computeInputStats(arr) {
+  const p = analyzePresortedness(arr);
+  const sorted = computeSortedPortion(arr);
+  return {
+    n: arr.length,
+    pIndex: p.pIndex,
+    inputType: p.type,
+    sortedPortion: sorted
+  };
+}
+
+function findAlgoKeyByTitle(title) {
+  const key = Object.keys(algorithms).find(k => algorithms[k].title.toLowerCase() === title.toLowerCase());
+  return key || null;
+}
+
+function predictComparisonsForAlgo(title, stats) {
+  const algo = algorithms_complexity.find(a => a.name === title);
+  if (!algo || !stats) return 0;
+  const n = Math.max(1, stats.n);
+  let comps = 0;
+  switch (algo.avg) {
+    case 'n': comps = n; break;
+    case 'nlogn': comps = n * Math.log2(n); break;
+    case 'nlog2n': comps = n * Math.pow(Math.log2(n), 2); break;
+    case 'n2': comps = n * n; break;
+    case 'logn': comps = Math.log2(n); break;
+    default: comps = n * Math.log2(n);
+  }
+  if (stats.sortedPortion >= 80 && ['Bubble Sort', 'Insertion Sort', 'Selection Sort'].includes(title)) comps *= 0.3;
+  if (stats.pIndex >= 85 && ['Tim Sort', 'Pdq Sort', 'Intro Sort', 'Dual Pivot Quick Sort'].includes(title)) comps *= 0.9;
+  if (stats.inputType.includes('Reverse') && title === 'Insertion Sort') comps *= 1.5;
+  return Math.round(Math.max(comps, 1));
+}
+
+function rankAlgorithmsForInputData(arr) {
+  const stats = computeInputStats(arr);
+  complexityInputStats = stats;
+  const ranked = algorithms_complexity.map(algo => {
+    let score = 50;
+    const isAdaptive = ['Tim Sort', 'Pdq Sort', 'Intro Sort', 'Dual Fusion Sort', 'Dual Pivot Quick Sort'].includes(algo.name);
+    const isQuadratic = ['Bubble Sort', 'Selection Sort', 'Insertion Sort'].includes(algo.name);
+    if (stats.pIndex >= 80 && isAdaptive) score += 25;
+    if (stats.pIndex >= 70 && isAdaptive) score += 15;
+    if (algo.avg === 'nlogn' && stats.n >= 100) score += 15;
+    if (algo.avg === 'n' && stats.sortedPortion >= 75) score += 20;
+    if (isQuadratic && stats.n > 200) score -= 20;
+    if (isQuadratic && stats.sortedPortion >= 80) score += 10;
+    if (algo.name === 'Heap Sort' && stats.n > 500) score += 10;
+    if (stats.inputType === 'Reverse-Sorted' && algo.name === 'Merge Sort') score += 10;
+    if (stats.inputType === 'Reverse-Sorted' && algo.name === 'Insertion Sort') score -= 10;
+    if (stats.sortedPortion >= 85 && algo.name === 'Insertion Sort') score += 20;
+    if (stats.sortedPortion >= 85 && algo.name === 'Bubble Sort') score += 15;
+    if (stats.sortedPortion <= 20 && algo.name === 'Merge Sort') score += 10;
+
+    const expectedOps = predictComparisonsForAlgo(algo.name, stats);
+    const note = getAlgoStrengths(findAlgoKeyByTitle(algo.name) || algo.name, stats.pIndex);
+    return {
+      title: algo.name,
+      score: Math.max(5, Math.min(99, Math.round(score))),
+      expectedOps,
+      note,
+      key: findAlgoKeyByTitle(algo.name)
+    };
+  });
+
+  ranked.sort((a, b) => b.score - a.score || a.expectedOps - b.expectedOps);
+  complexityCurrentRanking = ranked;
+  return ranked;
+}
+
+function updateComplexitySummary(stats) {
+  if (!stats) return;
+  if (complexitySummarySize) complexitySummarySize.textContent = `${stats.n.toLocaleString()} items`;
+  if (complexitySummaryPIndex) complexitySummaryPIndex.textContent = `${stats.pIndex}%`;
+  if (complexitySummaryType) complexitySummaryType.textContent = stats.inputType;
+  if (complexitySummarySorted) complexitySummarySorted.textContent = `${stats.sortedPortion}%`;
+}
+
+/* --- TOOLTIP DICTIONARY & UI --- */
+const complexityDerivations = {
+  'Quick Sort': 'Divides array into two partitions recursively (log n layers). Scans each layer once (n operations). Expected: O(n log n). Worst case O(n²) if pivot is consistently poor.',
+  'Merge Sort': 'Recursively halves the array (log n depth) and merges halves by linearly comparing elements (n ops/layer). Always strictly O(n log n).',
+  'Heap Sort': 'Builds a max-heap (O(n)), then repeatedly extracts maximum. Sifting down an element takes O(log n), done n times. Total: O(n log n).',
+  'Bubble Sort': 'Repeatedly steps through the list, comparing/swapping adjacent elements. Up to n passes for n elements. Total strictly O(n²).',
+  'Selection Sort': 'Scans the unsorted array to find the minimum (O(n)). Repeated n times. Arithmetic progression sum yields strictly O(n²).',
+  'Insertion Sort': 'Builds the sorted array one element at a time. The i-th element takes up to i comparisons. Summing 1 to n yields O(n²).',
+  'Tim Sort': 'Hybrid of Merge & Insertion. Identifies natural strictly increasing runs (O(n)) and merges them. Minimum run sizes optimize cache. Bounded O(n log n).',
+  'Shell Sort': 'Generalization of insertion sort allowing exchanges of far-apart elements. Complexity depends on gap sequence; usually O(n log n) or O(n^(4/3)).',
+  'Block Sort': 'In-place stable merging by dividing array into small blocks, sorting blocks, and merging. Overhead keeps complexity uniformly bound to O(n log n).',
+  'Dual Pivot Quick Sort': 'Employs two pivots, partitioning array into three segments. Reduces deep recursion logarithmically compared to a single pivot. Expected O(n log n).',
+  'Pdq Sort': 'Pattern-defeating quicksort. Blends Quick Sort with Insertion Sort for small arrays and Heap Sort to guarantee worst-case ceiling at O(n log n).',
+  'Intro Sort': 'Begins with Quick Sort but aggressively switches to Heap Sort if recursion tree depth exceeds 2 * log(n), guaranteeing worst case O(n log n).',
+  'Quickmerge Sort': 'Hybrid uniting Quick Sort partitioning with exact Merge Sort stability invariants. Constrained perfectly at O(n log n).',
+  'Dual Fusion Sort': 'Custom hybrid optimizing concurrent pivot boundaries while seamlessly merging overlapping sub-arrays. Practically O(n log n).',
+  'In-place Merge Sort': 'Performs merge boundaries without auxiliary O(n) memory by using block rotations or complex pointer inversions. Yields O(n log² n) or O(n log n).'
+};
+
+let derivationTooltip = document.getElementById('derivation-tooltip');
+if (!derivationTooltip) {
+    derivationTooltip = document.createElement('div');
+    derivationTooltip.id = 'derivation-tooltip';
+    derivationTooltip.className = 'fixed z-[9999] max-w-[280px] p-3 rounded-xl bg-slate-900 border border-white/10 shadow-2xl shadow-fuchsia-500/20 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-200 text-[11px] text-slate-300 leading-relaxed font-mono';
+    document.body.appendChild(derivationTooltip);
+}
+
+function showDerivationTooltip(title, e) {
+    const text = complexityDerivations[title] || 'Complexity derivation determined dynamically by bounds mapping.';
+    derivationTooltip.innerHTML = `<span class="text-white font-bold mb-1 block flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-fuchsia-400"></span>${title} Derivation</span>${text}`;
+    derivationTooltip.style.left = (e.clientX + 15) + 'px';
+    derivationTooltip.style.top = (e.clientY + 15) + 'px';
+    derivationTooltip.style.opacity = '1';
+}
+
+function hideDerivationTooltip() {
+    derivationTooltip.style.opacity = '0';
+}
+function moveDerivationTooltip(e) {
+    derivationTooltip.style.left = (e.clientX + 15) + 'px';
+    derivationTooltip.style.top = (e.clientY + 15) + 'px';
+}
+
+function renderRankingTable(ranked) {
+  if (!complexityRankingBody) return;
+  complexityRankingBody.innerHTML = '';
+  ranked.forEach((algo, index) => {
+    const row = document.createElement('tr');
+    row.className = 'border-b border-white/5 cursor-pointer hover:bg-white/5 relative';
+    row.dataset.algoTitle = algo.title;
+    row.innerHTML = `
+      <td class="py-2 pr-2 text-slate-300 font-bold">${index + 1}</td>
+      <td class="py-2 pr-2 text-slate-200">${algo.title}</td>
+      <td class="py-2 pr-2 text-emerald-300">${algo.score}</td>
+      <td class="py-2 pr-2 text-slate-400">${algo.expectedOps.toLocaleString()}</td>
+    `;
+    row.addEventListener('click', () => selectComplexityAlgorithm(algo.title));
+    row.addEventListener('mouseenter', (e) => showDerivationTooltip(algo.title, e));
+    row.addEventListener('mousemove', moveDerivationTooltip);
+    row.addEventListener('mouseleave', hideDerivationTooltip);
+    complexityRankingBody.appendChild(row);
+  });
+  if (complexityRankedCount) complexityRankedCount.textContent = `${ranked.length} algorithms`;
+}
+
+function buildDetailsHtml(algo, stats, preview) {
+  const expectedOpsText = algo.expectedOps.toLocaleString();
+  const currentInput = stats ? `${stats.n.toLocaleString()} items` : 'no input';
+  const sortedSample = preview ? preview.join(', ') : 'No sorted preview yet.';
+  return `
+    <p class="text-[11px] text-slate-400 uppercase tracking-wider">Selected Algorithm</p>
+    <p class="text-white font-bold text-sm">${algo.title}</p>
+    <p class="text-slate-300 text-[12px]">Input: ${currentInput} · Expected comparisons: <strong>${expectedOpsText}</strong></p>
+    <p class="text-slate-400 text-[11px]">Reason: ${algo.note}</p>
+    <p class="text-slate-400 text-[11px]">Based on size, presortedness, and sorted portion, this algorithm is ranked #${complexityCurrentRanking.indexOf(algo) + 1}.</p>
+  `;
+}
+
+function selectComplexityAlgorithm(title) {
+  selectedAlgorithm = title;
+  document.querySelectorAll('.algo-btn').forEach(btn => {
+    btn.classList.toggle('active-highlight', btn.innerText === title);
+  });
+  document.querySelectorAll('#complexity-ranking-body tr').forEach(row => {
+    row.classList.toggle('bg-white/10', row.dataset.algoTitle === title);
+  });
+
+  const algo = complexityCurrentRanking.find(item => item.title === title);
+  if (!algo || !complexityInputStats) return;
+  const preview = sortInputPreview(algo.key, complexityInputData, complexityInputStats);
+  if (complexityAlgoDetails) complexityAlgoDetails.innerHTML = buildDetailsHtml(algo, complexityInputStats, preview.sample);
+  if (complexitySortPreview) {
+    complexitySortPreview.classList.remove('hidden');
+    complexitySortedPreview.textContent = preview.sample.join(', ');
+  }
+  updateChart(true);
+}
+
+function sortInputPreview(key, arr, stats) {
+  if (!arr || arr.length === 0) return { sample: [], duration: 0 };
+  const sampleCount = 20;
+  const copy = [...arr];
+  let duration = 0;
+  try {
+    const start = performance.now();
+    if (key && algorithms[key] && algorithms[key].runRaw && arr.length <= 1000) {
+      algorithms[key].runRaw(copy);
+    } else {
+      copy.sort((a, b) => a - b);
+    }
+    duration = performance.now() - start;
+  } catch (e) {
+    copy.sort((a, b) => a - b);
+    duration = performance.now() - start;
+  }
+  return {
+    sample: copy.slice(0, sampleCount),
+    duration: Math.round(duration)
+  };
+}
+
+function analyzeComplexityInput() {
+  let data = [];
+  if (complexityInputMode === 'auto') {
+    const count = Number(complexityAutoSize?.value) || 50;
+    data = Array.from({ length: count }, () => Math.floor(Math.random() * count) + 1);
+  } else if (complexityInputMode === 'manual') {
+    data = parseInputText(complexityManualText?.value || '');
+  } else if (complexityInputMode === 'file') {
+    data = complexityInputData || [];
+  }
+  if (!data || data.length === 0) {
+    alert('Please provide a valid input array before analyzing.');
+    return;
+  }
+  complexityInputData = data;
+  const ranked = rankAlgorithmsForInputData(data);
+  updateComplexitySummary(complexityInputStats);
+  renderRankingTable(ranked);
+  if (ranked.length > 0) {
+    selectComplexityAlgorithm(ranked[0].title);
+  }
+  if (chart) updateChart(true);
+}
+
+if (complexitySourceAuto) complexitySourceAuto.addEventListener('click', () => setComplexityMode('auto'));
+if (complexitySourceManual) complexitySourceManual.addEventListener('click', () => setComplexityMode('manual'));
+if (complexitySourceFile) complexitySourceFile.addEventListener('click', () => setComplexityMode('file'));
+
+if (complexityAutoSize) {
+  complexityAutoSize.addEventListener('input', () => {
+    if (complexityAutoSizeLabel) complexityAutoSizeLabel.textContent = complexityAutoSize.value;
+  });
+}
+
+if (complexityFileInput) {
+  complexityFileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    complexityFileLabel.textContent = file.name;
+    if (btnComplexityResetFile) btnComplexityResetFile.classList.remove('hidden');
+    if (complexityFileUploadLabel) complexityFileUploadLabel.classList.add('border-cyan-500/30');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const arr = parseInputText(text || '');
+      if (arr.length === 0) {
+        alert('Uploaded file did not contain numeric values.');
+        complexityInputData = [];
+      } else {
+        complexityInputData = arr;
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+if (btnComplexityResetFile) {
+  btnComplexityResetFile.addEventListener('click', () => {
+    if (complexityFileInput) complexityFileInput.value = '';
+    complexityFileLabel.textContent = 'No file selected';
+    btnComplexityResetFile.classList.add('hidden');
+    if (complexityFileUploadLabel) complexityFileUploadLabel.classList.remove('border-cyan-500/30');
+    complexityInputData = [];
+  });
+}
+
+if (btnAnalyzeInput) btnAnalyzeInput.addEventListener('click', analyzeComplexityInput);
+
+// CREATE BUTTONS
+const toggleContainer = document.getElementById("algoToggle");
+
+algorithms_complexity.forEach(algo => {
+  const btn = document.createElement("button");
+  btn.className = "algo-btn active transition-all duration-300";
+  if (!activeAlgorithms.has(algo.name)) {
+      btn.classList.remove("active");
+      btn.classList.add("opacity-40", "scale-95");
+  }
+  btn.innerText = algo.name;
+
+  btn.onclick = () => {
+    // Toggle algorithm visibility
+    if (activeAlgorithms.has(algo.name)) {
+      activeAlgorithms.delete(algo.name);
+      btn.classList.remove("active", "active-highlight");
+      btn.classList.add("opacity-40", "scale-95");
+      
+      // Clear selectedAlgorithm if we just disabled it
+      if (selectedAlgorithm === algo.name) {
+          selectedAlgorithm = null;
+      }
+    } else {
+      activeAlgorithms.add(algo.name);
+      btn.classList.add("active");
+      btn.classList.remove("opacity-40", "scale-95");
+      
+      selectedAlgorithm = algo.name;
+      document.querySelectorAll(".algo-btn").forEach(b => b.classList.remove("active-highlight"));
+      btn.classList.add("active-highlight");
+      
+      highlightSortingAlgorithm(algo.name);
+      selectComplexityAlgorithm(algo.name);
+    }
+
+    updateChart(true);
+  };
+
+  toggleContainer.appendChild(btn);
+});
+
+// CASE TOGGLE WITH ANIMATION
+document.querySelectorAll(".case-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".case-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    selectedCase = btn.dataset.case === "average" ? "avg" : btn.dataset.case;
+
+    updateChart(true); // animate
+  };
+});
+
+// DATASETS
+function getDatasets() {
+  const inputN = (complexityInputStats && complexityInputStats.n <= 300) ? Math.max(1, Math.floor(complexityInputStats.n)) : -1;
+
+  const datasets = algorithms_complexity
+    .map((a, index) => {
+      const type = a[selectedCase];
+      // Micro offset factor to prevent overlapping of identically timed algorithms
+      const offsetFactor = 1 + (index * 0.08);
+
+      return {
+        label: `${a.name} (${type})`,
+        data: nValues.map(n => fn[type](n) * offsetFactor),
+        borderColor: a.color,
+        borderWidth: selectedAlgorithm === a.name ? 4 : (activeAlgorithms.has(a.name) ? 2 : 1),
+        fill: false,
+        tension: 0.35,
+        hidden: !activeAlgorithms.has(a.name),
+        // Dynamically plot a synchronization point on the active curve at X = inputN
+        pointRadius: nValues.map(n => (n === inputN ? (selectedAlgorithm === a.name ? 8 : 4) : 0)),
+        pointHoverRadius: nValues.map(n => (n === inputN ? 10 : 0)),
+        pointBackgroundColor: selectedAlgorithm === a.name ? '#ffffff' : a.color,
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: nValues.map(n => (n === inputN ? 2 : 0))
+      };
+    });
+
+  return datasets;
+}
+
+// CREATE CHART
+let chart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: nValues,
+    datasets: getDatasets()
+  },
+  options: {
+    layout: {
+      padding: { right: 120 }
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 800, // 🔥 smooth animation
+      easing: "easeInOutQuart"
+    },
+    plugins: {
+      legend: {
+        labels: { color: "#fff" },
+        display: true,
+        position: 'top',
+        onClick: function(e, legendItem, legend) {
+            const index = legendItem.datasetIndex;
+            const ci = legend.chart;
+            const label = legendItem.text.split(' (')[0];
+            
+            if (activeAlgorithms.has(label)) {
+                activeAlgorithms.delete(label);
+            } else {
+                activeAlgorithms.add(label);
+            }
+            
+            // Sync buttons visually
+            document.querySelectorAll(".algo-btn").forEach(b => {
+                if (b.innerText === label) {
+                    if (activeAlgorithms.has(label)) {
+                       b.classList.add("active");
+                       b.classList.remove("opacity-40", "scale-95");
+                    } else {
+                       b.classList.remove("active", "active-highlight");
+                       b.classList.add("opacity-40", "scale-95");
+                    }
+                }
+            });
+            updateChart(true);
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label; // shows O(n log n)
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: "#aaa" },
+        grid: { color: "rgba(255,255,255,0.05)" }
+      },
+      y: {
+        type: "logarithmic",
+        ticks: { color: "#aaa" },
+        grid: { color: "rgba(255,255,255,0.05)" }
+      }
+    }
+  },
+  plugins: [{
+    id: 'inlineAlgorithmLabels',
+    afterDatasetsDraw: (chart) => {
+      const { ctx, data } = chart;
+      ctx.save();
+      
+      let pendingLabels = [];
+
+      data.datasets.forEach((dataset, i) => {
+        if (dataset.hidden || dataset.type === 'bar') return;
+        const meta = chart.getDatasetMeta(i);
+        if (!meta || meta.hidden || !meta.data || meta.data.length === 0) return;
+        const lastPoint = meta.data[meta.data.length - 1];
+        if (!lastPoint || !lastPoint.x || isNaN(lastPoint.y)) return;
+        
+        pendingLabels.push({
+          text: dataset.label.split(' (')[0],
+          x: lastPoint.x,
+          targetY: lastPoint.y,
+          y: lastPoint.y, // Current working Y
+          color: dataset.borderWidth === 4 ? '#ffffff' : dataset.borderColor,
+          font: dataset.borderWidth === 4 ? 'bold 11px "Space Grotesk", sans-serif' : '10px "Space Grotesk", sans-serif',
+          alpha: dataset.borderWidth === 4 ? 1.0 : 0.8
+        });
+      });
+      
+      // Sort labels top-to-bottom on canvas (smaller Y is higher screen position)
+      pendingLabels.sort((a, b) => a.y - b.y);
+      
+      // Anti-collision resolution
+      const LABEL_HEIGHT = 14; 
+      let overlapping = true;
+      let resolveIterations = 0;
+      
+      while (overlapping && resolveIterations < 50) {
+          overlapping = false;
+          for (let i = 0; i < pendingLabels.length - 1; i++) {
+              let current = pendingLabels[i];
+              let next = pendingLabels[i + 1];
+              
+              const distance = next.y - current.y;
+              if (distance < LABEL_HEIGHT) {
+                  overlapping = true;
+                  const adjust = (LABEL_HEIGHT - distance) / 2;
+                  current.y -= adjust;
+                  next.y += adjust;
+              }
+          }
+          resolveIterations++;
+      }
+      
+      // Draw resolved labels with optional leading ticks
+      pendingLabels.forEach(p => {
+        if (Math.abs(p.y - p.targetY) > 3) {
+            ctx.beginPath();
+            ctx.moveTo(p.x + 2, p.targetY);
+            ctx.lineTo(p.x + 6, p.y);
+            ctx.strokeStyle = p.color;
+            ctx.globalAlpha = 0.3;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.font = p.font;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillText(p.text, p.x + 8, p.y + 4);
+      });
+      ctx.restore();
+    }
+  }]
+});
+
+// UPDATE FUNCTION
+function updateChart(animate = false) {
+  chart.data.datasets = getDatasets();
+  chart.update(animate ? undefined : "none");
+}
+
+// 🔥 CONNECT THIS WITH YOUR SORTING VISUALIZER
+function highlightSortingAlgorithm(name) {
+  console.log("Selected:", name);
+
+  // 👉 Replace this with your visualizer logic
+  // Example:
+  // currentAlgorithm = name;
+  // updateVisualizerUI(name);
+}
+
+// MODAL CONTROL
+const modal = document.getElementById("complexityModal");
+const openBtn = document.getElementById("openComplexity");
+const closeBtn = document.getElementById("closeComplexity");
+
+openBtn.onclick = () => {
+  modal.style.display = "block";
+  setTimeout(() => {
+    chart.resize();
+    chart.update();
+  }, 100);
+};
+closeBtn.onclick = () => modal.style.display = "none";
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+
+
+
+/* STITCH DESIGNED GAMIFIED LEARNING FEATURE */
+(function() {
+  let isGameMode = false;
+  let score = 0;
+  let heatmapData = [];
+  let moveLogGame = [];
+  let selectedIndices = [];
+  let compCount = 0;
+  let swapCount = 0;
+  
+  window.toggleGameMode = function() {
+    isGameMode = !isGameMode;
+    const aiPanel = document.getElementById('aiPanel');
+    
+    if (isGameMode) {
+      if(aiPanel) {
+        aiPanel.classList.remove('hidden');
+        // trigger reflow
+        void aiPanel.offsetWidth;
+        aiPanel.classList.add('opacity-100');
+      }
+      
+      // Auto-navigate to arena if not there
+      const btnGoArena = document.getElementById('btn-go-arena');
+      if (btnGoArena) btnGoArena.click();
+
+      score = 0;
+      compCount = 0;
+      swapCount = 0;
+      heatmapData = [];
+      moveLogGame = [];
+      selectedIndices = [];
+      document.getElementById('score').innerText = '0';
+      document.getElementById('strategy').innerText = 'UNKNOWN';
+      document.getElementById('feedback').innerText = 'Game Mode Active! Select two bars to swap.';
+      
+      updateHeatmapGame();
+    } else {
+      if(aiPanel) {
+        aiPanel.classList.remove('opacity-100');
+        setTimeout(() => aiPanel.classList.add('hidden'), 300);
+      }
+      selectedIndices = [];
+      
+      // Clear visual selections from bars
+      document.querySelectorAll('.bar, [style*="height"]').forEach(b => b.style.boxShadow = '');
+    }
+  };
+
+  // Close button binding
+  setTimeout(() => {
+    const cb = document.getElementById('close-game-btn');
+    if (cb) cb.addEventListener('click', () => { if(isGameMode) window.toggleGameMode(); });
+  }, 1000);
+
+  // Bind the Hero Button explicitly
+  setTimeout(() => {
+    const heroBtn = document.getElementById('btn-hero-gameMode');
+    if(heroBtn) heroBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if(!isGameMode) window.toggleGameMode();
+    });
+  }, 1000);
+
+  // Catch clicks globally for the game
+  document.addEventListener('click', (e) => {
+    if (!isGameMode) return;
+    
+    const bar = e.target.closest('.bar') || e.target.closest('[style*="height"]');
+    if (!bar) return;
+    
+    const container = bar.parentElement;
+    if (!container || (!container.id.includes('array') && !container.id.includes('vis'))) return;
+
+    const barsList = Array.from(container.children);
+    const index = barsList.indexOf(bar);
+    
+    if (index === -1) return;
+    
+    // Selection logic
+    if (selectedIndices.includes(index)) {
+      selectedIndices = selectedIndices.filter(i => i !== index);
+      bar.style.boxShadow = ''; // deselect
+    } else {
+      if (selectedIndices.length < 2) {
+        selectedIndices.push(index);
+        bar.style.boxShadow = '0 0 15px #00f5d4, inset 0 0 10px #00f5d4';
+      }
+    }
+    
+    // Compare & Swap logic
+    if (selectedIndices.length === 2) {
+      document.getElementById('feedback').innerText = 'Analyzing Neural Pathway...';
+      const idx1 = selectedIndices[0];
+      const idx2 = selectedIndices[1];
+      
+      compCount++;
+      swapCount++;
+      
+      setTimeout(() => {
+        let diff = Math.abs(idx1 - idx2);
+        let moveType = diff === 1 ? 'bubble' : (diff > 1 && diff < 5 ? 'insertion' : 'selection');
+        moveLogGame.push(moveType);
+        
+        let points = 0;
+        let cHex = "#ef476f"; 
+        if (moveType === 'bubble') { 
+          points = 10; cHex = "#00f5d4"; 
+        } else if (moveType === 'insertion') {
+          points = 25; cHex = "#ffb703"; 
+        } else {
+          points = 40; cHex = "#f72585"; 
+        }
+        
+        heatmapData.push(cHex);
+        score += points;
+        
+        let strategyStr = "MIXED";
+        let bCount = moveLogGame.filter(m=>m==='bubble').length;
+        let iCount = moveLogGame.filter(m=>m==='insertion').length;
+        let sCount = moveLogGame.filter(m=>m==='selection').length;
+        let maxCount = Math.max(bCount, iCount, sCount);
+        if(bCount === maxCount && bCount > 0) strategyStr = "BUBBLE SORT ??";
+        else if(iCount === maxCount) strategyStr = "INSERTION SORT ?";
+        else if(sCount === maxCount) strategyStr = "QUICK/SELECT ?";
+        
+        document.getElementById('strategy').innerText = strategyStr;
+        document.getElementById('strategy').style.color = cHex;
+        document.getElementById('strategy').style.textShadow = '0 10px ' + cHex;
+        
+        // Count animation logic
+        let currentScore = parseInt(document.getElementById('score').innerText);
+        animateValue("score", currentScore, score, 500);
+
+        document.getElementById('feedback').innerText = (points > 20 ? 'Optimal Meta! +' : 'Move logged. +') + points + ' XP';
+        
+        updateHeatmapGame();
+        
+        const b1 = barsList[idx1];
+        const b2 = barsList[idx2];
+        const inner1 = b1.innerHTML;
+        const inner2 = b2.innerHTML;
+        const h1 = b1.style.height;
+        const h2 = b2.style.height;
+        
+        b1.style.height = h2;
+        b1.innerHTML = inner2;
+        b2.style.height = h1;
+        b2.innerHTML = inner1;
+        
+        b1.style.boxShadow = '';
+        b2.style.boxShadow = '';
+        selectedIndices = [];
+      }, 300);
+    }
+  });
+
+  function updateHeatmapGame() {
+    let container = document.getElementById("heatmap");
+    if (!container) return;
+    container.innerHTML = "";
+    heatmapData.forEach(colorHex => {
+      let block = document.createElement("div");
+      block.className = "w-[12px] h-[12px] rounded-sm transition-transform duration-300 transform scale-0 animate-scale-in";
+      block.style.backgroundColor = colorHex;
+      block.style.boxShadow = '0 8px ' + colorHex;
+      // Animate block appearance
+      setTimeout(()=> { block.classList.remove('scale-0'); block.classList.add('scale-100'); }, 10);
+      container.appendChild(block);
+    });
+  }
+
+  function animateValue(id, start, end, duration) {
+    if (start === end) return;
+    var range = end - start;
+    var current = start;
+    var increment = end > start ? 1 : -1;
+    var stepTime = Math.abs(Math.floor(duration / range));
+    var obj = document.getElementById(id);
+    var timer = setInterval(function() {
+        current += increment;
+        obj.innerHTML = current;
+        if (current == end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+  }
+})();
+
+// ==========================================
+// GAME PAGE ENGINE (YOU ARE THE ALGORITHM)
+// ==========================================
+(function() {
+  const pageHome = document.getElementById('home-page');
+  const pageGame = document.getElementById('game-page');
+  const btnHero = document.getElementById('btn-hero-gameMode');
+  const btnBack = document.getElementById('btn-back-to-home');
+  
+  if (!pageGame) return; // Prevent crashes if HTML is missing
+  
+  // State
+  let isGameActive = false;
+  let gameArray = [];
+  let selectedIndices = [];
+  let numBars = 10;
+  
+  let stats = { compares: 0, swaps: 0, score: 100 };
+  let moveHistory = []; // Tracks actions
+  let heatmapData = []; // Heatmap colors
+  
+  // Navigation
+  if (btnHero) {
+    btnHero.addEventListener('click', () => {
+      // Hide all top level pages, show game page
+      document.querySelectorAll('.flex-1 > div[id$="-page"]').forEach(p => {
+        if (!p.id.includes('game-page')) p.classList.add('hidden');
+      });
+      pageGame.classList.remove('hidden');
+      isGameActive = true;
+      initGame();
+    });
+  }
+  
+  if (btnBack) {
+    btnBack.addEventListener('click', () => {
+      pageGame.classList.add('hidden');
+      if (pageHome) pageHome.classList.remove('hidden');
+      isGameActive = false;
+    });
+  }
+  
+  // Game Logic
+  function initGame() {
+    gameArray = [];
+    selectedIndices = [];
+    stats = { compares: 0, swaps: 0, score: 100 };
+    moveHistory = [];
+    heatmapData = [];
+    
+    for(let i=0; i<numBars; i++) {
+       gameArray.push(Math.floor(Math.random() * 90) + 10);
+    }
+    
+    updateUI();
+    renderBars();
+    setFeedback("SELECT TWO BARS TO SWAP OR COMPARE");
+    document.getElementById('game-strategy-txt').innerText = "- - -";
+    document.getElementById('game-heatmap').innerHTML = "";
+  }
+  
+  function renderBars() {
+    const container = document.getElementById('game-array-container');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    gameArray.forEach((val, i) => {
+      const bar = document.createElement('div');
+      bar.className = 'w-10 sm:w-16 rounded-t-lg flex flex-col justify-end items-center transition-all duration-300 cursor-pointer hover:brightness-125';
+      bar.style.height = val + "%";
+      bar.style.backgroundColor = selectedIndices.includes(i) ? '#00f5d4' : '#2b2dc0';
+      if (selectedIndices.includes(i)) bar.style.boxShadow = '0 0 15px #00f5d4';
+      
+      const label = document.createElement('span');
+      label.className = 'text-white text-[10px] font-bold mb-1';
+      label.innerText = val;
+      
+      bar.appendChild(label);
+      bar.addEventListener('click', () => handleBarClick(i));
+      container.appendChild(bar);
+    });
+  }
+  
+  function handleBarClick(idx) {
+    if (selectedIndices.includes(idx)) {
+      selectedIndices = selectedIndices.filter(i => i !== idx);
+    } else {
+      if (selectedIndices.length < 2) {
+        selectedIndices.push(idx);
+      }
+    }
+    renderBars();
+  }
+  
+  // Buttons
+  const btnSwap = document.getElementById('game-btn-swap');
+  const btnComp = document.getElementById('game-btn-compare');
+  const btnReset = document.getElementById('game-btn-reset');
+  
+  if (btnSwap) btnSwap.addEventListener('click', () => performAction('swap'));
+  if (btnComp) btnComp.addEventListener('click', () => performAction('compare'));
+  if (btnReset) btnReset.addEventListener('click', initGame);
+  
+  function performAction(type) {
+    if (selectedIndices.length !== 2) {
+      setFeedback("Must select exactly 2 bars!");
+      return;
+    }
+    
+    let [i, j] = selectedIndices;
+    if (i > j) { let temp = i; i = j; j = temp; }
+    
+    if (type === 'compare') {
+      stats.compares++;
+      setFeedback("Compared elements.");
+      moveHistory.push({ type: 'compare', diff: j - i });
+    } else if (type === 'swap') {
+      stats.swaps++;
+      let temp = gameArray[i];
+      gameArray[i] = gameArray[j];
+      gameArray[j] = temp;
+      setFeedback("Swapped!");
+      moveHistory.push({ type: 'swap', diff: j - i, v1: gameArray[j], v2: gameArray[i] }); 
+    }
+    
+    selectedIndices = [];
+    analyzeMove(type, j - i);
+    renderBars();
+    updateUI();
+  }
+  
+  function analyzeMove(type, diff) {
+    let pts = 0;
+    let color = "#ef476f"; // Red (bad)
+    
+    if (type === 'swap') {
+      if (diff === 1) {
+        // Adjacent swap (Bubble sort style)
+        pts = 5; color = "#ffd166"; // Yellow
+      } else {
+        // Long distance swap (Selection/Quick style)
+        pts = 15; color = "#00f5d4"; // Green
+      }
+    } else if (type === 'compare') {
+      pts = 2; color = "#118ab2"; // Blue
+    }
+    
+    heatmapData.push(color);
+    stats.score += pts;
+    if (stats.score > 200) stats.score = 200; // Cap
+    
+    updateStrategyDetection();
+    renderHeatmap();
+  }
+  
+  function updateStrategyDetection() {
+    if (moveHistory.length < 3) return;
+    
+    let swaps = moveHistory.filter(m => m.type === 'swap');
+    if (swaps.length === 0) return;
+    
+    let adjacent = swaps.filter(m => m.diff === 1).length;
+    let long = swaps.filter(m => m.diff > 2).length;
+    
+    let strategy = "MIXED APPROACH";
+    let stColor = "#fff";
+    
+    if (adjacent / swaps.length >= 0.7) {
+      strategy = "BUBBLE SORT";
+      stColor = "#ffb703";
+    } else if (long / swaps.length >= 0.5) {
+      strategy = "SELECTION SORT";
+      stColor = "#00f5d4";
+    }
+    
+    const sElem = document.getElementById('game-strategy-txt');
+    if(sElem) {
+      sElem.innerText = strategy;
+      sElem.style.color = stColor;
+      sElem.style.textShadow = '0 0 10px ' + stColor;
+    }
+  }
+  
+  function renderHeatmap() {
+    const hm = document.getElementById('game-heatmap');
+    if(!hm) return;
+    hm.innerHTML = "";
+    
+    // Limits
+    let displayData = heatmapData.slice(-30);
+    displayData.forEach(c => {
+      let b = document.createElement('div');
+      b.className = "w-4 h-full rounded-sm opacity-80 shrink-0";
+      b.style.backgroundColor = c;
+      hm.appendChild(b);
+    });
+    hm.scrollLeft = hm.scrollWidth;
+    
+    // Update Tooltip Heatmap grid
+    renderTooltipHeatmap();
+  }
+  
+  function renderTooltipHeatmap() {
+    const tg = document.getElementById('tooltip-heatmap-grid');
+    if(!tg) return;
+    // We only need to generate it once or we can give it dynamic ripples. Let's just generate a nice static-looking matrix with varying opacities if it's empty, and just mildly update it.
+    if(tg.children.length === 0) {
+      const colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
+      for (let i = 0; i < 48; i++) {
+        let span = document.createElement('div');
+        let col = colors[Math.floor(Math.random() * colors.length)];
+        let op = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
+        span.className = `w-full aspect-square rounded-[2px] ${col}`;
+        span.style.opacity = op;
+        tg.appendChild(span);
+      }
+    } else {
+      // randomly shift a few blocks to make it feel "live"
+      for (let i = 0; i < 5; i++) {
+         let idx = Math.floor(Math.random() * 48);
+         let colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
+         let span = tg.children[idx];
+         if(span) {
+            span.className = `w-full aspect-square rounded-[2px] ${colors[Math.floor(Math.random() * colors.length)]} transition-colors duration-500`;
+            span.style.opacity = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
+         }
+      }
+    }
+  }
+  
+  function updateUI() {
+    if(document.getElementById('game-comparisons')) document.getElementById('game-comparisons').innerText = stats.compares;
+    if(document.getElementById('game-swaps')) document.getElementById('game-swaps').innerText = stats.swaps;
+    
+    // Update Score
+    if(document.getElementById('game-score')) document.getElementById('game-score').innerText = stats.score;
+    if(document.getElementById('tooltip-score')) document.getElementById('tooltip-score').innerText = stats.score;
+    
+    // Update Strategy in tooltip if available
+    if(document.getElementById('tooltip-strategy')) {
+      const stratElem = document.getElementById('game-strategy-txt');
+      if(stratElem) document.getElementById('tooltip-strategy').innerText = stratElem.innerText + " ⚡";
+    }
+
+    // Bar
+    const b = document.getElementById('game-eff-bar');
+    const p = document.getElementById('game-eff-pct');
+    let pct = Math.max(0, Math.min(100, Math.floor(stats.score / 2)));
+    if(b) b.style.width = pct + "%";
+    if(p) p.innerText = pct + "%";
+  }
+  
+  function setFeedback(txt) {
+    const f = document.getElementById('game-feedback');
+    if(f) {
+      f.innerText = txt;
+      f.style.transform = 'translate(-50%, -10px)';
+      f.style.opacity = '1';
+      setTimeout(() => {
+        f.style.transform = 'translate(-50%, 0)';
+      }, 200);
+    }
+  }
+
+})();

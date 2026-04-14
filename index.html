@@ -206,16 +206,25 @@
                 Visualize, compare, and benchmark sorting algorithms in real time.
                 Learn how algorithms behave with interactive animations and performance insights.
               </p>
-              <button id="btn-start"
-                class="px-6 sm:px-8 py-3 bg-primary text-background-dark font-bold rounded-lg hover:brightness-110 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(0,238,255,0.3)] cursor-pointer self-center md:self-start">
-                Start Exploring
-              </button>
+              <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                <button id="btn-start"
+                  class="px-6 sm:px-8 py-3 bg-primary text-background-dark font-bold rounded-lg hover:brightness-110 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(0,238,255,0.3)] cursor-pointer">
+                  Start Exploring
+                </button>
+                <button id="btn-hero-gameMode" class="game-btn px-6 sm:px-8 py-3 rounded-lg flex items-center gap-2 hover:-translate-y-1 transition-all cursor-pointer shadow-[0_0_20px_rgba(255,0,110,0.3)]">
+                  🎮 You Are The Algorithm
+                </button>
+                <button id="openComplexity" class="neon-btn">
+                  📈 Time Complexity
+                </button>
+              </div>
             </div>
           </section>
 
           <!-- FEATURES -->
           <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto w-full">
-            <div class="glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-amber-500/30 transition-colors group cursor-pointer shadow-lg hover:shadow-amber-500/10">
+            <!-- Live Visualization Card -->
+            <div id="card-visualization" class="feature-card glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-amber-500/30 transition-all group cursor-pointer shadow-lg hover:shadow-amber-500/10 relative overflow-hidden">
               <h3 class="text-white font-bold mb-2 sm:mb-3 flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-500 group-hover:scale-110 transition-transform text-xl">bolt</span>
                 Live Visualization
@@ -223,8 +232,15 @@
               <p class="text-slate-400 text-sm leading-relaxed">
                 Watch sorting algorithms step-by-step with animated bars.
               </p>
+              <div class="feature-card-overlay absolute inset-0 bg-gradient-to-t from-amber-900/90 via-amber-900/60 to-transparent flex items-end justify-center p-5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <button id="btn-enter-visualization" class="w-full py-3 px-4 bg-amber-500 text-background-dark font-bold rounded-lg flex items-center justify-center gap-2 hover:brightness-110 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg shadow-amber-500/30">
+                  <span class="material-symbols-outlined text-lg">play_arrow</span>
+                  Enter Visualization
+                </button>
+              </div>
             </div>
-            <div class="glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-blue-400/30 transition-colors group cursor-pointer shadow-lg hover:shadow-blue-400/10">
+            <!-- Performance Metrics Card -->
+            <div id="card-performance" class="feature-card glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-blue-400/30 transition-all group cursor-pointer shadow-lg hover:shadow-blue-400/10 relative overflow-hidden">
               <h3 class="text-white font-bold mb-2 sm:mb-3 flex items-center gap-2">
                 <span class="material-symbols-outlined text-blue-400 group-hover:scale-110 transition-transform text-xl">bar_chart</span>
                 Performance Metrics
@@ -232,8 +248,15 @@
               <p class="text-slate-400 text-sm leading-relaxed">
                 Track comparisons, swaps, and time complexity live.
               </p>
+              <div class="feature-card-overlay absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/60 to-transparent flex items-end justify-center p-5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <button id="btn-explore-performance" class="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:brightness-110 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg shadow-blue-500/30">
+                  <span class="material-symbols-outlined text-lg">insights</span>
+                  Explore Performance
+                </button>
+              </div>
             </div>
-            <div class="glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-emerald-400/30 transition-colors group cursor-pointer shadow-lg hover:shadow-emerald-400/10">
+            <!-- Benchmark Lab Card -->
+            <div id="card-benchmark" class="feature-card glass p-5 sm:p-6 rounded-xl border border-white/10 hover:border-emerald-400/30 transition-all group cursor-pointer shadow-lg hover:shadow-emerald-400/10 relative overflow-hidden">
               <h3 class="text-white font-bold mb-2 sm:mb-3 flex items-center gap-2">
                 <span class="material-symbols-outlined text-emerald-400 group-hover:scale-110 transition-transform text-xl">science</span>
                 Benchmark Lab
@@ -241,6 +264,12 @@
               <p class="text-slate-400 text-sm leading-relaxed">
                 Upload custom datasets and test algorithm performance.
               </p>
+              <div class="feature-card-overlay absolute inset-0 bg-gradient-to-t from-emerald-900/90 via-emerald-900/60 to-transparent flex items-end justify-center p-5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <button id="btn-start-benchmarking" class="w-full py-3 px-4 bg-emerald-500 text-background-dark font-bold rounded-lg flex items-center justify-center gap-2 hover:brightness-110 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg shadow-emerald-500/30">
+                  <span class="material-symbols-outlined text-lg">speed</span>
+                  Start Benchmarking
+                </button>
+              </div>
             </div>
           </section>
 
@@ -263,6 +292,155 @@
               <p class="text-[10px] sm:text-xs text-slate-400 font-medium tracking-wide">Benchmarking</p>
             </div>
           </section>
+        </div>
+      </div>
+
+      <!-- =====================  GAME PAGE (YOU ARE THE ALGORITHM)  ===================== -->
+      <div id="game-page" class="hidden flex-1 w-full h-full flex flex-col fade-transition bg-[#050a14]">
+        
+        <!-- Game Header -->
+        <header class="flex items-center justify-between p-4 sm:p-6 border-b border-white/5 bg-black/20 backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <button id="btn-back-to-home" class="touch-target glass p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">You Are The Algorithm</h1>
+              <p class="text-xs text-secondary/80 font-mono">Gamified Strategy Engine</p>
+            </div>
+          </div>
+          
+          <!-- Top Stats Bar -->
+          <div class="flex gap-4 sm:gap-8 bg-black/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-white/5 shadow-inner">
+            <div class="flex flex-col items-center">
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Comparisons</span>
+              <span id="game-comparisons" class="text-lg font-mono text-white font-bold">0</span>
+            </div>
+            <div class="w-px bg-white/10"></div>
+            <div class="flex flex-col items-center">
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Swaps</span>
+              <span id="game-swaps" class="text-lg font-mono text-white font-bold">0</span>
+            </div>
+            <div class="w-px bg-white/10"></div>
+            <div class="flex flex-col items-center">
+              <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Score</span>
+              <span id="game-score" class="text-lg font-mono text-emerald-400 font-bold">100</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Game Arena (Center Stage) -->
+        <div class="flex-1 p-6 flex flex-col relative items-center justify-center min-h-0">
+          
+          <!-- Dynamic Feedback text -->
+          <div id="game-feedback" class="absolute top-8 left-1/2 -translate-x-1/2 text-sm sm:text-base font-bold text-amber-400 tracking-wider uppercase drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] transition-all text-center whitespace-nowrap">
+            SELECT TWO BARS TO SWAP
+          </div>
+          
+          <!-- Array Container -->
+          <div id="game-array-container" class="flex items-end justify-center gap-2 w-full max-w-4xl h-64 sm:h-80 border-b border-white/20 pb-4 relative z-10 transition-all duration-300">
+            <!-- Bars will be injected here via JS -->
+          </div>
+
+        </div>
+
+        <!-- Bottom Utility Panel -->
+        <div class="h-64 shrink-0 bg-black/40 border-t border-white/5 p-4 sm:p-6 flex flex-col gap-4 relative z-20">
+          <div class="flex justify-between items-start gap-4 h-full max-w-7xl mx-auto w-full">
+            
+            <!-- Controls -->
+            <div class="flex flex-col gap-3 w-1/4">
+              <button id="game-btn-swap" class="game-btn w-full py-4 rounded-xl border-none flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(255,0,110,0.3)] bg-gradient-to-r from-[#ff006e] to-[#00f5d4] hover:scale-[1.02] transition-transform text-white font-bold uppercase tracking-widest">
+                <span class="material-symbols-outlined">swap_horiz</span> Swap
+              </button>
+              <button id="game-btn-compare" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/10 hover:border-white/30 text-white hover:bg-white/5 font-bold uppercase tracking-widest mt-2 transition-all">
+                <span class="material-symbols-outlined">visibility</span> Compare Only
+              </button>
+              <button id="game-btn-reset" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/5 hover:bg-white/5 text-slate-400 hover:text-white font-bold tracking-widest mt-auto transition-all">
+                <span class="material-symbols-outlined text-sm">restart_alt</span> Reset Level
+              </button>
+            </div>
+            
+            <!-- Analysis Panel -->
+            <div class="flex-1 glass rounded-2xl border border-white/10 p-5 h-full flex flex-col">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary text-base">psychology</span>
+                  Real-Time Strategy Analysis
+                </h3>
+                <div class="px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20">
+                  <span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Live</span>
+                </div>
+              </div>
+              
+              <div class="flex gap-8 mb-4">
+                <div class="min-w-[200px]">
+                  <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Detected Algorithm</p>
+                  <p id="game-strategy-txt" class="text-xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(255,0,110,0.6)]">- - -</p>
+                </div>
+                <!-- Mini Efficiency Graph/Bar -->
+                <div class="flex-1 flex flex-col justify-center">
+                  <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2 flex justify-between">
+                    <span>Sorting Efficiency</span>
+                    <span id="game-eff-pct" class="text-emerald-400 font-bold">100%</span>
+                  </p>
+                  <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div id="game-eff-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-full transition-all duration-500"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-auto relative group/heatmap" id="heatmap-wrapper">
+                <div id="heatmap-trigger" class="cursor-pointer inline-block w-full">
+                  <p class="text-[10px] text-slate-500 group-hover/heatmap:text-slate-300 transition-colors font-bold uppercase tracking-widest mb-2 flex justify-between items-center">
+                    Decision Heatmap 📊
+                    <span class="material-symbols-outlined text-[14px] text-primary animate-pulse opacity-0 group-hover/heatmap:opacity-100 transition-opacity">info</span>
+                  </p>
+                  <div id="game-heatmap" class="flex gap-1 overflow-x-auto pb-1 h-8 items-end pointer-events-none">
+                    <!-- Heat blocks -->
+                  </div>
+                </div>
+
+                <!-- AI FINGERPRINT TOOLTIP -->
+                <div id="ai-fingerprint-tooltip" class="absolute bottom-full -right-2 mb-4 w-[280px] sm:w-[320px] glass rounded-2xl border border-primary/30 p-4 sm:p-5 shadow-[0_10px_50px_rgba(0,238,255,0.2)] opacity-0 pointer-events-none transition-all duration-300 translate-y-4 z-50 bg-[#0B0F19]/95 backdrop-blur-2xl group-hover/heatmap:opacity-100 group-hover/heatmap:translate-y-0 group-hover/heatmap:pointer-events-auto">
+                  <!-- Glowing accent -->
+                  <div class="absolute -top-px left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                  
+                  <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">AI Fingerprint</p>
+                  
+                  <!-- Live Stats box -->
+                  <div class="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 shadow-inner">
+                    <h4 class="text-xs text-white font-bold mb-2">Live Stats</h4>
+                    <div class="flex flex-col gap-1.5 text-xs">
+                       <div class="flex justify-between">
+                         <span class="text-slate-400">Score:</span>
+                         <span id="tooltip-score" class="text-emerald-400 font-bold tracking-wider">100</span>
+                       </div>
+                       <div class="flex justify-between">
+                         <span class="text-slate-400">Strategy:</span>
+                         <span id="tooltip-strategy" class="text-amber-400 font-bold tracking-wider">Optimal ⚡</span>
+                       </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Decision Heatmap Matrix -->
+                  <div class="mb-4">
+                    <h4 class="text-[10px] text-white font-bold mb-2 flex items-center gap-1 uppercase tracking-widest">Decision Heatmap 📊</h4>
+                    <div id="tooltip-heatmap-grid" class="grid grid-cols-12 gap-[2px] bg-black/60 p-2 rounded-lg border border-white/5">
+                      <!-- Grid items populated by JS -->
+                    </div>
+                  </div>
+                  
+                  <!-- Footer -->
+                  <div class="flex items-start gap-2 text-[9px] text-slate-500 font-medium leading-tight">
+                    <span class="material-symbols-outlined text-[12px] text-primary/70 shrink-0">sports_esports</span>
+                    <span>Game Mode Activated: Analyzing your sort efficiency</span>
+                    <span class="text-primary text-[10px] ml-auto shrink-0">✨</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -322,6 +500,7 @@
               class="touch-target size-9 sm:size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-white transition-all cursor-pointer">
               <span class="material-symbols-outlined">pause</span>
             </button>
+
             <!-- User avatar (desktop only) -->
             <div class="hidden md:flex items-center gap-3 border-l border-white/10 pl-4 sm:pl-6 ml-2">
               <div class="text-right">
@@ -465,6 +644,1255 @@
           </div>
         </footer>
       </div><!-- /arena-page -->
+
+      <!-- =====================  VISUALIZATION PAGE  ===================== -->
+      <div id="visualization-page" class="hidden flex-1 w-full h-full flex-col fade-transition overflow-hidden bg-[#050B14]">
+        <!-- Vis Header -->
+        <header class="h-16 glass border-b border-white/10 px-4 sm:px-6 flex items-center justify-between z-10 flex-shrink-0 bg-background/50 backdrop-blur-xl">
+          <div class="flex items-center gap-3">
+            <button id="btn-vis-back" class="touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2 hover:bg-white/5" aria-label="Back">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h2 class="text-lg font-bold flex items-center gap-2 tracking-wide">
+              <span class="text-amber-500 material-symbols-outlined text-xl">bolt</span>
+              <span class="text-white">Live</span>
+              <span class="text-slate-400 font-light">Visualizer</span>
+            </h2>
+          </div>
+          <!-- Global stats (optional) -->
+          <div class="hidden sm:flex items-center gap-4 text-xs font-mono font-bold tracking-widest text-slate-500 uppercase">
+             <span>Comparisons: <span id="vis-ops" class="text-amber-400 ml-1">0</span></span>
+             <span>|</span>
+             <span>Array Size: <span id="vis-array-size" class="text-white ml-1">30</span></span>
+          </div>
+        </header>
+
+        <!-- Main Workspace (Desktop: Row, Mobile: Col) -->
+        <div class="flex-1 flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
+          
+          <!-- LEFT SIDEBAR: ControlsBox -->
+          <aside class="w-full md:w-80 flex-shrink-0 glass border-r border-white/10 flex flex-col justify-between overflow-y-auto custom-scrollbar md:h-full z-10 shadow-xl">
+            <div class="p-6 flex flex-col gap-8">
+              <!-- Algorithm Dropdown -->
+              <div class="flex flex-col gap-2 relative">
+                <label class="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm">change_history</span>
+                  Select Algorithm
+                </label>
+                <div class="relative">
+                  <select id="vis-algo-select" class="w-full h-12 bg-[#0A101C] border border-white/10 rounded-xl px-4 text-sm font-semibold text-white appearance-none cursor-pointer focus:outline-none focus:border-amber-500/50 hover:border-white/20 transition-colors shadow-inner">
+                    <option value="" disabled selected>Choose an algorithm...</option>
+                    <!-- populated by JS -->
+                  </select>
+                  <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_content</span>
+                </div>
+              </div>
+
+              <!-- Array Size Slider -->
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                  <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">straighten</span>
+                    Array Limit
+                  </label>
+                  <span id="vis-size-label" class="text-xs font-mono font-bold text-white bg-white/5 px-2 py-0.5 rounded-md border border-white/10">30</span>
+                </div>
+                <input id="vis-size-slider" type="range" class="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-500" min="5" max="100" value="30">
+                <div class="flex justify-between text-[9px] font-mono text-slate-600 px-1">
+                  <span>5</span>
+                  <span>100</span>
+                </div>
+              </div>
+
+              <!-- Speed Slider -->
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                  <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">speed</span>
+                    Animation Speed
+                  </label>
+                  <span id="vis-speed-label" class="text-[9px] font-bold text-amber-500/70 border border-amber-500/20 px-1.5 py-0.5 rounded uppercase">Speed: 50</span>
+                </div>
+                <input id="vis-speed-slider" type="range" class="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-500" min="1" max="100" value="50">
+              </div>
+
+              <!-- Algorithm Stats (Dynamically Updated) -->
+              <div id="vis-algo-info-panel" class="hidden flex-col gap-3 mt-4 glass p-4 rounded-xl border border-white/5 bg-black/20">
+                <h4 class="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-2 mb-1">
+                  <span class="material-symbols-outlined text-sm">info</span>
+                  Complexity
+                </h4>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-500 font-medium">Time (Worst)</span>
+                  <span id="vis-info-worst" class="font-mono text-rose-400 font-bold">O(nÂ²)</span>
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-500 font-medium">Time (Best)</span>
+                  <span id="vis-info-best" class="font-mono text-emerald-400 font-bold">O(n)</span>
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-500 font-medium">Space</span>
+                  <span id="vis-info-space" class="font-mono text-sky-400 font-bold">O(1)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="p-6 border-t border-white/10 bg-white/[0.02] flex flex-col gap-3">
+              <button id="btn-vis-start" class="w-full h-12 bg-amber-500 hover:bg-amber-400 text-[#050B14] font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)] disabled:opacity-40 disabled:cursor-not-allowed group">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">play_arrow</span>
+                START SORTING
+              </button>
+              <div class="flex items-center gap-3">
+                <button id="btn-vis-stop" class="flex-1 h-10 glass border border-white/10 hover:border-rose-500/50 hover:bg-rose-500/10 text-slate-300 hover:text-rose-400 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                  <span class="material-symbols-outlined text-base">stop</span>
+                  STOP
+                </button>
+                <button id="btn-vis-restart" class="flex-1 h-10 glass border border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-slate-300 hover:text-cyan-400 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                  <span class="material-symbols-outlined text-base">replay</span>
+                  RESET
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          <!-- RIGHT AREA: Workspace (Chart + Code) -->
+          <main class="flex-1 flex flex-col overflow-hidden relative">
+             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none"></div>
+             
+             <!-- Visualization Arena -->
+             <section class="flex-1 p-4 md:p-8 flex flex-col relative z-10 min-h-[300px]">
+                <div class="flex items-center justify-between mb-4">
+                   <h3 id="vis-algo-title" class="text-white font-bold text-lg flex items-center gap-2">
+                     <span class="material-symbols-outlined text-amber-500 text-sm">monitoring</span>
+                     Awaiting Selection
+                   </h3>
+                </div>
+                <!-- The Container where bars render -->
+                <div id="vis-arena" class="flex-1 glass border border-white/5 rounded-2xl flex items-end justify-center p-6 relative overflow-hidden shadow-2xl">
+                   <!-- Ambient Glow -->
+                   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+                   
+                   <!-- Placeholder Text -->
+                   <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 text-sm opacity-50">
+                     <span class="material-symbols-outlined text-5xl mb-3 opacity-20 relative animate-pulse">account_tree</span>
+                     Choose an algorithm from the sidebar
+                   </div>
+                </div>
+             </section>
+
+             <!-- Scrollable Code Trace Window -->
+             <section id="vis-code-section" class="h-64 md:h-80 border-t border-white/10 bg-[#0A0D14]/90 backdrop-blur-md flex flex-col relative z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                <div class="flex items-center justify-between px-6 py-2 border-b border-white/5 bg-black/20">
+                   <div class="flex items-center gap-2">
+                     <span class="material-symbols-outlined text-amber-500 text-sm">terminal</span>
+                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Execution Trace</span>
+                   </div>
+                   <div class="flex gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-full bg-rose-500/50"></span>
+                      <span class="w-2.5 h-2.5 rounded-full bg-amber-500/50"></span>
+                      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></span>
+                   </div>
+                </div>
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+                   <pre id="vis-code-display" class="text-[13px] font-mono leading-relaxed text-slate-400"><span class="italic text-slate-600">// No algorithm selected to trace...</span></pre>
+                </div>
+             </section>
+          </main>
+
+        </div>
+      </div><!-- /visualization-page -->
+
+      <!-- =====================  BENCHMARK PAGE  ===================== -->
+      <div id="benchmark-page" class="hidden flex-1 w-full h-full flex-col fade-transition">
+        <!-- Bench Header -->
+        <header class="h-16 sm:h-20 glass border-b border-white/10 px-4 sm:px-8 flex items-center justify-between z-10 flex-shrink-0">
+          <div class="flex items-center gap-3">
+            <button id="btn-bench-back" class="touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2" aria-label="Back">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+              <span class="text-emerald-400">Benchmark</span>
+              <span class="text-slate-500 font-light">Laboratory</span>
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-500 bg-white/5 px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 border border-white/5 shadow-inner">
+              PRO ENGINE 2.0
+            </span>
+          </div>
+        </header>
+
+        <!-- Bench Body -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-10 flex flex-col gap-8 custom-scrollbar relative">
+          <!-- Ambient Background Gradients for Pro Feel -->
+          <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+          <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
+
+          <!-- STEP 1: Data Source Section -->
+          <section class="glass rounded-2xl p-6 border border-white/10 shadow-2xl relative z-10">
+            <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+              <div class="size-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">1</div>
+              <div>
+                <h3 class="text-white font-bold text-base uppercase tracking-wider">Define Data Source</h3>
+                <p class="text-slate-400 text-xs mt-1">Provide up to 100,000 array elements for maximum performance testing</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Auto Generate option -->
+              <div class="bg-black/20 rounded-xl p-5 border border-white/5 hover:border-emerald-500/30 transition-all group flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-lg">casino</span> Auto-Generate
+                    </span>
+                    <span id="bench-gen-val" class="text-white font-mono font-bold bg-white/10 px-2 py-1 rounded text-xs select-none">10,000</span>
+                  </div>
+                  <input type="range" id="bench-gen-slider" min="10" max="100000" step="10" value="10000" class="w-full accent-emerald-500 mb-6 mt-2 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" />
+                </div>
+                <button id="btn-bench-generate" class="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-background-dark font-bold py-3 rounded-lg transition-all text-sm flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-sm">memory</span> Generate Array Buffer
+                </button>
+              </div>
+
+              <!-- File Upload option -->
+              <div class="bg-black/20 rounded-xl p-5 border border-white/5 hover:border-cyan-500/30 transition-all group border-dashed flex flex-col justify-between relative overflow-hidden">
+                 <div>
+                   <div class="flex items-center gap-2 mb-4">
+                    <span class="text-sm text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-lg">upload_file</span> Custom Source (.txt/.csv)
+                    </span>
+                  </div>
+                </div>
+                <div class="relative w-full h-[60px] flex items-center mt-auto">
+                    <label class="absolute inset-0 flex items-center justify-center gap-2 border-2 border-dashed border-white/10 rounded-lg hover:border-cyan-400/50 hover:bg-white/5 transition-all text-sm text-slate-400 cursor-pointer w-full group overflow-hidden bg-black/40">
+                      <span class="material-symbols-outlined text-xl group-hover:text-cyan-400 transition-colors shrink-0">cloud_upload</span>
+                      <span id="bench-standalone-file-label" class="group-hover:text-white transition-colors truncate px-2 font-mono text-xs max-w-[80%]">Click to browse file...</span>
+                      <input type="file" id="bench-standalone-file" accept=".txt,.csv" class="hidden" />
+                    </label>
+                    <div id="bench-file-actions" class="hidden absolute top-1/2 right-2 -translate-y-1/2 z-20 items-center justify-end bg-black/80 p-1 rounded-md">
+                       <button id="btn-bench-standalone-delete-file" class="text-rose-400 hover:text-white hover:bg-rose-500 rounded p-1 transition-all flex items-center" title="Clear Upload">
+                          <span class="material-symbols-outlined text-sm">close</span>
+                       </button>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Buffer Status (Hidden until data is ready) -->
+            <div id="bench-data-status" class="hidden mt-6 bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/20 rounded-xl p-4 flex sm:flex-row flex-col items-start sm:items-center justify-between gap-4">
+               <div class="flex items-center gap-3">
+                 <span class="material-symbols-outlined text-emerald-400 animate-pulse">check_circle</span>
+                 <p class="text-sm text-emerald-400 font-medium tracking-wide">Data Array Buffer Loaded & Ready</p>
+               </div>
+               <div class="text-white font-mono font-bold text-xl bg-black/30 px-4 py-1.5 rounded-lg border border-white/5" id="bench-s-n">0 <span class="text-[10px] text-slate-500 uppercase tracking-widest ml-1">Elements</span></div>
+            </div>
+          </section>
+
+          <!-- STEP 2: Algorithm Execution Center -->
+          <section id="bench-algo-section" class="glass rounded-2xl p-6 border border-white/10 shadow-2xl relative z-10 opacity-50 pointer-events-none transition-all duration-500">
+             <div class="flex items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4 flex-col sm:flex-row items-start sm:items-center">
+              <div class="flex items-center gap-3">
+               <div class="size-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">2</div>
+               <div>
+                  <h3 class="text-white font-bold text-base uppercase tracking-wider">Execute Benchmarks</h3>
+                  <p class="text-slate-400 text-xs mt-1">Select an individual algorithm or run the full test suite</p>
+               </div>
+              </div>
+              <button id="btn-bench-run-all" class="bg-gradient-to-r w-full sm:w-auto from-cyan-500 to-emerald-500 hover:brightness-110 text-background-dark font-bold px-6 py-2.5 rounded-lg transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
+                <span class="material-symbols-outlined text-sm">rocket</span> Run Full Suite
+              </button>
+            </div>
+
+            <div id="bench-algo-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 mb-6">
+              <!-- populated by JS -->
+            </div>
+
+            <button id="btn-bench-standalone-run" class="w-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-bold h-12 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-cyan-500 hover:text-background-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed group" disabled>
+                <span class="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">play_arrow</span>
+                Run Selected Algorithm (<span id="bench-standalone-algo-name" class="font-mono text-xs tracking-wider">NONE</span>)
+            </button>
+          </section>
+
+          <!-- STEP 3: Results Dashboard -->
+          <section id="bench-standalone-results" class="hidden glass border-white/10 rounded-2xl p-6 relative z-10 flex-col gap-6">
+             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                 <div class="size-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0">3</div>
+                 <h3 class="text-white font-bold text-base uppercase tracking-wider">Analytics Laboratory</h3>
+                </div>
+                <!-- Time Comparison Unit Selector -->
+                <div class="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-between sm:justify-start">
+                    <button data-unit="ms" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 transition-all shadow-sm">ms</button>
+                    <button data-unit="Âµs" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-400 hover:text-emerald-400 transition-all">Âµs</button>
+                    <button data-unit="ns" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-400 hover:text-emerald-400 transition-all">ns</button>
+                </div>
+             </div>
+
+             <!-- Single Run Result Grid -->
+             <div id="bench-single-results-view" class="hidden flex-col gap-6">
+                <!-- Status Row -->
+                <div class="flex items-center gap-2 text-sm font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-lg" id="bench-s-status-container">
+                    <span class="material-symbols-outlined text-lg">check_circle</span> <span id="bench-s-status">BENCHMARK SUCCESS</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-emerald-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Actual Execution</p>
+                      <div class="flex items-baseline gap-1 relative z-10">
+                        <p id="bench-s-actual-time" class="text-emerald-400 font-mono font-bold text-3xl">0.00</p>
+                        <span id="bench-s-actual-unit" class="text-[10px] text-emerald-400/60 font-bold">ms</span>
+                      </div>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-cyan-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Comparisons Operations</p>
+                      <p id="bench-s-comparisons" class="text-cyan-400 font-mono font-bold text-3xl relative z-10">0</p>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-amber-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Swaps / Write Operations</p>
+                      <p id="bench-s-swaps" class="text-amber-400 font-mono font-bold text-3xl relative z-10">0</p>
+                    </div>
+                </div>
+
+                <!-- Theory vs Actual Bar -->
+                <div class="bg-black/20 rounded-xl p-6 border border-white/5">
+                   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                       <span class="material-symbols-outlined text-slate-500 text-sm">bar_chart</span>
+                       Performance Profile vs Theoretical Average
+                     </p>
+                     <span id="bench-s-diff-badge" class="text-[10px] font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 shrink-0">â€”</span>
+                   </div>
+                   <div class="flex flex-col gap-5">
+                     <div class="flex flex-col gap-2">
+                       <div class="flex justify-between text-[10px] font-mono font-bold text-emerald-400 items-baseline">
+                         <span class="tracking-widest uppercase">Actual Measured Time</span>
+                         <span id="bench-s-bar-actual-label" class="text-xs"></span>
+                       </div>
+                       <div class="w-full h-4 bg-white/5 rounded-full overflow-hidden relative">
+                         <div id="bench-s-bar-actual" class="absolute left-0 top-0 bottom-0 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(16,185,129,0.3)]" style="width: 0%; min-width: 4px"></div>
+                       </div>
+                     </div>
+                     <div class="flex flex-col gap-2">
+                       <div class="flex justify-between text-[10px] font-mono font-bold text-cyan-400 items-baseline">
+                         <span class="tracking-widest uppercase opacity-80">Theoretical Estimate Time</span>
+                         <span id="bench-s-bar-theory-label" class="text-xs opacity-80"></span>
+                       </div>
+                       <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden relative">
+                         <div id="bench-s-bar-theory" class="absolute left-0 top-0 bottom-0 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-1000 ease-out opacity-70" style="width: 0%; min-width: 4px"></div>
+                       </div>
+                     </div>
+                   </div>
+                  <div class="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-white/5">
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-emerald-500/70 font-bold uppercase tracking-widest">Best Case</p>
+                      <p id="bench-s-theory-best" class="text-emerald-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-amber-500/70 font-bold uppercase tracking-widest">Avg Case</p>
+                      <p id="bench-s-theory-avg" class="text-amber-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-rose-500/70 font-bold uppercase tracking-widest">Worst Case</p>
+                      <p id="bench-s-theory-worst" class="text-rose-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                  </div>
+                </div>
+             </div>
+
+             <!-- Full Suite Results View (Leaderboard) -->
+             <div id="bench-suite-results-view" class="hidden flex-col gap-4">
+                 <!-- Suite Summary -->
+                 <div class="flex items-center gap-2 text-sm font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-lg">fact_check</span> 
+                    <span>SUITE COMPLETED: </span>
+                    <span id="bench-suite-count" class="text-white ml-2">13</span> Algorithms Evaluated on
+                    <span id="bench-suite-n" class="text-white ml-1 font-mono">0</span> Items
+                 </div>
+
+                 <div class="bg-black/30 border border-white/5 rounded-xl overflow-hidden mt-2">
+                   <div class="grid grid-cols-12 gap-3 text-[9px] text-slate-500 font-bold uppercase tracking-wider px-5 py-3 border-b border-white/5 bg-white/5">
+                      <div class="col-span-1 hidden sm:block">Rank</div>
+                      <div class="col-span-12 sm:col-span-4">Algorithm</div>
+                      <div class="col-span-5 sm:col-span-3 text-right">Time</div>
+                      <div class="col-span-7 sm:col-span-4 pl-4 sm:pl-6">Relative Performance</div>
+                   </div>
+                   <div id="bench-suite-leaderboard" class="flex flex-col p-2">
+                      <!-- populated by js -->
+                   </div>
+                 </div>
+             </div>
+
+          </section>
+
+          <!-- STEP 4: Performance Matrices Analytics Dashboard -->
+          <section id="bench-analytics-dashboard" class="hidden glass border-white/10 rounded-2xl relative z-10 flex-col overflow-hidden">
+            <!-- Dashboard Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 p-6 pb-4">
+              <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="size-8 rounded-lg bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center font-bold shrink-0">4</div>
+                <div>
+                  <h3 class="text-white font-bold text-base uppercase tracking-wider">Performance Matrices</h3>
+                  <p class="text-slate-400 text-[10px] mt-0.5">Algorithmic Pathway Visualizer & Dynamic Benchmarking Laboratory</p>
+                </div>
+              </div>
+              <!-- Tab Navigation -->
+              <div class="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5 w-full sm:w-auto">
+                <button id="pm-tab-comparison" class="pm-tab flex-1 sm:flex-none text-[10px] font-bold px-4 py-2 rounded-md bg-fuchsia-500/20 text-fuchsia-400 transition-all shadow-sm flex items-center gap-1.5 justify-center">
+                  <span class="material-symbols-outlined text-[14px]">bar_chart</span> Performance
+                </button>
+                <button id="pm-tab-diagnostics" class="pm-tab flex-1 sm:flex-none text-[10px] font-bold px-4 py-2 rounded-md text-slate-400 hover:text-fuchsia-400 transition-all flex items-center gap-1.5 justify-center">
+                  <span class="material-symbols-outlined text-[14px]">neurology</span> Diagnostics
+                </button>
+              </div>
+            </div>
+
+            <!-- ========== TAB 1: Performance Comparison ========== -->
+            <div id="pm-panel-comparison" class="flex flex-col gap-6 p-6">
+
+              <!-- Row 1: Complexity Chart + Algorithm Deep Dive -->
+              <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <!-- Time & Space Complexity Comparison Chart -->
+                <div class="lg:col-span-3 bg-black/20 rounded-xl p-5 border border-white/5 relative overflow-hidden">
+                  <h4 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-fuchsia-400 text-lg">show_chart</span>
+                    Time & Space Complexity Comparison
+                  </h4>
+                  <div class="relative w-full" style="height:280px">
+                    <canvas id="pm-complexity-chart" class="w-full h-full"></canvas>
+                  </div>
+                  <!-- Space Complexity Inset -->
+                  <div class="mt-4 pt-4 border-t border-white/5">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-2">Space Complexity</p>
+                    <div id="pm-space-bars" class="flex gap-2 items-end h-12">
+                      <!-- populated by js -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Algorithm Deep Dive (Top 3) -->
+                <div class="lg:col-span-2 flex flex-col gap-3">
+                  <h4 class="text-white font-bold text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-cyan-400 text-lg">info</span>
+                    Algorithm Deep Dive
+                  </h4>
+                  <div id="pm-deep-dive-cards" class="flex flex-col gap-3">
+                    <!-- populated by js -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Input Analysis + Adaptive Learning Insights -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Input Analysis & Recommendation -->
+                <div class="lg:col-span-2 bg-black/20 rounded-xl border border-white/5 overflow-hidden">
+                  <!-- Recommendation Banner -->
+                  <div id="pm-recommendation" class="p-5 border-b border-white/5 flex items-start gap-4 bg-gradient-to-r from-emerald-500/5 to-transparent">
+                    <div class="size-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-2xl">psychology</span>
+                    </div>
+                    <div>
+                      <p id="pm-input-type" class="text-emerald-400 font-bold text-sm">Input Analysis: Randomized</p>
+                      <p id="pm-recommendation-text" class="text-slate-300 text-xs mt-1 leading-relaxed">Analyzing input pattern...</p>
+                    </div>
+                  </div>
+                  <!-- Ranking Table -->
+                  <div class="p-4">
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[12px]">format_list_numbered</span>
+                      Ranking Table for this Input
+                    </p>
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-[11px]">
+                        <thead>
+                          <tr class="text-slate-500 font-bold uppercase border-b border-white/5">
+                            <th class="text-left py-2 px-2 w-10">Rank</th>
+                            <th class="text-left py-2 px-2">Algorithm</th>
+                            <th class="text-center py-2 px-2">Suitability</th>
+                            <th class="text-left py-2 px-2 hidden sm:table-cell">Key Strengths / Notes</th>
+                          </tr>
+                        </thead>
+                        <tbody id="pm-ranking-tbody">
+                          <!-- populated by js -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Adaptive Learning Insights -->
+                <div class="flex flex-col gap-4">
+                  <!-- P-Index Gauge -->
+                  <div class="bg-black/20 rounded-xl p-5 border border-white/5 flex flex-col items-center justify-center text-center">
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-3">"Presortedness Index (P-Index)"</p>
+                    <div id="pm-pindex-gauge" class="pm-gauge-ring relative w-28 h-28 rounded-full flex items-center justify-center mb-3">
+                      <span id="pm-pindex-value" class="text-white font-mono font-bold text-2xl">0%</span>
+                    </div>
+                    <p id="pm-pindex-desc" class="text-slate-400 text-[10px] leading-relaxed mt-1 max-w-[200px]">Measures how sorted the input data is.</p>
+                  </div>
+
+                  <!-- Algorithm-to-Pattern Fit Score -->
+                  <div class="bg-black/20 rounded-xl p-5 border border-white/5">
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-4 text-center">"Algorithm-to-Pattern Fit Score"</p>
+                    <div id="pm-fit-scores" class="flex flex-col gap-3">
+                      <!-- populated by js -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ========== TAB 2: Pathway Diagnostics ========== -->
+            <div id="pm-panel-diagnostics" class="hidden flex-col gap-6 p-6">
+
+              <!-- Banner -->
+              <div class="bg-gradient-to-r from-cyan-500/10 via-fuchsia-500/10 to-cyan-500/10 border border-fuchsia-500/20 rounded-xl p-4 text-center">
+                <p class="text-fuchsia-400 font-mono font-bold text-xs sm:text-sm tracking-[0.15em] uppercase">[ Algorithmic Pathway Visualizer & Dynamic Benchmarking Laboratory â€“ Diagnostics ]</p>
+              </div>
+
+              <!-- Row 1: Complexity Conflict + Neural Heuristic -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Complexity Conflict Table -->
+                <div class="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
+                  <div class="px-5 py-3 border-b border-white/5 bg-white/[0.02]">
+                    <h4 class="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-amber-400 text-sm">compare_arrows</span>
+                      Practical vs. Theoretical Complexity Conflict
+                    </h4>
+                  </div>
+                  <div class="p-4 overflow-x-auto">
+                    <table class="w-full text-[11px] pm-conflict-table">
+                      <thead>
+                        <tr class="text-slate-500 font-bold uppercase border-b border-white/5">
+                          <th class="text-left py-2 px-2">Metric</th>
+                          <th class="text-center py-2 px-2">Theoretical (O)</th>
+                          <th class="text-center py-2 px-2">Practical</th>
+                          <th class="text-center py-2 px-2">% Conflict</th>
+                        </tr>
+                      </thead>
+                      <tbody id="pm-conflict-tbody">
+                        <!-- populated by js -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Neural Heuristic Summary -->
+                <div class="bg-black/20 rounded-xl p-5 border border-white/5 flex flex-col gap-4">
+                  <h4 class="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined text-fuchsia-400 text-sm">neurology</span>
+                    Algorithmic Heuristic Influence
+                  </h4>
+                  <p id="pm-heuristic-text" class="text-slate-300 text-xs leading-relaxed">Analyzing heuristic patterns...</p>
+                  <div class="grid grid-cols-2 gap-3 mt-auto">
+                    <div class="bg-black/30 rounded-lg p-3 border border-white/5 text-center">
+                      <p class="text-[8px] text-fuchsia-400/70 font-bold uppercase mb-1 tracking-wider">Adaptive Gain</p>
+                      <p id="pm-adaptive-gain" class="text-fuchsia-400 font-mono font-bold text-lg">0%</p>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-3 border border-white/5 text-center">
+                      <p class="text-[8px] text-cyan-400/70 font-bold uppercase mb-1 tracking-wider">Run Detection</p>
+                      <p id="pm-run-detection" class="text-cyan-400 font-mono font-bold text-lg">0%</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Memory Pattern Heatmap + Strategy Forecast -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Memory Pattern Heatmap -->
+                <div class="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
+                  <div class="px-5 py-3 border-b border-white/5 bg-white/[0.02]">
+                    <h4 class="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-cyan-400 text-sm">grid_view</span>
+                      Simulated Data Input Matrix
+                    </h4>
+                  </div>
+                  <div class="p-4">
+                    <div id="pm-heatmap" class="grid gap-[2px]" style="grid-template-columns: repeat(16, 1fr)">
+                      <!-- populated by js: 16x10 grid -->
+                    </div>
+                    <div class="flex items-center justify-between mt-3 text-[8px] text-slate-500 font-mono">
+                      <span>Low</span>
+                      <div class="flex-1 mx-2 h-1.5 rounded-full bg-gradient-to-r from-cyan-900 via-fuchsia-500 to-amber-400"></div>
+                      <span>High</span>
+                    </div>
+                  </div>
+                  <!-- Pattern Detection -->
+                  <div class="px-5 py-3 border-t border-white/5 bg-white/[0.02]">
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-2">Pattern Detection</p>
+                    <div id="pm-patterns-summary" class="flex flex-wrap gap-2">
+                      <!-- populated by js -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Strategy Forecast -->
+                <div class="bg-black/20 rounded-xl p-5 border border-white/5 flex flex-col gap-4">
+                  <h4 class="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined text-amber-400 text-sm">trending_up</span>
+                    Behavior Prediction & Strategy Forecast
+                  </h4>
+                  <div id="pm-strategy-text" class="text-slate-300 text-xs leading-relaxed flex-1">
+                    Generating strategy forecast...
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 mt-auto">
+                    <div class="bg-black/30 rounded-lg p-2 border border-white/5 text-center">
+                      <p class="text-[7px] text-emerald-400/70 font-bold uppercase mb-0.5">Sorted Runs</p>
+                      <p id="pm-sorted-runs" class="text-emerald-400 font-mono font-bold text-sm">0</p>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-2 border border-white/5 text-center">
+                      <p class="text-[7px] text-amber-400/70 font-bold uppercase mb-0.5">Avg Run Len</p>
+                      <p id="pm-avg-run-len" class="text-amber-400 font-mono font-bold text-sm">0</p>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-2 border border-white/5 text-center">
+                      <p class="text-[7px] text-rose-400/70 font-bold uppercase mb-0.5">Plateaus</p>
+                      <p id="pm-plateaus" class="text-rose-400 font-mono font-bold text-sm">0</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+      </div><!-- /benchmark-page -->
+
+      <!-- =====================  PERFORMANCE MATRICES PAGE  ===================== -->
+      <div id="performance-matrices-page" class="hidden flex-1 w-full h-full flex-col fade-transition">
+        <!-- PM Header -->
+        <header class="h-16 sm:h-20 glass border-b border-white/10 px-4 sm:px-8 flex items-center justify-between z-10 flex-shrink-0">
+          <div class="flex items-center gap-3">
+            <button id="btn-pm-back" class="touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2" aria-label="Back">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+              <span class="text-fuchsia-400">Performance</span>
+              <span class="text-slate-500 font-light">Matrices</span>
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-500 bg-white/5 px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 border border-white/5 shadow-inner">
+              <span class="size-2 rounded-full bg-fuchsia-500 animate-pulse"></span>
+              ANALYTICS ENGINE
+            </span>
+          </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="flex-shrink-0 glass border-b border-white/5 px-4 sm:px-8 py-3 overflow-x-auto">
+          <div class="flex items-center gap-2 min-w-max">
+            <button class="pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 transition-all flex items-center gap-2 shadow-lg shadow-fuchsia-500/10" data-tab="0">
+              <span class="material-symbols-outlined text-[16px]">bar_chart</span> Performance Comparison
+            </button>
+            <button class="pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all flex items-center gap-2" data-tab="1">
+              <span class="material-symbols-outlined text-[16px]">neurology</span> Diagnostics
+            </button>
+            <button class="pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all flex items-center gap-2" data-tab="2">
+              <span class="material-symbols-outlined text-[16px]">labs</span> Forecasting Lab
+            </button>
+            <button class="pm-screen-tab text-[11px] font-bold px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all flex items-center gap-2" data-tab="3">
+              <span class="material-symbols-outlined text-[16px]">merge</span> Algorithm Fusion Lab
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== SHARED DATA SOURCE CONTROLS ===== -->
+        <div class="flex-shrink-0 glass border-b border-white/5 px-4 sm:px-8 py-3">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            
+            <!-- Target Algorithm Selection -->
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="material-symbols-outlined text-cyan-400 text-lg">memory_alt</span>
+              <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider shrink-0">Algorithm:</span>
+              <select id="pm-target-algo" class="bg-black/40 border border-cyan-500/30 text-xs text-cyan-50 rounded px-2 py-1.5 focus:border-cyan-400 outline-none w-[140px] cursor-pointer">
+                <option value="">Select Algorithm</option>
+              </select>
+            </div>
+            
+            <div class="w-[1px] h-6 bg-white/10 hidden sm:block mx-1"></div>
+
+            <div class="flex items-center gap-2 flex-1 min-w-0 opacity-50 pointer-events-none transition-opacity" id="pm-data-controls">
+              <span class="material-symbols-outlined text-fuchsia-400 text-lg shrink-0">database</span>
+              <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider shrink-0">Data Source:</span>
+              <div class="flex items-center gap-2 flex-1 min-w-0">
+                <input id="pm-gen-slider" type="range" min="100" max="100000" value="10000" step="100"
+                  class="flex-1 h-1.5 accent-fuchsia-500 bg-white/10 rounded-full cursor-pointer min-w-[80px]" />
+                <span id="pm-gen-val" class="text-fuchsia-400 font-mono text-xs font-bold w-14 text-right shrink-0">10,000</span>
+              </div>
+              <button id="btn-pm-generate"
+                class="text-[10px] font-bold px-3 py-1.5 rounded-md bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 hover:bg-fuchsia-500/30 transition-all flex items-center gap-1.5 shrink-0 shadow-lg shadow-fuchsia-500/10">
+                <span class="material-symbols-outlined text-sm">bolt</span> Generate
+              </button>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-slate-600 text-xs hidden sm:inline">or</span>
+              <label class="text-[10px] font-bold px-3 py-2 rounded-md bg-white/5 text-slate-400 border border-white/10 hover:border-fuchsia-500/30 hover:text-fuchsia-400 transition-all flex items-center gap-1.5 cursor-pointer">
+                <span class="material-symbols-outlined text-sm">upload_file</span>
+                <span id="pm-file-label">Upload File</span>
+                <input id="pm-file-input" type="file" accept=".txt,.csv" class="hidden" />
+              </label>
+              <button id="btn-pm-delete-file" class="hidden text-slate-400 hover:text-rose-400 transition-colors p-1" title="Remove file">
+                <span class="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+            <div id="pm-data-status" class="hidden items-center gap-2 shrink-0">
+              <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="pm-data-count" class="text-[10px] text-emerald-400 font-mono font-bold">0</span>
+              <span class="text-[10px] text-slate-500">elements loaded</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PANEL CONTAINER ===== -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar">
+
+          <!-- ===== PANEL 0: PERFORMANCE COMPARISON ===== -->
+          <div id="pm-panel-0" class="pm-panel p-4 sm:p-6 lg:p-8 space-y-6">
+            <!-- Empty state -->
+            <div id="pm-empty-state" class="flex flex-col items-center justify-center py-20 gap-4 text-center">
+              <div class="relative">
+                <div class="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full"></div>
+                <span class="material-symbols-outlined text-7xl text-cyan-400 relative z-10 animate-bounce">touch_app</span>
+              </div>
+              <h3 class="text-xl font-bold text-white tracking-tight">Select an Algorithm to Analyze</h3>
+              <p class="text-xs text-slate-500 max-w-md leading-relaxed">Choose a target algorithm from the top dropdown to instantly generate baseline data and unveil the detailed comparison analytics.</p>
+            </div>
+
+            <!-- Analysis content (hidden until data is loaded) -->
+            <div id="pm-analysis-content" class="hidden space-y-6">
+              <!-- Top Row: Chart (Full Width) with Floating Overlay -->
+              <div class="pm-glass relative overflow-hidden group">
+                <div class="p-5 sm:p-6">
+                  <div class="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 class="text-base font-bold text-white">Time & Space Complexity Comparison</h3>
+                      <p class="text-[10px] text-slate-500 font-mono mt-1" id="pm-chart-subtitle">[ BUFFER_SIZE: — // DATA_TYPE: — ]</p>
+                  </div>
+                  <div class="relative z-0" style="height: 380px;">
+                    <canvas id="pm-complexity-chart" class="w-full h-full"></canvas>
+                  </div>
+                </div>
+
+                <!-- Floating Ranking Table Overlay (Hover to expand) -->
+                <div id="pm-ranking-overlay" class="absolute bottom-6 left-6 pm-glass p-4 border border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all duration-500 w-64 hover:w-80 lg:hover:w-96 overflow-hidden h-14 hover:h-80 z-10 cursor-pointer bg-[#0f172a]/80 backdrop-blur-xl group/overlay">
+                  <!-- Collapsed Header -->
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-cyan-400 text-lg">emoji_events</span>
+                      <h4 class="text-xs font-bold text-white uppercase tracking-wider">Ranking Analysis</h4>
+                    </div>
+                    <span class="material-symbols-outlined text-slate-500 text-sm group-hover/overlay:rotate-180 transition-transform">expand_more</span>
+                  </div>
+                  <!-- Expanded Table Content -->
+                  <div class="opacity-0 group-hover/overlay:opacity-100 transition-opacity duration-300 flex flex-col h-[calc(100%-2rem)]">
+                    <p id="pm-overlay-input-type" class="text-[10px] text-emerald-400 font-mono mb-2 border-b border-white/10 pb-2 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                      <span id="pm-input-type-text">Analyzing...</span>
+                    </p>
+                    <div class="overflow-y-auto pr-1 flex-1 custom-scrollbar">
+                      <table class="w-full text-left text-[10px]">
+                        <thead class="text-slate-500 uppercase sticky top-0 bg-[#0f172a]/90 backdrop-blur pb-1">
+                          <tr>
+                            <th class="py-2 font-medium w-10">Rank</th>
+                            <th class="py-2 font-medium w-32">Algorithm</th>
+                            <th class="py-2 font-medium text-center w-24">Suitability Score</th>
+                            <th class="py-2 font-medium pl-4">Key Strengths/Notes</th>
+                          </tr>
+                        </thead>
+                        <tbody id="pm-ranking-tbody" class="text-white font-mono space-y-1"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Second Row: Deep Dive Cards -->
+              <div class="space-y-4">
+                 <div class="flex items-center justify-between">
+                   <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                     <span class="material-symbols-outlined text-fuchsia-400 text-base">search_insights</span>
+                     Algorithm Deep Dive
+                   </h3>
+                 </div>
+                 <div id="pm-deep-dive-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+              </div>
+
+              <!-- Third Row: Space Bars & Fit Scores -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Space Complexity Bars -->
+                <div class="pm-glass p-5">
+                  <h4 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-4">Space Complexity (Top 5)</h4>
+                  <div id="pm-space-bars" class="flex flex-col justify-center gap-3"></div>
+                </div>
+                
+                <!-- P-Index Gauge -->
+                <div class="pm-glass p-5 flex items-center gap-6 md:col-span-1">
+                  <div id="pm-pindex-gauge" class="relative w-20 h-20 shrink-0">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 96 96">
+                      <circle cx="48" cy="48" r="40" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="8"></circle>
+                      <circle id="pm-pindex-ring" cx="48" cy="48" r="40" fill="transparent" stroke="#d946ef" stroke-width="8"
+                        stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round"
+                        style="transition: stroke-dashoffset 1.5s ease-out"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                      <span id="pm-pindex-value" class="text-base font-bold text-white">0%</span>
+                      <span class="text-[8px] text-slate-500 uppercase">P-Index</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white mb-1">P-Index Learning</h4>
+                    <p id="pm-pindex-desc" class="text-[10px] text-slate-400 leading-relaxed"></p>
+                  </div>
+                </div>
+
+                <!-- Fit Scores -->
+                <div class="pm-glass p-5">
+                  <h4 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-4">Algorithm-to-Pattern Fit</h4>
+                  <div id="pm-fit-scores" class="space-y-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 1: DIAGNOSTICS ===== -->
+          <div id="pm-panel-1" class="pm-panel hidden p-4 sm:p-6 lg:p-8 space-y-6">
+            <!-- Top Row -->
+            <div class="grid grid-cols-1 md:grid-cols-10 gap-6">
+              <!-- Left: Processing Flow -->
+              <div class="md:col-span-4 pm-glass p-5 border-l-2 border-cyan-500/30">
+                <h3 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm text-cyan-400">account_tree</span>
+                  Algorithmic Pathway Visualizer — The Bridge
+                </h3>
+                <div class="relative h-48 bg-[#0a0f1c]/50 border border-white/5 rounded-lg overflow-hidden flex items-center justify-center shadow-inner">
+                  <!-- Background Grid -->
+                  <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:15px_15px]"></div>
+                  
+                  <!-- SVG Flow -->
+                  <svg class="w-full h-full absolute inset-0 text-cyan-500" overflow="visible" viewBox="0 0 400 200" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="flowGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.8" />
+                        <stop offset="100%" stop-color="#d946ef" stop-opacity="0.8" />
+                      </linearGradient>
+                      <filter id="glowFlow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    <path d="M 80 50 L 200 100 L 80 150" fill="none" stroke="url(#flowGrad1)" stroke-width="2" class="animate-pulse" filter="url(#glowFlow)"/>
+                    <path d="M 320 50 L 200 100 L 320 150" fill="none" stroke="url(#flowGrad1)" stroke-width="2" class="animate-pulse" filter="url(#glowFlow)"/>
+                    <circle cx="200" cy="100" r="5" fill="#d946ef" filter="url(#glowFlow)" class="animate-ping"/>
+                  </svg>
+                  
+                  <!-- Nodes -->
+                  <div class="absolute top-4 left-4 p-2 border border-cyan-500/50 bg-cyan-950/80 rounded backdrop-blur text-[9px] font-bold uppercase text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)]">Sorted Runs</div>
+                  <div class="absolute top-4 right-4 p-2 border border-fuchsia-500/50 bg-fuchsia-950/80 rounded backdrop-blur text-[9px] font-bold uppercase text-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.3)]">Pattern Match</div>
+                  
+                  <div class="absolute bottom-4 left-4 p-2 border border-emerald-500/50 bg-emerald-950/80 rounded backdrop-blur text-[9px] font-bold uppercase text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)] opacity-70">Heuristic Div</div>
+                  <div class="absolute bottom-4 right-4 p-2 border border-rose-500/50 bg-rose-950/80 rounded backdrop-blur text-[9px] font-bold uppercase text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.3)] opacity-70">Conflict Res</div>
+                  
+                  <!-- Center Core -->
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="p-3 border-2 border-fuchsia-500/80 bg-black/80 rounded-full backdrop-blur shadow-[0_0_20px_rgba(217,70,239,0.6)] flex items-center justify-center">
+                       <span class="material-symbols-outlined text-fuchsia-400 text-2xl animate-spin-slow">memory</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Middle: Metric Gauges -->
+              <div class="md:col-span-2 flex flex-col gap-3">
+                <div class="pm-glass p-4 flex flex-col items-center justify-center border-l-2 border-cyan-500/30 flex-1">
+                  <div class="relative w-16 h-16 mb-2">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 64 64">
+                      <circle cx="32" cy="32" r="28" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="2"></circle>
+                      <circle id="pm-diag-pindex-ring" cx="32" cy="32" r="28" fill="transparent" stroke="#06b6d4" stroke-width="2"
+                        stroke-dasharray="176" stroke-dashoffset="176" stroke-linecap="round"
+                        style="transition: stroke-dashoffset 1.5s ease-out"></circle>
+                    </svg>
+                    <span id="pm-diag-pindex-val" class="absolute inset-0 flex items-center justify-center text-sm font-bold text-cyan-400">0%</span>
+                  </div>
+                  <span class="text-[10px] text-slate-500 uppercase font-bold">P-Index</span>
+                </div>
+                <div class="pm-glass p-4 flex items-center justify-between border-l-2 border-fuchsia-500/30 flex-1">
+                  <div>
+                    <span id="pm-adaptive-gain" class="text-lg font-bold text-fuchsia-400">0%</span>
+                    <span class="text-[10px] text-slate-500 uppercase block font-bold">Adaptive Gain</span>
+                  </div>
+                  <span class="material-symbols-outlined text-fuchsia-400 text-2xl">trending_up</span>
+                </div>
+                <div class="pm-glass p-4 flex items-center justify-between border-l-2 border-emerald-500/30 flex-1">
+                  <div>
+                    <span id="pm-run-detection" class="text-lg font-bold text-emerald-400">0%</span>
+                    <span class="text-[10px] text-slate-500 uppercase block font-bold leading-tight">Run Detection<br/>Efficiency</span>
+                  </div>
+                  <span class="material-symbols-outlined text-emerald-400 text-2xl">offline_bolt</span>
+                </div>
+              </div>
+
+              <!-- Right: Heuristic Influence -->
+              <div class="md:col-span-4 pm-glass p-5 border-l-2 border-fuchsia-500/30 flex flex-col">
+                <h3 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm text-fuchsia-400">psychology</span>
+                  Neural Heuristic Influence
+                </h3>
+                <div class="flex-1 bg-black/30 rounded-lg p-4 border border-white/5 relative overflow-hidden">
+                  <div class="absolute top-2 right-2 opacity-10">
+                    <span class="material-symbols-outlined text-5xl">data_exploration</span>
+                  </div>
+                  <p id="pm-heuristic-text" class="text-xs text-slate-400 leading-relaxed"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Conflict Table -->
+              <div class="pm-glass p-5 border-l-2 border-cyan-500/30">
+                <h3 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-4">
+                  Practical vs. Theoretical Complexity Conflict
+                </h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-[11px]">
+                    <thead class="text-[10px] text-slate-600 uppercase border-b border-white/5">
+                      <tr>
+                        <th class="pb-3 font-medium">Metric</th>
+                        <th class="pb-3 font-medium text-center">Theoretical</th>
+                        <th class="pb-3 font-medium text-center">Practical</th>
+                        <th class="pb-3 font-medium text-center">% Conflict</th>
+                      </tr>
+                    </thead>
+                    <tbody id="pm-conflict-tbody" class="text-slate-300"></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- Memory Topology -->
+              <div class="pm-glass p-5 border-l-2 border-fuchsia-500/30 flex flex-col overflow-hidden">
+                <h3 class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2">
+                  Deep-Drive Memory Topology
+                </h3>
+                <div class="relative h-40 flex items-center justify-center my-auto" style="perspective: 1000px;">
+                  <div class="relative w-32 h-32" style="transform: rotateX(60deg) rotateZ(-45deg); transform-style: preserve-3d;">
+                    <!-- Bottom Plane (Theoretical) -->
+                    <div class="absolute inset-0 border border-cyan-500/50 bg-cyan-500/10 flex flex-col items-center justify-center p-2" style="transform: translateZ(0px); box-shadow: 0 0 15px rgba(6,182,212,0.2);">
+                         <span class="text-[7px] text-cyan-500 font-bold uppercase tracking-widest -mb-1 transform -rotate-45">Theoretical Base</span>
+                         <span class="text-[14px] font-mono text-cyan-400 font-bold uppercase transform -rotate-45" id="pm-mem-theoretical">O(1)</span>
+                    </div>
+                    
+                    <!-- Middle connection / particles -->
+                    <div class="absolute inset-0 flex items-center justify-center" style="transform: translateZ(20px);">
+                       <div class="w-16 h-16 border-l border-t border-fuchsia-500/30 rounded-full animate-spin"></div>
+                    </div>
+
+                    <!-- Top Plane (Practical) -->
+                    <div class="absolute inset-0 border-2 border-fuchsia-500/50 bg-fuchsia-500/20 backdrop-blur-sm flex flex-col items-center justify-center p-2" style="transform: translateZ(40px); box-shadow: 0 0 25px rgba(217,70,239,0.4);">
+                         <span class="text-[8px] text-fuchsia-400 font-bold uppercase tracking-widest -mb-1 transform -rotate-45 filter drop-shadow-[0_0_2px_rgba(217,70,239,0.8)]">Practical Load</span>
+                         <span class="text-[16px] font-mono text-fuchsia-300 font-bold uppercase transform -rotate-45 filter drop-shadow-[0_0_5px_rgba(217,70,239,0.8)]" id="pm-mem-practical">O(n)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 p-3 bg-black/30 rounded border-l-2 border-fuchsia-500/30">
+                  <p id="pm-mem-summary" class="text-[10px] text-slate-400 leading-relaxed"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 2: FORECASTING LAB ===== -->
+          <div id="pm-panel-2" class="pm-panel hidden p-4 sm:p-6 lg:p-8 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- Left: Path-Memory Visualizer -->
+              <div class="lg:col-span-4 pm-glass p-5 border-l-2 border-cyan-500/30">
+                <h3 class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider mb-1">Path-Memory Visualizer</h3>
+                <p class="text-[10px] text-slate-500 mb-4">Merge Sort's Memory Footprint & Merge-Tree Evolution</p>
+                <div class="relative h-48 bg-black/40 rounded border border-white/5 p-3 mb-3 overflow-hidden">
+                  <canvas id="pm-merge-tree-canvas" class="w-full h-full"></canvas>
+                  <div class="absolute top-2 right-2">
+                    <span id="pm-stack-depth" class="text-[8px] font-mono bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 border border-cyan-400/30 rounded">[Stack Depth: —]</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="w-2 h-2 bg-cyan-400 animate-pulse rounded-sm"></span>
+                  <span class="text-[10px] text-cyan-400 uppercase font-bold tracking-tight">Adaptive Strategy Pathing</span>
+                </div>
+                <p id="pm-path-strategy" class="text-[10px] text-slate-500 leading-relaxed border-l border-cyan-500/30 pl-3"></p>
+              </div>
+
+              <!-- Middle: Data Heatmap -->
+              <div class="lg:col-span-4 pm-glass p-5 border-l-2 border-fuchsia-500/30 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="text-[10px] text-fuchsia-400 font-bold uppercase tracking-wider mb-1">Simulated Data Input Matrix</h3>
+                    <p id="pm-heatmap-subtitle" class="text-[10px] text-slate-500"></p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[9px] uppercase font-mono">Pattern 12</span>
+                    <span class="material-symbols-outlined text-slate-600 text-lg">grid_view</span>
+                  </div>
+                </div>
+                <div id="pm-heatmap" class="grid grid-cols-5 gap-2 flex-1 mb-3"></div>
+                <div class="p-3 bg-black/40 rounded border border-white/5">
+                  <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-[10px] text-slate-500 uppercase font-bold">Pattern 12 Analysis</span>
+                    <span id="pm-sync-score" class="text-[10px] text-cyan-400 font-mono font-bold"></span>
+                  </div>
+                  <p class="text-[9px] text-cyan-400/70 mb-2 border-b border-white/5 pb-1.5">Pattern 12 (Semi-Structured Runs): [Detected 8 runs; Avg. run length: 5 elements]</p>
+                  <div id="pm-patterns-summary" class="flex flex-wrap gap-1.5 mb-2"></div>
+                  <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div id="pm-sync-bar" class="h-full bg-cyan-400 rounded-full transition-all duration-1000" style="width:0%;box-shadow:0 0_8px_rgba(0,251,251,0.4)"></div>
+                  </div>
+                </div>
+              </div>
+                  <div class="flex items-center gap-2">
+                    <span class="bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[9px] uppercase font-mono">Pattern 12</span>
+                    <span class="material-symbols-outlined text-slate-600 text-lg">grid_view</span>
+                  </div>
+                </div>
+                <div id="pm-heatmap" class="grid grid-cols-4 sm:grid-cols-6 gap-2 flex-1 mb-3"></div>
+                <div class="p-3 bg-black/40 rounded border border-white/5">
+                  <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-[10px] text-slate-500 uppercase font-bold">Pattern Analysis</span>
+                    <span id="pm-sync-score" class="text-[10px] text-cyan-400 font-mono font-bold"></span>
+                  </div>
+                  <div id="pm-patterns-summary" class="flex flex-wrap gap-1.5 mb-2"></div>
+                  <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div id="pm-sync-bar" class="h-full bg-cyan-400 rounded-full transition-all duration-1000" style="width:0%;box-shadow:0 0 8px rgba(0,251,251,0.4)"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Environment Forecasting -->
+              <div class="lg:col-span-4 pm-glass p-5 border-l-2 border-emerald-500/30 flex flex-col justify-between">
+                <div>
+                  <div class="flex justify-between items-start mb-4">
+                      <h3 class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-1">Cross-Environmental Forecasting</h3>
+                      <span class="material-symbols-outlined text-slate-600 text-lg">query_stats</span>
+                  </div>
+                  <!-- Chart 1: Predicted Curves -->
+                  <div class="mb-4">
+                    <h4 class="text-[9px] text-slate-500 uppercase font-bold mb-1">Execution Trajectory Prediction</h4>
+                    <div class="w-full h-24 bg-black/40 rounded border border-white/5 relative p-1 shadow-inner">
+                       <canvas id="pm-predict-canvas" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
+                  <!-- Chart 2: Energy & Hardware -->
+                  <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div>
+                      <h4 class="text-[9px] text-slate-500 uppercase font-bold mb-1">Energy Profile (Joules/Op)</h4>
+                      <div class="w-full h-16 bg-black/40 rounded border border-white/5 relative p-1 shadow-inner bg-gradient-to-b from-transparent to-rose-500/5">
+                         <canvas id="pm-energy-canvas" class="w-full h-full"></canvas>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="text-[9px] text-slate-500 uppercase font-bold mb-1">Hardware Matrix</h4>
+                      <div class="w-full h-16 bg-black/40 rounded border border-white/5 p-1 flex">
+                        <div class="grid grid-cols-4 gap-0.5 w-full h-full" id="pm-resource-matrix"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Usage Stats -->
+                <div class="p-3 bg-emerald-500/[0.03] border border-emerald-500/10 rounded">
+                  <div class="flex items-center justify-between">
+                    <div class="text-center">
+                      <div id="pm-core-load" class="text-lg font-bold text-white tracking-tight">—</div>
+                      <div class="text-[8px] text-slate-500 uppercase font-bold mt-1">Core Load</div>
+                    </div>
+                    <div class="h-6 w-[1px] bg-white/10"></div>
+                    <div class="text-center">
+                      <div id="pm-efficiency" class="text-lg font-bold text-emerald-400 tracking-tight">—</div>
+                      <div class="text-[8px] text-slate-500 uppercase font-bold mt-1">Efficiency</div>
+                    </div>
+                    <div class="h-6 w-[1px] bg-white/10"></div>
+                    <div class="text-center">
+                      <div id="pm-latency" class="text-lg font-bold text-cyan-400 tracking-tight">—</div>
+                      <div class="text-[8px] text-slate-500 uppercase font-bold mt-1">Latency</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom: Strategy Forecast -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-5 pm-glass p-5 border-l-2 border-cyan-500/30">
+                <h3 class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider mb-3">Pattern Indicator Details</h3>
+                <div id="pm-pattern-tags" class="flex flex-wrap gap-2 mb-4"></div>
+                <div class="flex items-center gap-4 p-3 bg-black/40 rounded border-l-2 border-fuchsia-500/40">
+                  <span class="material-symbols-outlined text-fuchsia-400 text-3xl shrink-0">analytics</span>
+                  <p id="pm-pattern-detail" class="text-[10px] text-slate-400 leading-relaxed italic"></p>
+                </div>
+              </div>
+              <div class="lg:col-span-7 pm-glass p-5 border-l-2 border-fuchsia-500/30 relative overflow-hidden">
+                <div class="absolute bottom-0 right-0 p-4">
+                  <span class="text-[80px] font-bold text-fuchsia-500/[0.03] leading-none pointer-events-none select-none">STRAT</span>
+                </div>
+                <div class="relative z-10">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 border border-fuchsia-500/30 flex items-center justify-center rounded">
+                      <span class="material-symbols-outlined text-fuchsia-400 text-lg">psychology</span>
+                    </div>
+                    <h3 class="text-sm text-white font-bold">Behavior Prediction & Strategy Forecast</h3>
+                  </div>
+                  <div id="pm-strategy-text" class="text-xs text-slate-400 leading-relaxed space-y-2">
+                    <p class="text-slate-600 italic">Generate data to see strategy predictions...</p>
+                  </div>
+                  <div class="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-white/5">
+                    <div class="text-center">
+                      <span class="text-slate-500 text-[9px] uppercase block mb-1">Sorted Runs</span>
+                      <span id="pm-sorted-runs" class="text-white font-mono font-bold text-sm">—</span>
+                    </div>
+                    <div class="text-center">
+                      <span class="text-slate-500 text-[9px] uppercase block mb-1">Avg Run Len</span>
+                      <span id="pm-avg-run-len" class="text-white font-mono font-bold text-sm">—</span>
+                    </div>
+                    <div class="text-center">
+                      <span class="text-slate-500 text-[9px] uppercase block mb-1">Plateaus</span>
+                      <span id="pm-plateaus" class="text-white font-mono font-bold text-sm">—</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL 3: ALGORITHM FUSION LAB ===== -->
+          <div id="pm-panel-3" class="pm-panel hidden p-4 sm:p-6 lg:p-8 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Left: Creator Studio -->
+              <div class="space-y-6">
+                <div>
+                  <h2 class="text-lg font-bold text-white uppercase tracking-tight">Create Your Adaptive Hybrid Algorithm</h2>
+                  <div class="h-0.5 w-16 bg-fuchsia-500 mt-2 rounded-full"></div>
+                </div>
+                <div class="pm-glass p-6 space-y-5">
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col relative group">
+                      <div class="relative cursor-pointer border-2 border-dashed border-fuchsia-500/30 bg-fuchsia-500/5 hover:bg-fuchsia-500/10 rounded-xl p-4 text-center transition-all h-28 flex flex-col items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-2xl text-fuchsia-400/50 mb-1 transition-colors group-hover:text-fuchsia-400">downloading</span>
+                        <div class="text-[10px] text-white font-bold uppercase tracking-wider">Drop Primary (A)</div>
+                        <select id="pm-fusion-algo-a" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                          <option value="">Select Primary</option>
+                        </select>
+                      </div>
+                      <div id="pm-fusion-a-badge" class="hidden absolute inset-0 bg-black/90 border border-fuchsia-500/50 flex-col items-center justify-center rounded-xl p-4 shadow-[0_0_20px_rgba(217,70,239,0.3)] backdrop-blur z-20">
+                        <span class="material-symbols-outlined text-fuchsia-400 text-3xl mb-1">memory</span>
+                        <span id="pm-fusion-a-name" class="text-[10px] font-bold text-white uppercase tracking-wider text-center"></span>
+                        <span class="text-[8px] text-slate-400 mt-1 uppercase underline pointer-events-none">Change</span>
+                      </div>
+                    </div>
+                    
+                    <div class="flex flex-col relative group">
+                      <div class="relative cursor-pointer border-2 border-dashed border-cyan-500/30 bg-cyan-500/5 hover:bg-cyan-500/10 rounded-xl p-4 text-center transition-all h-28 flex flex-col items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-2xl text-cyan-400/50 mb-1 transition-colors group-hover:text-cyan-400">dashboard_customize</span>
+                        <div class="text-[10px] text-white font-bold uppercase tracking-wider">Drop Secondary (B)</div>
+                        <select id="pm-fusion-algo-b" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                          <option value="">Select Secondary</option>
+                        </select>
+                      </div>
+                      <div id="pm-fusion-b-badge" class="hidden absolute inset-0 bg-black/90 border border-cyan-500/50 flex-col items-center justify-center rounded-xl p-4 shadow-[0_0_20px_rgba(6,182,212,0.3)] backdrop-blur z-20">
+                        <span class="material-symbols-outlined text-cyan-400 text-3xl mb-1">mediation</span>
+                        <span id="pm-fusion-b-name" class="text-[10px] font-bold text-white uppercase tracking-wider text-center"></span>
+                        <span class="text-[8px] text-slate-400 mt-1 uppercase underline pointer-events-none">Change</span>
+                      </div>
+                    </div>
+                  </div>                  <!-- Threshold Slider -->
+                  <div class="flex flex-col gap-2 pt-3 border-t border-white/5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Switch Threshold (N)</span>
+                      <span id="pm-fusion-threshold-val" class="text-fuchsia-400 font-mono text-xs font-bold">32</span>
+                    </div>
+                    <input id="pm-fusion-threshold" type="range" min="8" max="256" value="32" step="8"
+                      class="w-full h-1.5 accent-fuchsia-500 bg-white/10 rounded-full cursor-pointer" />
+                    <p class="text-[9px] text-slate-600">When N ≤ threshold → use Algorithm A; else → use Algorithm B</p>
+                  </div>
+                  <!-- Predicted Operations Chart -->
+                  <div class="pt-3 border-t border-white/5">
+                    <div class="flex justify-between items-center mb-3">
+                      <h4 class="text-xs font-bold text-white uppercase">Predicted Operations</h4>
+                      <span id="pm-fusion-metric" class="text-[9px] text-fuchsia-400 font-mono"></span>
+                    </div>
+                    <div class="relative bg-black/40 rounded border border-white/5" style="height: 200px;">
+                      <canvas id="pm-fusion-chart" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Analysis -->
+              <div class="space-y-6">
+                <div>
+                  <h2 class="text-lg font-bold text-white uppercase tracking-tight flex items-center gap-2">
+                    Fusion Analysis & Visualization
+                    <span id="pm-fusion-status" class="hidden text-emerald-400 font-mono text-xs bg-emerald-400/10 px-2 py-1 rounded">(Build Complete)</span>
+                  </h2>
+                  <div class="h-0.5 w-16 bg-cyan-500 mt-2 rounded-full"></div>
+                </div>
+                <div class="pm-glass p-6 space-y-6">
+                  <!-- Complexity Breakdown -->
+                  <div class="space-y-3">
+                    <div>
+                      <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Time Complexity (Calculated)</span>
+                      <div id="pm-fusion-time-complexity" class="text-2xl font-mono text-fuchsia-400 font-bold mt-1">—</div>
+                    </div>
+                    <ul id="pm-fusion-time-breakdown" class="space-y-1 text-xs font-mono text-slate-400"></ul>
+                  </div>
+                  <div class="space-y-3 pt-4 border-t border-white/5">
+                    <div>
+                      <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Space Complexity (Calculated)</span>
+                      <div id="pm-fusion-space-complexity" class="text-2xl font-mono text-cyan-400 font-bold mt-1">—</div>
+                    </div>
+                    <ul id="pm-fusion-space-breakdown" class="space-y-1 text-xs font-mono text-slate-400"></ul>
+                  </div>
+                  <!-- Performance Comparison -->
+                  <div class="pt-4 border-t border-white/5">
+                    <div class="flex justify-between items-center mb-3">
+                      <h4 class="text-xs font-bold text-white uppercase">Individual vs Hybrid Performance</h4>
+                      <div class="flex gap-3">
+                        <span class="flex items-center gap-1 text-[8px] font-mono text-fuchsia-400"><span class="w-2 h-0.5 bg-fuchsia-400 rounded"></span> HYBRID</span>
+                        <span class="flex items-center gap-1 text-[8px] font-mono text-slate-500"><span class="w-2 h-0.5 bg-slate-500 rounded"></span> ALGO A</span>
+                        <span class="flex items-center gap-1 text-[8px] font-mono text-cyan-500"><span class="w-2 h-0.5 bg-cyan-500 rounded"></span> ALGO B</span>
+                      </div>
+                    </div>
+                    <div class="relative bg-black/40 rounded border border-white/5" style="height: 140px;">
+                      <canvas id="pm-fusion-comparison-chart" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
+                  <!-- Execution Trace -->
+                  <div class="pt-4 border-t border-white/5">
+                    <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider block mb-3">Adaptive Execution Trace Matrix</span>
+                    <div id="pm-fusion-trace" class="grid grid-cols-12 sm:grid-cols-16 gap-1.5 p-2 bg-black/40 rounded border border-white/5 min-h-[80px] content-start"></div>
+                  </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-4">
+                  <button id="btn-pm-fusion-execute"
+                    class="w-full py-3 font-bold text-xs tracking-wider uppercase bg-gradient-to-r from-fuchsia-600 to-fuchsia-500 text-white rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <span class="material-symbols-outlined text-sm">play_arrow</span> Execute on Live Data
+                  </button>
+                  <button id="btn-pm-fusion-build"
+                    class="w-full py-3 font-bold text-xs tracking-wider uppercase bg-white/5 border border-fuchsia-500/30 text-fuchsia-400 rounded-lg hover:bg-fuchsia-500/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <span class="material-symbols-outlined text-sm">build</span> Build & Visualize
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /panel-container -->
+      </div><!-- /performance-matrices-page -->
+
+
+
     </main>
   </div><!-- /app-shell -->
 
@@ -510,7 +1938,7 @@
             </div>
             <div class="bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6 flex flex-col gap-2">
               <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Worst Case</span>
-              <span id="algo-worst" class="text-rose-500 text-lg sm:text-2xl font-display font-bold">O(n²)</span>
+              <span id="algo-worst" class="text-rose-500 text-lg sm:text-2xl font-display font-bold">O(nÂ²)</span>
               <span class="text-slate-400 text-[10px]">When pivot is smallest/largest</span>
             </div>
             <div class="bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6 flex flex-col gap-2">
@@ -647,17 +2075,17 @@
 
                 <div class="bg-black/30 rounded-xl p-4 border border-white/5">
                   <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">⏱ Time Comparison</p>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">â± Time Comparison</p>
                     <div class="flex items-center gap-1 flex-wrap">
                       <button data-unit="ms"
                         class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-all">ms</button>
-                      <button data-unit="µs"
-                        class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-500 border border-white/10 hover:border-rose-500/30 hover:text-rose-400 transition-all">µs</button>
+                      <button data-unit="Âµs"
+                        class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-500 border border-white/10 hover:border-rose-500/30 hover:text-rose-400 transition-all">Âµs</button>
                       <button data-unit="ns"
                         class="bench-unit-btn text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-500 border border-white/10 hover:border-rose-500/30 hover:text-rose-400 transition-all">ns</button>
                       <span class="mx-1 text-white/10">|</span>
                       <span id="bench-diff-badge"
-                        class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-400">—</span>
+                        class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-400">â€”</span>
                     </div>
                   </div>
 
@@ -704,15 +2132,15 @@
                   <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/5">
                     <div class="text-center">
                       <p class="text-[7px] text-emerald-500/70 font-bold uppercase">Best Case</p>
-                      <p id="bench-theory-best" class="text-emerald-400 font-mono font-bold text-xs mt-0.5">—</p>
+                      <p id="bench-theory-best" class="text-emerald-400 font-mono font-bold text-xs mt-0.5">â€”</p>
                     </div>
                     <div class="text-center">
                       <p class="text-[7px] text-amber-500/70 font-bold uppercase">Avg Case</p>
-                      <p id="bench-theory-avg" class="text-amber-400 font-mono font-bold text-xs mt-0.5">—</p>
+                      <p id="bench-theory-avg" class="text-amber-400 font-mono font-bold text-xs mt-0.5">â€”</p>
                     </div>
                     <div class="text-center">
                       <p class="text-[7px] text-rose-500/70 font-bold uppercase">Worst Case</p>
-                      <p id="bench-theory-worst" class="text-rose-400 font-mono font-bold text-xs mt-0.5">—</p>
+                      <p id="bench-theory-worst" class="text-rose-400 font-mono font-bold text-xs mt-0.5">â€”</p>
                     </div>
                   </div>
                 </div>
@@ -742,7 +2170,110 @@
     </div>
   </div><!-- /modal -->
 
+  <div id="complexityModal" class="modal">
+    <div class="modal-content">
+      
+      <div class="flex items-center gap-4 mb-6">
+        <button id="closeComplexity" class="touch-target bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-lg p-2.5 flex items-center justify-center border border-white/10 cursor-pointer" title="Back to Home">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </button>
+        <h2 class="m-0 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Time Complexity Comparison</h2>
+      </div>
+
+      <div class="complexity-input-panel grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="glass rounded-2xl p-4 border border-white/10">
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-3">Input Source</p>
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            <button id="complexity-source-auto" class="complexity-source-btn active">Auto</button>
+            <button id="complexity-source-manual" class="complexity-source-btn">Manual</button>
+            <button id="complexity-source-file" class="complexity-source-btn">File</button>
+          </div>
+          <div id="complexity-input-auto" class="complexity-input-mode">
+            <label class="text-xs text-slate-400 mb-2 flex items-center gap-2"><span class="material-symbols-outlined">casino</span> Array Size</label>
+            <input id="complexity-auto-size" type="range" min="5" max="500" value="50" class="w-full accent-primary mb-3" />
+            <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+              <span>5</span><span id="complexity-auto-size-label">50</span><span>500</span>
+            </div>
+          </div>
+          <div id="complexity-input-manual" class="complexity-input-mode hidden">
+            <label class="text-xs text-slate-400 mb-2 flex items-center gap-2"><span class="material-symbols-outlined">edit</span> Manual values</label>
+            <textarea id="complexity-manual-text" rows="5" class="w-full bg-[#08101e] border border-white/10 rounded-xl p-3 text-slate-200 text-sm placeholder:text-slate-500" placeholder="e.g. 12, 7, 3, 25, 10"></textarea>
+          </div>
+          <div id="complexity-input-file" class="complexity-input-mode hidden">
+            <label class="text-xs text-slate-400 mb-2 flex items-center gap-2"><span class="material-symbols-outlined">upload_file</span> Upload file</label>
+            <div class="flex gap-2 items-stretch">
+              <label id="complexity-file-upload-label" class="flex-1 p-4 bg-black/30 border border-white/10 hover:border-cyan-500/30 rounded-xl cursor-pointer flex items-center justify-between gap-3 text-slate-300 transition-all">
+                <span>Select file (.txt, .csv)</span>
+                <span id="complexity-file-label" class="text-xs text-slate-400 font-mono">No file selected</span>
+                <input type="file" id="complexity-file-input" accept=".txt,.csv" class="hidden" />
+              </label>
+              <button id="btn-complexity-reset-file" class="hidden bg-white/5 border border-white/10 text-slate-400 hover:text-rose-400 hover:border-rose-400/50 rounded-xl px-4 transition-all touch-target" title="Remove File">
+                <span class="material-symbols-outlined text-lg">delete</span>
+              </button>
+            </div>
+          </div>
+          <button id="btn-analyze-input" class="mt-4 w-full bg-primary text-background-dark rounded-xl py-3 font-bold hover:brightness-110 transition-all">Analyze Input</button>
+        </div>
+
+        <div class="glass rounded-2xl p-4 border border-white/10">
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-3">Input Summary</p>
+          <div id="complexity-input-summary" class="space-y-3 text-sm text-slate-300">
+            <p><strong>Size:</strong> <span id="complexity-summary-size">—</span></p>
+            <p><strong>Presortedness:</strong> <span id="complexity-summary-pindex">—</span></p>
+            <p><strong>Pattern:</strong> <span id="complexity-summary-type">—</span></p>
+            <p><strong>Sorted portion:</strong> <span id="complexity-summary-sorted">—</span></p>
+          </div>
+          <div class="mt-4 text-[10px] text-slate-500 bg-white/5 rounded-xl p-3 border border-white/5">
+            Use the chosen array to rank algorithms by expected comparisons, input size, and presortedness.
+          </div>
+        </div>
+      </div>
+
+      <div class="complexity-results-grid grid gap-4 mb-6">
+        <div class="glass rounded-2xl p-4 border border-white/10">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-slate-400 uppercase tracking-widest text-[10px]">Algorithm Ranking</p>
+            <span id="complexity-ranked-count" class="text-emerald-300 text-xs">0 algorithms</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-[11px] text-slate-300">
+              <thead class="text-slate-500 uppercase text-[9px] border-b border-white/10">
+                <tr><th class="py-2 pr-2">Rank</th><th class="py-2 pr-2">Algorithm</th><th class="py-2 pr-2">Score</th><th class="py-2 pr-2">Expected Ops</th></tr>
+              </thead>
+              <tbody id="complexity-ranking-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4 border border-white/10">
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-3">Algorithm Selection</p>
+          <div id="complexity-algo-details" class="space-y-3 text-slate-300">
+            <p class="text-slate-400">Select a ranked algorithm to see why it was chosen and how it sorts this input.</p>
+          </div>
+          <div id="complexity-sort-preview" class="hidden bg-black/20 rounded-xl p-3 text-[12px] text-slate-300 overflow-x-auto">
+            <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-2">Sorted Sample Preview</p>
+            <code id="complexity-sorted-preview" class="font-mono"></code>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-toggle">
+        <button class="case-btn active" data-case="best">Best</button>
+        <button class="case-btn" data-case="average">Average</button>
+        <button class="case-btn" data-case="worst">Worst</button>
+      </div>
+      
+      <div class="algo-toggle" id="algoToggle"></div>
+      
+      <div id="complexityChartContainer" style="width: 100%; height: 500px; position: relative;">
+        <canvas id="complexityChart"></canvas>
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 
 </html>
+
