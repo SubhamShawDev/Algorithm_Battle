@@ -662,6 +662,68 @@ const algorithms = {
                 await sort(i + 1, r, badAllowed);
             }
             await sort(0, n - 1, Math.floor(Math.log2(n)));
+        },
+        runRaw: (arr) => {
+            const n = arr.length;
+            function insertionSort(l, r) {
+                for (let i = l + 1; i <= r; i++) {
+                    let temp = arr[i], j = i;
+                    while (j > l && arr[j - 1] > temp) {
+                        arr[j] = arr[j - 1];
+                        j--;
+                    }
+                    arr[j] = temp;
+                }
+            }
+            function heapify(sz, index, start) {
+                let limit = start + sz;
+                let cur = start + index;
+                let largest = cur;
+                let l = start + 2 * index + 1;
+                let r = start + 2 * index + 2;
+                if (l < limit && arr[l] > arr[largest]) largest = l;
+                if (r < limit && arr[r] > arr[largest]) largest = r;
+                if (largest !== cur) {
+                    [arr[cur], arr[largest]] = [arr[largest], arr[cur]];
+                    heapify(sz, largest - start, start);
+                }
+            }
+            function heapSort(l, r) {
+                let sz = r - l + 1;
+                for (let idx = Math.floor(sz / 2) - 1; idx >= 0; idx--) heapify(sz, idx, l);
+                for (let idx = sz - 1; idx > 0; idx--) {
+                    [arr[l], arr[l + idx]] = [arr[l + idx], arr[l]];
+                    heapify(idx, 0, l);
+                }
+            }
+            function sort(l, r, badAllowed) {
+                let sz = r - l + 1;
+                if (sz < 16) { insertionSort(l, r); return; }
+                if (badAllowed === 0) { heapSort(l, r); return; }
+
+                let mid = l + Math.floor(sz / 2);
+                if (arr[l] > arr[mid]) [arr[l], arr[mid]] = [arr[mid], arr[l]];
+                if (arr[l] > arr[r]) [arr[l], arr[r]] = [arr[r], arr[l]];
+                if (arr[mid] > arr[r]) [arr[mid], arr[r]] = [arr[r], arr[mid]];
+
+                [arr[mid], arr[r - 1]] = [arr[r - 1], arr[mid]];
+                let pivot = arr[r - 1];
+                let i = l, j = r - 1;
+                while (true) {
+                    while (arr[++i] < pivot);
+                    while (arr[--j] > pivot && j > l);
+                    if (i >= j) break;
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                [arr[i], arr[r - 1]] = [arr[r - 1], arr[i]];
+
+                let lSize = i - l;
+                if (lSize < sz / 8) badAllowed--;
+
+                sort(l, i - 1, badAllowed);
+                sort(i + 1, r, badAllowed);
+            }
+            sort(0, n - 1, Math.floor(Math.log2(n)));
         }
     },
     'dual-pivot-quick-sort': {
@@ -1390,42 +1452,114 @@ function introSortRecursive(arr, start, end, maxDepth) {
     return arr;
 }`,
 
-        'pdq-sort': `// Simplified Pattern-Defeating Quicksort (PDQSort)
+        'pdq-sort': `// Pattern-Defeating Quicksort (PDQSort)
+function swap(arr, i, j) {
+    let temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+function insertionSort(arr, left, right) {
+    for (let i = left + 1; i <= right; i++) {
+        let key = arr[i];
+        let j = i - 1;
+        while (j >= left && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+function heapify(arr, size, index, start) {
+    let cur = start + index;
+    let largest = cur;
+    let l = start + 2 * index + 1;
+    let r = start + 2 * index + 2;
+    let limit = start + size;
+    
+    if (l < limit && arr[l] > arr[largest]) largest = l;
+    if (r < limit && arr[r] > arr[largest]) largest = r;
+    
+    if (largest !== cur) {
+        swap(arr, cur, largest);
+        heapify(arr, size, largest - start, start);
+    }
+}
+
+function heapSort(arr, left, right) {
+    let size = right - left + 1;
+    for (let i = Math.floor(size / 2) - 1; i >= 0; i--) {
+        heapify(arr, size, i, left);
+    }
+    for (let i = size - 1; i > 0; i--) {
+        swap(arr, left, left + i);
+        heapify(arr, i, 0, left);
+    }
+}
+
+function choosePivot(arr, begin, end) {
+    let size = end - begin;
+    let mid = begin + Math.floor(size / 2);
+    if (arr[begin] > arr[mid]) swap(arr, begin, mid);
+    if (arr[mid] > arr[end - 1]) swap(arr, mid, end - 1);
+    if (arr[begin] > arr[mid]) swap(arr, begin, mid);
+    return mid;
+}
+
+function partitionRight(arr, begin, end, pivotPos) {
+    let pivotValue = arr[pivotPos];
+    swap(arr, pivotPos, end - 1);
+    
+    let storeIdx = begin;
+    for (let i = begin; i < end - 1; i++) {
+        if (arr[i] < pivotValue) {
+            swap(arr, i, storeIdx);
+            storeIdx++;
+        }
+    }
+    swap(arr, storeIdx, end - 1);
+    
+    let unbalanced = (storeIdx - begin) < (end - storeIdx - 1);
+    let threshold = (end - begin) / 8;
+    let highlyUnbalanced = (storeIdx - begin) < threshold || (end - storeIdx - 1) < threshold;
+    
+    return { pivotIdx: storeIdx, highlyUnbalanced: highlyUnbalanced };
+}
+
 function pdqSort(arr) {
-    pdqSortLoop(arr, 0, arr.length, Math.log2(arr.length));
+    pdqSortHelper(arr, 0, arr.length, Math.log2(arr.length));
     return arr;
 }
 
-function pdqSortLoop(arr, begin, end, badAllowed, leftmost = true) {
+function pdqSortHelper(arr, begin, end, badAllowed) {
     while (true) {
         let size = end - begin;
-        if (size < 24) {
-            insertionSort(arr, begin, end);
+        if (size < 16) {
+            insertionSort(arr, begin, end - 1);
+            return;
+        }
+        if (badAllowed === 0) {
+            heapSort(arr, begin, end - 1);
             return;
         }
         
         let pivotPos = choosePivot(arr, begin, end);
-        if (leftmost && arr[begin] > arr[pivotPos]) {
-            swap(arr, begin, pivotPos);
-        }
-        
         let part = partitionRight(arr, begin, end, pivotPos);
         let pivotIdx = part.pivotIdx;
         let highlyUnbalanced = part.highlyUnbalanced;
         
-        pdqSortLoop(arr, begin, pivotIdx, badAllowed, leftmost);
+        pdqSortHelper(arr, begin, pivotIdx, badAllowed);
         
         begin = pivotIdx + 1;
-        leftmost = false;
-        
         if (highlyUnbalanced) {
-            if (--badAllowed === 0) {
-                heapSort(arr, begin, end);
-                return;
-            }
+            badAllowed--;
         }
     }
-}`,
+}
+
+pdqSort(arr);
+return arr;`,
 
         'dual-pivot-quick-sort': `function dualPivotQuickSort(arr, low = 0, high = arr.length - 1) {
     if (low < high) {
@@ -1604,55 +1738,91 @@ function partitionDual(arr, low, high) {
         const file = e.target.files[0];
         if (!file) return;
 
+        // Validate file size (max 5MB)
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
+        if (file.size > MAX_FILE_SIZE) {
+            alert('File is too large. Maximum file size is 5MB.');
+            UI.benchFileLabel.textContent = 'File too large';
+            return;
+        }
+
         UI.benchFileLabel.textContent = file.name;
         UI.benchFileLabel.classList.add('text-rose-400');
         UI.btnDeleteFile.classList.remove('hidden');
 
         const reader = new FileReader();
         reader.onload = (evt) => {
-            let text = evt.target.result;
+            try {
+                let text = evt.target.result;
 
-            // Remove text UI groups like '--- Group: 10 to 100 ---' from averageCase.txt
-            text = text.replace(/---.*?---/g, '');
+                // Remove text UI groups like '--- Group: 10 to 100 ---' from averageCase.txt
+                text = text.replace(/---.*?---/g, '');
 
-            // Parse comma, space, or newline separated numbers in O(N)
-            const nums = [];
-            const tokens = text.split(/[\s,]+/);
-            for (let i = 0; i < tokens.length; i++) {
-                const token = tokens[i];
-                if (token !== "") {
-                    const num = Number(token);
-                    if (!isNaN(num)) {
-                        nums.push(num);
+                // Parse comma, space, or newline separated numbers in O(N)
+                const nums = [];
+                const tokens = text.split(/[\s,]+/);
+                const MAX_ELEMENTS = 50000;
+                
+                for (let i = 0; i < tokens.length && nums.length < MAX_ELEMENTS; i++) {
+                    if (tokens[i] !== "") {
+                        const num = Number(tokens[i]);
+                        if (!isNaN(num) && isFinite(num)) {
+                            nums.push(num);
+                        }
                     }
                 }
-            }
 
-            if (nums.length > 0) {
-                benchmarkData = nums;
-                UI.btnRunBench.disabled = false;
-                UI.benchStatus.textContent = "READY";
-                UI.benchStatus.className = "text-sky-400 font-bold text-sm mt-1";
-                UI.benchResults.classList.remove('hidden');
-                UI.benchResults.classList.add('flex');
-                UI.benchN.textContent = nums.length.toLocaleString();
-                UI.benchTime.textContent = "0.00";
-                UI.benchComparisons.textContent = "0";
-                UI.benchSwaps.textContent = "0";
+                if (nums.length === 0) {
+                    alert("Invalid Data Format. No numeric elements found.");
+                    benchmarkData = null;
+                    UI.benchStatus.textContent = "INVALID DATA";
+                    UI.benchStatus.className = "text-rose-500 font-bold text-sm mt-1";
+                } else if (nums.length >= MAX_ELEMENTS) {
+                    alert(`File contains too many elements. Maximum is ${MAX_ELEMENTS}. Using first ${MAX_ELEMENTS} elements.`);
+                    benchmarkData = nums;
+                    UI.btnRunBench.disabled = false;
+                    UI.benchStatus.textContent = "READY";
+                    UI.benchStatus.className = "text-sky-400 font-bold text-sm mt-1";
+                    UI.benchResults.classList.remove('hidden');
+                    UI.benchResults.classList.add('flex');
+                    UI.benchN.textContent = nums.length.toLocaleString();
+                } else {
+                    benchmarkData = nums;
+                    UI.btnRunBench.disabled = false;
+                    UI.benchStatus.textContent = "READY";
+                    UI.benchStatus.className = "text-sky-400 font-bold text-sm mt-1";
+                    UI.benchResults.classList.remove('hidden');
+                    UI.benchResults.classList.add('flex');
+                    UI.benchN.textContent = nums.length.toLocaleString();
+                    UI.benchTime.textContent = "0.00";
+                    UI.benchComparisons.textContent = "0";
+                    UI.benchSwaps.textContent = "0";
 
-                // Show theoretical complexity if algo is selected
-                if (currentModalAlgoId) {
-                    const algo = algorithms[currentModalAlgoId];
-                    const n = nums.length;
-                    UI.benchTheoryBest.textContent = computeTheoretical(n, algo.best);
-                    UI.benchTheoryAvg.textContent = computeTheoretical(n, algo.avg);
-                    UI.benchTheoryWorst.textContent = computeTheoretical(n, algo.worst);
+                    // Show theoretical complexity if algo is selected
+                    if (currentModalAlgoId) {
+                        const algo = algorithms[currentModalAlgoId];
+                        const n = nums.length;
+                        UI.benchTheoryBest.textContent = computeTheoretical(n, algo.best);
+                        UI.benchTheoryAvg.textContent = computeTheoretical(n, algo.avg);
+                        UI.benchTheoryWorst.textContent = computeTheoretical(n, algo.worst);
+                    }
                 }
-            } else {
+            } catch (err) {
+                console.error('Error parsing benchmark file:', err);
+                alert('Error parsing file: ' + err.message);
+                UI.benchFileLabel.textContent = 'Upload failed';
                 benchmarkData = null;
-                UI.benchStatus.textContent = "INVALID DATA";
+                UI.benchStatus.textContent = "ERROR";
                 UI.benchStatus.className = "text-rose-500 font-bold text-sm mt-1";
             }
+        };
+        reader.onerror = () => {
+            alert('Error reading file. Please try again.');
+            console.error('FileReader error');
+            UI.benchFileLabel.textContent = 'Read error';
+            benchmarkData = null;
+            UI.benchStatus.textContent = "ERROR";
+            UI.benchStatus.className = "text-rose-500 font-bold text-sm mt-1";
         };
         reader.readAsText(file);
     });
@@ -2748,32 +2918,60 @@ document.addEventListener('DOMContentLoaded', () => {
         BSE.file.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            
+            // Validate file size (max 5MB)
+            const MAX_FILE_SIZE = 5 * 1024 * 1024;
+            if (file.size > MAX_FILE_SIZE) {
+                alert('File is too large. Maximum file size is 5MB.');
+                BSE.fileLabel.textContent = 'File too large';
+                return;
+            }
+            
             BSE.fileLabel.textContent = file.name;
             BSE.fileActions.classList.remove('hidden');
             BSE.fileActions.classList.add('flex');
             
             const reader = new FileReader();
             reader.onload = (evt) => {
-                let text = evt.target.result;
-                text = text.replace(/---.*?---/g, '');
-                const nums = [];
-                const tokens = text.split(/[\s,]+/);
-                for (let i = 0; i < tokens.length; i++) {
-                    if (tokens[i] !== "") {
-                        const num = Number(tokens[i]);
-                        if (!isNaN(num)) nums.push(num);
+                try {
+                    let text = evt.target.result;
+                    text = text.replace(/---.*?---/g, '');
+                    text = text.replace(/\/\/.*$/gm, '');
+                    text = text.replace(/\/\*.*?\*\//gs, '');
+                    
+                    const nums = [];
+                    const numRegex = /-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/gi;
+                    let match;
+                    while ((match = numRegex.exec(text)) !== null) {
+                        const num = Number(match[0]);
+                        if (isFinite(num)) nums.push(num);
                     }
-                }
-                if (nums.length > 0) {
-                    benchStandaloneData = nums;
-                    unlockAlgoSection(nums.length);
-                    BSE.resultsWrapper.classList.add('hidden');
-                    BSE.resultsWrapper.classList.remove('flex');
-                } else {
+                    
+                    if (nums.length > 0) {
+                        benchStandaloneData = nums;
+                        unlockAlgoSection(nums.length);
+                        BSE.resultsWrapper.classList.add('hidden');
+                        BSE.resultsWrapper.classList.remove('flex');
+                        console.log('Successfully loaded', nums.length, 'elements from file');
+                    } else {
+                        benchStandaloneData = null;
+                        unlockAlgoSection(0);
+                        alert("Invalid Data Format. Found 0 numeric elements.");
+                    }
+                } catch (err) {
+                    console.error('Error parsing benchmark file:', err);
+                    alert('Error parsing file: ' + err.message);
+                    BSE.fileLabel.textContent = 'Parse error';
                     benchStandaloneData = null;
                     unlockAlgoSection(0);
-                    alert("Invalid Data Format. Found 0 numeric elements.");
                 }
+            };
+            reader.onerror = () => {
+                alert('Error reading file. Please try again.');
+                console.error('FileReader error');
+                BSE.fileLabel.textContent = 'Read error';
+                benchStandaloneData = null;
+                unlockAlgoSection(0);
             };
             reader.readAsText(file);
         });
@@ -3160,7 +3358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- Drawing Functions ----
 
-    function drawComplexityChart(canvas, n, benchTimeMs) {
+    function drawComplexityChart(canvas, n, benchTimeMs, algoKey, actualComplexity) {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
@@ -3243,8 +3441,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Plot actual benchmark point
         if (benchTimeMs !== undefined && n > 0) {
             const px = scaleX(n);
-            // Place the dot at an estimated ops level (n log n zone)
-            const estimatedOps = n * Math.log2(Math.max(n, 2));
+            // Compute the correct estimated ops based on actual algorithm complexity
+            let estimatedOps = n * Math.log2(Math.max(n, 2)); // Default to n log n
+            
+            // If algorithm key is provided, use its actual complexity
+            if (algoKey && algorithms[algoKey]) {
+                const algo = algorithms[algoKey];
+                const complexityStr = actualComplexity || algo.avg;
+                estimatedOps = computeTheoreticalOps(n, complexityStr);
+            }
+            
             const py = scaleY(Math.min(estimatedOps, maxY));
             ctx.beginPath();
             ctx.arc(px, py, 6, 0, Math.PI * 2);
@@ -3461,8 +3667,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const ranked = rankAlgorithmsForInput(data, suiteResults);
 
         // -- Tab 1: Performance Comparison --
-        // Chart
-        setTimeout(() => drawComplexityChart(PM.chart, n, benchTimeMs), 100);
+        // Chart - pass algorithm key for accurate complexity plotting
+        const chartAlgoKey = algoKey || (ranked[0] && ranked[0].key);
+        setTimeout(() => drawComplexityChart(PM.chart, n, benchTimeMs, chartAlgoKey, algorithms[chartAlgoKey]?.avg), 100);
 
         // Deep Dive Cards
         renderDeepDiveCards(ranked);
@@ -3688,14 +3895,51 @@ document.addEventListener('DOMContentLoaded', () => {
         pmFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            
+            // Validate file size (max 5MB)
+            const MAX_FILE_SIZE = 5 * 1024 * 1024;
+            if (file.size > MAX_FILE_SIZE) {
+                alert('File is too large. Maximum file size is 5MB.');
+                pmFileLabel.textContent = 'File too large';
+                return;
+            }
+            
             pmFileLabel.textContent = file.name;
             btnPmDeleteFile.classList.remove('hidden');
             const reader = new FileReader();
             reader.onload = (evt) => {
-                let text = evt.target.result.replace(/---.*?---/g, '');
-                const nums = [];
-                text.split(/[\s,]+/).forEach(t => { if (t !== '') { const n = Number(t); if (!isNaN(n)) nums.push(n); } });
-                if (nums.length > 0) pmLoadData(nums);
+                try {
+                    let text = evt.target.result.replace(/---.*?---/g, '');
+                    text = text.replace(/\/\/.*$/gm, '');
+                    text = text.replace(/\/\*.*?\*\//gs, '');
+                    
+                    const nums = [];
+                    const MAX_ELEMENTS = 50000;
+                    const tokens = text.split(/[\s,;]+/);
+                    
+                    for (let i = 0; i < tokens.length && nums.length < MAX_ELEMENTS; i++) {
+                        const t = tokens[i].trim();
+                        if (t !== '') {
+                            const n = Number(t);
+                            if (!isNaN(n) && isFinite(n)) nums.push(n);
+                        }
+                    }
+                    
+                    if (nums.length > 0) {
+                        pmLoadData(nums);
+                    } else {
+                        alert('No numeric values found in file.');
+                    }
+                } catch (err) {
+                    console.error('Error parsing PM file:', err);
+                    alert('Error parsing file: ' + err.message);
+                    pmFileLabel.textContent = 'Parse error';
+                }
+            };
+            reader.onerror = () => {
+                alert('Error reading file. Please try again.');
+                console.error('FileReader error');
+                pmFileLabel.textContent = 'Read error';
             };
             reader.readAsText(file);
         });
@@ -3721,8 +3965,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const subtitle = document.getElementById('pm-chart-subtitle');
         if (subtitle) subtitle.textContent = `[ BUFFER_SIZE: ${n.toLocaleString()} // DATA_TYPE: ${pmType} ]`;
 
-        // Complexity Chart
-        setTimeout(() => drawComplexityChart(document.getElementById('pm-complexity-chart'), n, 0), 150);
+        // Complexity Chart - pass top algorithm for accurate complexity plotting
+        const topChartAlgoKey = pmRanked && pmRanked[0] ? pmRanked[0].key : 'quick-sort';
+        setTimeout(() => drawComplexityChart(document.getElementById('pm-complexity-chart'), n, 0, topChartAlgoKey, algorithms[topChartAlgoKey]?.avg), 150);
 
         // Deep Dive Cards
         renderDeepDiveCards(pmRanked);
@@ -4804,69 +5049,105 @@ function getAlgoStrengths(key, pIndex) {
     return strengths[key] || 'General purpose sorting algorithm.';
 }
 
-// GRAPH SETUP
-const ctx = document.getElementById('complexityChart').getContext('2d');
-const nValues = Array.from({ length: 300 }, (_, i) => i + 1);
-
-// Complexity functions
-const fn = {
-  "1": n => 1,
-  "logn": n => Math.log2(n),
-  "n": n => n,
-  "nlogn": n => n * Math.log2(n),
-  "nlog2n": n => n * Math.pow(Math.log2(n), 2),
-  "n2": n => n * n
-};
-
-// Algorithms
-const algorithms_complexity = [
-  { name: "Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#00f7ff" },
-  { name: "Merge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#00ffa6" },
-  { name: "Heap Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#ffd166" },
-  { name: "Bubble Sort", best: "n", avg: "n2", worst: "n2", color: "#ff4d6d" },
-  { name: "Selection Sort", best: "n2", avg: "n2", worst: "n2", color: "#ff6b6b" },
-  { name: "Insertion Sort", best: "n", avg: "n2", worst: "n2", color: "#f72585" },
-  { name: "Tim Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#4cc9f0" },
-  { name: "Shell Sort", best: "nlogn", avg: "nlog2n", worst: "n2", color: "#90dbf4" },
-  { name: "Block Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#72efdd" },
-  { name: "Dual Pivot Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#64dfdf" },
-  { name: "Pdq Sort", best: "n", avg: "nlogn", worst: "n2", color: "#48bfe3" },
-  { name: "Intro Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#5390d9" },
-  { name: "Quickmerge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#6930c3" },
-  { name: "In-place Merge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#7400b8" }
-];
+// ========== GLOBAL COMPLEXITY CHART VARIABLES & FUNCTIONS ==========
+let chart = null;
+let ctx = null;
+let nValues = [];
+let fn = {};
+let algorithms_complexity = [];
 
 let selectedCase = "avg";
-let activeAlgorithms = new Set(algorithms_complexity.map(a => a.name));
+let activeAlgorithms = new Set();
 let selectedAlgorithm = null;
 let complexityInputMode = 'auto';
 let complexityInputData = [];
 let complexityCurrentRanking = [];
 let complexityInputStats = null;
+let complexityFileUploaded = false;
+let complexityTimingData = { best: {}, avg: {}, worst: {} }; // Store actual execution times per case per algorithm
 
-const complexitySourceAuto = document.getElementById('complexity-source-auto');
-const complexitySourceManual = document.getElementById('complexity-source-manual');
-const complexitySourceFile = document.getElementById('complexity-source-file');
-const complexityInputAuto = document.getElementById('complexity-input-auto');
-const complexityInputManual = document.getElementById('complexity-input-manual');
-const complexityInputFile = document.getElementById('complexity-input-file');
-const complexityAutoSize = document.getElementById('complexity-auto-size');
-const complexityAutoSizeLabel = document.getElementById('complexity-auto-size-label');
-const complexityManualText = document.getElementById('complexity-manual-text');
-const complexityFileInput = document.getElementById('complexity-file-input');
-const complexityFileLabel = document.getElementById('complexity-file-label');
-const btnComplexityResetFile = document.getElementById('btn-complexity-reset-file');
-const btnAnalyzeInput = document.getElementById('btn-analyze-input');
-const complexityFileUploadLabel = document.getElementById('complexity-file-upload-label');
-const complexitySummarySize = document.getElementById('complexity-summary-size');
-const complexitySummaryPIndex = document.getElementById('complexity-summary-pindex');
-const complexitySummaryType = document.getElementById('complexity-summary-type');
-const complexitySummarySorted = document.getElementById('complexity-summary-sorted');
-const complexityRankingBody = document.getElementById('complexity-ranking-body');
-const complexityRankedCount = document.getElementById('complexity-ranked-count');
-const complexityAlgoDetails = document.getElementById('complexity-algo-details');
-const complexitySortPreview = document.getElementById('complexity-sort-preview');
-const complexitySortedPreview = document.getElementById('complexity-sorted-preview');
+// DOM elements
+let complexitySourceAuto, complexitySourceManual, complexitySourceFile;
+let complexityInputAuto, complexityInputManual, complexityInputFile;
+let complexityAutoSize, complexityAutoSizeLabel, complexityManualText;
+let complexityFileInput, complexityFileLabel, btnComplexityResetFile;
+let btnAnalyzeInput, complexityFileUploadLabel;
+let complexitySummarySize, complexitySummaryPIndex, complexitySummaryType, complexitySummarySorted;
+let complexityRankingBody, complexityRankedCount, complexityAlgoDetails;
+let complexitySortPreview, complexitySortedPreview;
+let modal, openBtn, closeBtn, openCardBtn, complexityCard;
+let derivationTooltip;
+
+// Setup complexity functions
+function initComplexityFunctions() {
+  fn = {
+    "1": n => 1,
+    "logn": n => Math.log2(Math.max(n, 1)),
+    "n": n => n,
+    "nlogn": n => n * Math.log2(Math.max(n, 1)),
+    "nlog2n": n => n * Math.pow(Math.log2(Math.max(n, 1)), 2),
+    "n2": n => n * n
+  };
+  
+  algorithms_complexity = [
+    { name: "Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#00f7ff" },
+    { name: "Merge Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#00ffa6" },
+    { name: "Heap Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#ffd166" },
+    { name: "Bubble Sort", best: "n", avg: "n2", worst: "n2", color: "#ff4d6d" },
+    { name: "Selection Sort", best: "n2", avg: "n2", worst: "n2", color: "#ff6b6b" },
+    { name: "Insertion Sort", best: "n", avg: "n2", worst: "n2", color: "#f72585" },
+    { name: "Tim Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#4cc9f0" },
+    { name: "Shell Sort", best: "nlogn", avg: "nlog2n", worst: "n2", color: "#90dbf4" },
+    { name: "Block Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#72efdd" },
+    { name: "Dual Pivot Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#64dfdf" },
+    { name: "Pdq Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#48bfe3" },
+    { name: "Intro Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#5390d9" },
+    { name: "Dual Fusion Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#6930c3" }
+  ];
+  
+  activeAlgorithms = new Set(algorithms_complexity.map(a => a.name));
+  nValues = Array.from({ length: 100 }, (_, i) => Math.floor((i + 1) * 3));
+  
+  // Initialize timing data with empty arrays for each case
+  complexityTimingData = { best: {}, avg: {}, worst: {} };
+  algorithms_complexity.forEach(algo => {
+    complexityTimingData.best[algo.name] = [];
+    complexityTimingData.avg[algo.name] = [];
+    complexityTimingData.worst[algo.name] = [];
+  });
+}
+
+// Initialize DOM references
+function initComplexityDOMElements() {
+  complexitySourceAuto = document.getElementById('complexity-source-auto');
+  complexitySourceManual = document.getElementById('complexity-source-manual');
+  complexitySourceFile = document.getElementById('complexity-source-file');
+  complexityInputAuto = document.getElementById('complexity-input-auto');
+  complexityInputManual = document.getElementById('complexity-input-manual');
+  complexityInputFile = document.getElementById('complexity-input-file');
+  complexityAutoSize = document.getElementById('complexity-auto-size');
+  complexityAutoSizeLabel = document.getElementById('complexity-auto-size-label');
+  complexityManualText = document.getElementById('complexity-manual-text');
+  complexityFileInput = document.getElementById('complexity-file-input');
+  complexityFileLabel = document.getElementById('complexity-file-label');
+  btnComplexityResetFile = document.getElementById('btn-complexity-reset-file');
+  btnAnalyzeInput = document.getElementById('btn-analyze-input');
+  complexityFileUploadLabel = document.getElementById('complexity-file-upload-label');
+  complexitySummarySize = document.getElementById('complexity-summary-size');
+  complexitySummaryPIndex = document.getElementById('complexity-summary-pindex');
+  complexitySummaryType = document.getElementById('complexity-summary-type');
+  complexitySummarySorted = document.getElementById('complexity-summary-sorted');
+  complexityRankingBody = document.getElementById('complexity-ranking-body');
+  complexityRankedCount = document.getElementById('complexity-ranked-count');
+  complexityAlgoDetails = document.getElementById('complexity-algo-details');
+  complexitySortPreview = document.getElementById('complexity-sort-preview');
+  complexitySortedPreview = document.getElementById('complexity-sorted-preview');
+  modal = document.getElementById("complexityModal");
+  openBtn = document.getElementById("openComplexity");
+  closeBtn = document.getElementById("closeComplexity");
+  openCardBtn = document.getElementById("openComplexity-card");
+  complexityCard = document.getElementById("card-complexity");
+}
 
 function setComplexityMode(mode) {
   complexityInputMode = mode;
@@ -4878,13 +5159,24 @@ function setComplexityMode(mode) {
 
 function parseInputText(text) {
   if (!text) return [];
-  const tokens = text.trim().split(/[\s,;]+/);
-  const nums = tokens.reduce((acc, token) => {
-    const value = Number(token);
-    if (!isNaN(value)) acc.push(value);
-    return acc;
-  }, []);
-  return nums;
+  
+  try {
+    const nums = [];
+    
+    // Fast native extraction of numbers, bypassing slow comment regexes
+    const matches = text.match(/-?\d+(\.\d+)?/g);
+    if (matches) {
+      for (let i = 0; i < matches.length; i++) {
+        nums.push(Number(matches[i]));
+      }
+    }
+    
+    console.log('Parsed', nums.length, 'numbers from input text');
+    return nums;
+  } catch (err) {
+    console.error('Error parsing input text:', err);
+    return [];
+  }
 }
 
 function computeSortedPortion(arr) {
@@ -4995,7 +5287,7 @@ const complexityDerivations = {
   'In-place Merge Sort': 'Performs merge boundaries without auxiliary O(n) memory by using block rotations or complex pointer inversions. Yields O(n log² n) or O(n log n).'
 };
 
-let derivationTooltip = document.getElementById('derivation-tooltip');
+derivationTooltip = document.getElementById('derivation-tooltip');
 if (!derivationTooltip) {
     derivationTooltip = document.createElement('div');
     derivationTooltip.id = 'derivation-tooltip';
@@ -5026,11 +5318,12 @@ function renderRankingTable(ranked) {
     const row = document.createElement('tr');
     row.className = 'border-b border-white/5 cursor-pointer hover:bg-white/5 relative';
     row.dataset.algoTitle = algo.title;
+    
+    const timeStr = algo.actualTime !== undefined ? algo.actualTime.toFixed(3) + ' ms' : 'N/A';
     row.innerHTML = `
       <td class="py-2 pr-2 text-slate-300 font-bold">${index + 1}</td>
       <td class="py-2 pr-2 text-slate-200">${algo.title}</td>
-      <td class="py-2 pr-2 text-emerald-300">${algo.score}</td>
-      <td class="py-2 pr-2 text-slate-400">${algo.expectedOps.toLocaleString()}</td>
+      <td class="py-2 pr-2 text-slate-400">${timeStr}</td>
     `;
     row.addEventListener('click', () => selectComplexityAlgorithm(algo.title));
     row.addEventListener('mouseenter', (e) => showDerivationTooltip(algo.title, e));
@@ -5042,15 +5335,17 @@ function renderRankingTable(ranked) {
 }
 
 function buildDetailsHtml(algo, stats, preview) {
-  const expectedOpsText = algo.expectedOps.toLocaleString();
-  const currentInput = stats ? `${stats.n.toLocaleString()} items` : 'no input';
-  const sortedSample = preview ? preview.join(', ') : 'No sorted preview yet.';
+  const currentInput = stats ? `${stats.n.toLocaleString()} items` : (complexityInputData ? `${complexityInputData.length} items` : 'no input');
+  const rankPosition = complexityCurrentRanking.indexOf(algo) + 1;
+  const reason = algo.note || 'Measured timing data';
+  const timeText = algo.actualTime !== undefined ? `${algo.actualTime.toFixed(3)} ms` : 'N/A';
+  
   return `
     <p class="text-[11px] text-slate-400 uppercase tracking-wider">Selected Algorithm</p>
     <p class="text-white font-bold text-sm">${algo.title}</p>
-    <p class="text-slate-300 text-[12px]">Input: ${currentInput} · Expected comparisons: <strong>${expectedOpsText}</strong></p>
-    <p class="text-slate-400 text-[11px]">Reason: ${algo.note}</p>
-    <p class="text-slate-400 text-[11px]">Based on size, presortedness, and sorted portion, this algorithm is ranked #${complexityCurrentRanking.indexOf(algo) + 1}.</p>
+    <p class="text-slate-300 text-[12px]">Input: ${currentInput} · Execution Time: <strong>${timeText}</strong></p>
+    <p class="text-slate-400 text-[11px]">Details: ${reason}</p>
+    <p class="text-slate-400 text-[11px]">Based on actual execution time from the benchmark, this algorithm is ranked <strong>#${rankPosition}</strong>.</p>
   `;
 }
 
@@ -5064,13 +5359,30 @@ function selectComplexityAlgorithm(title) {
   });
 
   const algo = complexityCurrentRanking.find(item => item.title === title);
-  if (!algo || !complexityInputStats) return;
-  const preview = sortInputPreview(algo.key, complexityInputData, complexityInputStats);
-  if (complexityAlgoDetails) complexityAlgoDetails.innerHTML = buildDetailsHtml(algo, complexityInputStats, preview.sample);
-  if (complexitySortPreview) {
-    complexitySortPreview.classList.remove('hidden');
-    complexitySortedPreview.textContent = preview.sample.join(', ');
+  if (!algo) return;
+  
+  // Handle both input-based stats and performance-based rankings
+  let statsToUse = complexityInputStats;
+  let preview = { sample: [] };
+  
+  if (statsToUse && complexityInputData) {
+    preview = sortInputPreview(algo.key, complexityInputData, statsToUse);
   }
+  
+  // Update algorithm details section
+  if (complexityAlgoDetails) {
+    complexityAlgoDetails.innerHTML = buildDetailsHtml(algo, statsToUse, preview.sample);
+  }
+  
+  if (complexitySortPreview) {
+    if (preview.sample.length > 0) {
+      complexitySortPreview.classList.remove('hidden');
+      complexitySortedPreview.textContent = preview.sample.join(', ');
+    } else {
+      complexitySortPreview.classList.add('hidden');
+    }
+  }
+  
   updateChart(true);
 }
 
@@ -5098,331 +5410,789 @@ function sortInputPreview(key, arr, stats) {
 }
 
 function analyzeComplexityInput() {
-  let data = [];
-  if (complexityInputMode === 'auto') {
-    const count = Number(complexityAutoSize?.value) || 50;
-    data = Array.from({ length: count }, () => Math.floor(Math.random() * count) + 1);
-  } else if (complexityInputMode === 'manual') {
-    data = parseInputText(complexityManualText?.value || '');
-  } else if (complexityInputMode === 'file') {
-    data = complexityInputData || [];
+  let inputSize;
+  let customArray = null;
+  
+  // Check if user explicitly uploaded a file (takes priority over slider)
+  if (complexityFileUploaded && complexityInputData && complexityInputData.length >= 10) {
+    inputSize = complexityInputData.length;
+    customArray = complexityInputData;
+  } else {
+    inputSize = Number(complexityAutoSize?.value) || 100;
   }
-  if (!data || data.length === 0) {
-    alert('Please provide a valid input array before analyzing.');
+  
+  if (inputSize < 10) {
+    alert('Input size should be at least 10 elements for meaningful timing analysis.');
     return;
   }
-  complexityInputData = data;
-  const ranked = rankAlgorithmsForInputData(data);
-  updateComplexitySummary(complexityInputStats);
-  renderRankingTable(ranked);
-  if (ranked.length > 0) {
-    selectComplexityAlgorithm(ranked[0].title);
-  }
-  if (chart) updateChart(true);
+  
+  // Show loading indicator
+  if (btnAnalyzeInput) btnAnalyzeInput.textContent = 'Analyzing... (Running Benchmarks)';
+  if (btnAnalyzeInput) btnAnalyzeInput.disabled = true;
+  
+  // Run timing benchmark asynchronously
+  setTimeout(async () => {
+    try {
+      console.log(`Running timing benchmark with input size: ${inputSize}, case: ${selectedCase}, fileData: ${!!customArray}`);
+      await runTimingBenchmark(inputSize, 'random', customArray);
+      
+      // Update summary
+      const caseLabel = selectedCase === 'best' ? 'Best (Sorted)' : selectedCase === 'worst' ? 'Worst (Reverse)' : 'Average (Random)';
+      if (complexitySummarySize) complexitySummarySize.textContent = inputSize + ' elements';
+      if (complexitySummaryType) complexitySummaryType.textContent = caseLabel;
+      if (complexitySummarySorted) complexitySummarySorted.textContent = customArray ? 'From file' : 'Auto-generated';
+      
+      // Update ranking based on performance at largest size
+      const rankedByPerformance = getRankedByPerformance();
+      if (complexityRankedCount) complexityRankedCount.textContent = `${rankedByPerformance.length} algorithms analyzed`;
+      renderPerformanceRanking(rankedByPerformance);
+      
+      // Select the top-ranked algorithm and update details
+      if (rankedByPerformance.length > 0) {
+        selectComplexityAlgorithm(rankedByPerformance[0].title);
+      }
+      
+      // Update chart
+      if (chart) {
+        updateChart(true);
+      }
+      
+      console.log('Benchmark complete. Timing data:', complexityTimingData);
+    } catch (e) {
+      console.error('Error during benchmark:', e);
+      alert('Error running benchmark: ' + e.message);
+    } finally {
+      if (btnAnalyzeInput) {
+        btnAnalyzeInput.textContent = 'Analyze Input';
+        btnAnalyzeInput.disabled = false;
+      }
+    }
+  }, 100);
 }
 
-if (complexitySourceAuto) complexitySourceAuto.addEventListener('click', () => setComplexityMode('auto'));
-if (complexitySourceManual) complexitySourceManual.addEventListener('click', () => setComplexityMode('manual'));
-if (complexitySourceFile) complexitySourceFile.addEventListener('click', () => setComplexityMode('file'));
+function resetComplexityAll() {
+  // Reset timing data
+  complexityTimingData = { best: {}, avg: {}, worst: {} };
+  algorithms_complexity.forEach(algo => {
+    complexityTimingData.best[algo.name] = [];
+    complexityTimingData.avg[algo.name] = [];
+    complexityTimingData.worst[algo.name] = [];
+  });
+  
+  // Reset input data
+  complexityInputData = [];
+  complexityFileUploaded = false;
+  
+  // Reset file upload UI
+  if (complexityFileLabel) complexityFileLabel.textContent = 'Select file...';
+  if (complexityFileInput) complexityFileInput.value = '';
+  if (btnComplexityResetFile) btnComplexityResetFile.classList.add('hidden');
+  if (complexityFileUploadLabel) {
+    complexityFileUploadLabel.classList.remove('border-cyan-500/30');
+    complexityFileUploadLabel.classList.add('border-white/10');
+  }
+  
+  // Reset slider
+  if (complexityAutoSize) {
+    complexityAutoSize.value = 50;
+    if (complexityAutoSizeLabel) complexityAutoSizeLabel.textContent = '50';
+  }
+  
+  // Reset case to Average
+  selectedCase = 'avg';
+  document.querySelectorAll('.case-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.dataset.case === 'average') b.classList.add('active');
+  });
+  
+  // Reset all algorithm toggles to active
+  activeAlgorithms = new Set(algorithms_complexity.map(a => a.name));
+  selectedAlgorithm = null;
+  document.querySelectorAll('.algo-btn').forEach(b => {
+    b.classList.add('active');
+    b.classList.remove('opacity-40', 'scale-95', 'active-highlight');
+  });
+  
+  // Reset summary
+  if (complexitySummarySize) complexitySummarySize.textContent = '—';
+  if (complexitySummaryPIndex) complexitySummaryPIndex.textContent = '—';
+  if (complexitySummaryType) complexitySummaryType.textContent = '—';
+  if (complexitySummarySorted) complexitySummarySorted.textContent = '—';
+  
+  // Reset ranking
+  complexityCurrentRanking = [];
+  if (complexityRankingBody) complexityRankingBody.innerHTML = '';
+  if (complexityRankedCount) complexityRankedCount.textContent = '0 algorithms';
+  if (complexityAlgoDetails) complexityAlgoDetails.innerHTML = '<p class="text-slate-400">Select a ranked algorithm to see why it was chosen and how it sorts this input.</p>';
+  if (complexitySortPreview) complexitySortPreview.classList.add('hidden');
+  
+  // Reset chart
+  if (chart) {
+    updateChart(true);
+  }
+  
+  console.log('Complexity analysis reset to defaults');
+}
 
-if (complexityAutoSize) {
-  complexityAutoSize.addEventListener('input', () => {
-    if (complexityAutoSizeLabel) complexityAutoSizeLabel.textContent = complexityAutoSize.value;
+function getRankedByPerformance() {
+  // Rank algorithms by actual performance (lower time = better)
+  const rankings = [];
+  
+  const avgData = complexityTimingData.avg || {};
+  Object.keys(avgData).forEach(algoName => {
+    const timings = avgData[algoName];
+    if (timings && timings.length > 0) {
+      // Get the last (largest) timing value as overall performance
+      const lastTiming = timings[timings.length - 1];
+      const algoKey = findAlgoKeyByTitle(algoName);
+      const algo = algorithms_complexity.find(a => a.name === algoName);
+      
+      rankings.push({
+        title: algoName,
+        actualTime: lastTiming.y,
+        testSize: lastTiming.x,
+        score: 100 - Math.min(99, (lastTiming.y / 100)),
+        expectedOps: Math.round(lastTiming.y * 1000),
+        note: algo ? `Performance: ${lastTiming.y.toFixed(2)}ms on ${lastTiming.x} elements` : 'Measured timing data',
+        key: algoKey
+      });
+    }
+  });
+  
+  // Sort by actual time (ascending)
+  rankings.sort((a, b) => a.actualTime - b.actualTime);
+  complexityCurrentRanking = rankings;
+  
+  return rankings;
+}
+
+function renderPerformanceRanking(rankings) {
+  if (!complexityRankingBody) return;
+  complexityRankingBody.innerHTML = '';
+  
+  rankings.forEach((algo, index) => {
+    const row = document.createElement('tr');
+    row.className = 'border-b border-white/5 cursor-pointer hover:bg-white/5 relative';
+    row.dataset.algoTitle = algo.title;
+    
+    const timeStr = algo.actualTime.toFixed(3) + ' ms';
+    row.innerHTML = `
+      <td class="py-2 pr-2 text-slate-300 font-bold">${index + 1}</td>
+      <td class="py-2 pr-2 text-slate-200">${algo.title}</td>
+      <td class="py-2 pr-2 text-slate-400">${timeStr}</td>
+    `;
+    
+    row.addEventListener('click', () => selectComplexityAlgorithm(algo.title));
+    row.addEventListener('mouseenter', (e) => showDerivationTooltip(algo.title, e));
+    row.addEventListener('mousemove', moveDerivationTooltip);
+    row.addEventListener('mouseleave', hideDerivationTooltip);
+    complexityRankingBody.appendChild(row);
   });
 }
 
-if (complexityFileInput) {
-  complexityFileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    complexityFileLabel.textContent = file.name;
-    if (btnComplexityResetFile) btnComplexityResetFile.classList.remove('hidden');
-    if (complexityFileUploadLabel) complexityFileUploadLabel.classList.add('border-cyan-500/30');
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target.result;
-      const arr = parseInputText(text || '');
-      if (arr.length === 0) {
-        alert('Uploaded file did not contain numeric values.');
-        complexityInputData = [];
-      } else {
-        complexityInputData = arr;
+// ========== GLOBAL FUNCTIONS FOR CHART ==========
+
+function getDatasets() {
+  const caseData = complexityTimingData[selectedCase] || {};
+  const caseLabel = selectedCase === 'best' ? 'Best Case' : selectedCase === 'avg' ? 'Average Case' : 'Worst Case';
+
+  const datasets = algorithms_complexity.map(a => {
+    const timings = caseData[a.name] || [];
+    return {
+      label: `${a.name} (${caseLabel})`,
+      data: timings,
+      borderColor: a.color,
+      backgroundColor: a.color + '15',
+      borderWidth: selectedAlgorithm === a.name ? 3 : (activeAlgorithms.has(a.name) ? 1.5 : 0.5),
+      fill: false,
+      tension: 0.3,
+      hidden: !activeAlgorithms.has(a.name),
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      pointBackgroundColor: a.color,
+      pointBorderColor: '#ffffff',
+      pointBorderWidth: 1,
+      clip: false,
+      segment: {
+        borderDash: selectedAlgorithm === a.name ? [] : [5, 5]
       }
     };
-    reader.readAsText(file);
   });
-}
-
-if (btnComplexityResetFile) {
-  btnComplexityResetFile.addEventListener('click', () => {
-    if (complexityFileInput) complexityFileInput.value = '';
-    complexityFileLabel.textContent = 'No file selected';
-    btnComplexityResetFile.classList.add('hidden');
-    if (complexityFileUploadLabel) complexityFileUploadLabel.classList.remove('border-cyan-500/30');
-    complexityInputData = [];
-  });
-}
-
-if (btnAnalyzeInput) btnAnalyzeInput.addEventListener('click', analyzeComplexityInput);
-
-// CREATE BUTTONS
-const toggleContainer = document.getElementById("algoToggle");
-
-algorithms_complexity.forEach(algo => {
-  const btn = document.createElement("button");
-  btn.className = "algo-btn active transition-all duration-300";
-  if (!activeAlgorithms.has(algo.name)) {
-      btn.classList.remove("active");
-      btn.classList.add("opacity-40", "scale-95");
-  }
-  btn.innerText = algo.name;
-
-  btn.onclick = () => {
-    // Toggle algorithm visibility
-    if (activeAlgorithms.has(algo.name)) {
-      activeAlgorithms.delete(algo.name);
-      btn.classList.remove("active", "active-highlight");
-      btn.classList.add("opacity-40", "scale-95");
-      
-      // Clear selectedAlgorithm if we just disabled it
-      if (selectedAlgorithm === algo.name) {
-          selectedAlgorithm = null;
-      }
-    } else {
-      activeAlgorithms.add(algo.name);
-      btn.classList.add("active");
-      btn.classList.remove("opacity-40", "scale-95");
-      
-      selectedAlgorithm = algo.name;
-      document.querySelectorAll(".algo-btn").forEach(b => b.classList.remove("active-highlight"));
-      btn.classList.add("active-highlight");
-      
-      highlightSortingAlgorithm(algo.name);
-      selectComplexityAlgorithm(algo.name);
-    }
-
-    updateChart(true);
-  };
-
-  toggleContainer.appendChild(btn);
-});
-
-// CASE TOGGLE WITH ANIMATION
-document.querySelectorAll(".case-btn").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".case-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    selectedCase = btn.dataset.case === "average" ? "avg" : btn.dataset.case;
-
-    updateChart(true); // animate
-  };
-});
-
-// DATASETS
-function getDatasets() {
-  const inputN = (complexityInputStats && complexityInputStats.n <= 300) ? Math.max(1, Math.floor(complexityInputStats.n)) : -1;
-
-  const datasets = algorithms_complexity
-    .map((a, index) => {
-      const type = a[selectedCase];
-      // Micro offset factor to prevent overlapping of identically timed algorithms
-      const offsetFactor = 1 + (index * 0.08);
-
-      return {
-        label: `${a.name} (${type})`,
-        data: nValues.map(n => fn[type](n) * offsetFactor),
-        borderColor: a.color,
-        borderWidth: selectedAlgorithm === a.name ? 4 : (activeAlgorithms.has(a.name) ? 2 : 1),
-        fill: false,
-        tension: 0.35,
-        hidden: !activeAlgorithms.has(a.name),
-        // Dynamically plot a synchronization point on the active curve at X = inputN
-        pointRadius: nValues.map(n => (n === inputN ? (selectedAlgorithm === a.name ? 8 : 4) : 0)),
-        pointHoverRadius: nValues.map(n => (n === inputN ? 10 : 0)),
-        pointBackgroundColor: selectedAlgorithm === a.name ? '#ffffff' : a.color,
-        pointBorderColor: '#ffffff',
-        pointBorderWidth: nValues.map(n => (n === inputN ? 2 : 0))
-      };
-    });
 
   return datasets;
 }
 
-// CREATE CHART
-let chart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: nValues,
-    datasets: getDatasets()
-  },
-  options: {
-    layout: {
-      padding: { right: 120 }
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {
-      duration: 800, // 🔥 smooth animation
-      easing: "easeInOutQuart"
-    },
-    plugins: {
-      legend: {
-        labels: { color: "#fff" },
-        display: true,
-        position: 'top',
-        onClick: function(e, legendItem, legend) {
-            const index = legendItem.datasetIndex;
-            const ci = legend.chart;
-            const label = legendItem.text.split(' (')[0];
-            
-            if (activeAlgorithms.has(label)) {
-                activeAlgorithms.delete(label);
-            } else {
-                activeAlgorithms.add(label);
-            }
-            
-            // Sync buttons visually
-            document.querySelectorAll(".algo-btn").forEach(b => {
-                if (b.innerText === label) {
-                    if (activeAlgorithms.has(label)) {
-                       b.classList.add("active");
-                       b.classList.remove("opacity-40", "scale-95");
-                    } else {
-                       b.classList.remove("active", "active-highlight");
-                       b.classList.add("opacity-40", "scale-95");
-                    }
-                }
-            });
-            updateChart(true);
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            return context.dataset.label; // shows O(n log n)
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        ticks: { color: "#aaa" },
-        grid: { color: "rgba(255,255,255,0.05)" }
-      },
-      y: {
-        type: "logarithmic",
-        ticks: { color: "#aaa" },
-        grid: { color: "rgba(255,255,255,0.05)" }
-      }
-    }
-  },
-  plugins: [{
-    id: 'inlineAlgorithmLabels',
-    afterDatasetsDraw: (chart) => {
-      const { ctx, data } = chart;
-      ctx.save();
-      
-      let pendingLabels = [];
-
-      data.datasets.forEach((dataset, i) => {
-        if (dataset.hidden || dataset.type === 'bar') return;
-        const meta = chart.getDatasetMeta(i);
-        if (!meta || meta.hidden || !meta.data || meta.data.length === 0) return;
-        const lastPoint = meta.data[meta.data.length - 1];
-        if (!lastPoint || !lastPoint.x || isNaN(lastPoint.y)) return;
-        
-        pendingLabels.push({
-          text: dataset.label.split(' (')[0],
-          x: lastPoint.x,
-          targetY: lastPoint.y,
-          y: lastPoint.y, // Current working Y
-          color: dataset.borderWidth === 4 ? '#ffffff' : dataset.borderColor,
-          font: dataset.borderWidth === 4 ? 'bold 11px "Space Grotesk", sans-serif' : '10px "Space Grotesk", sans-serif',
-          alpha: dataset.borderWidth === 4 ? 1.0 : 0.8
-        });
-      });
-      
-      // Sort labels top-to-bottom on canvas (smaller Y is higher screen position)
-      pendingLabels.sort((a, b) => a.y - b.y);
-      
-      // Anti-collision resolution
-      const LABEL_HEIGHT = 14; 
-      let overlapping = true;
-      let resolveIterations = 0;
-      
-      while (overlapping && resolveIterations < 50) {
-          overlapping = false;
-          for (let i = 0; i < pendingLabels.length - 1; i++) {
-              let current = pendingLabels[i];
-              let next = pendingLabels[i + 1];
-              
-              const distance = next.y - current.y;
-              if (distance < LABEL_HEIGHT) {
-                  overlapping = true;
-                  const adjust = (LABEL_HEIGHT - distance) / 2;
-                  current.y -= adjust;
-                  next.y += adjust;
-              }
-          }
-          resolveIterations++;
-      }
-      
-      // Draw resolved labels with optional leading ticks
-      pendingLabels.forEach(p => {
-        if (Math.abs(p.y - p.targetY) > 3) {
-            ctx.beginPath();
-            ctx.moveTo(p.x + 2, p.targetY);
-            ctx.lineTo(p.x + 6, p.y);
-            ctx.strokeStyle = p.color;
-            ctx.globalAlpha = 0.3;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
-        
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.font = p.font;
-        ctx.globalAlpha = p.alpha;
-        ctx.fillText(p.text, p.x + 8, p.y + 4);
-      });
-      ctx.restore();
-    }
-  }]
-});
-
-// UPDATE FUNCTION
 function updateChart(animate = false) {
-  chart.data.datasets = getDatasets();
-  chart.update(animate ? undefined : "none");
+  if (!chart) return;
+  try {
+    chart.data.datasets = getDatasets();
+    // Don't set labels for timing data (using {x, y} format instead)
+    
+    const container = document.getElementById('complexityChartContainer');
+    if (container && chart.canvas) {
+      const rect = container.getBoundingClientRect();
+      chart.canvas.style.width = rect.width + 'px';
+      chart.canvas.style.height = rect.height + 'px';
+    }
+    
+    chart.resize();
+    chart.update(animate ? { duration: 400 } : "none");
+  } catch(e) {
+    console.error('Chart update error:', e);
+  }
 }
 
-// 🔥 CONNECT THIS WITH YOUR SORTING VISUALIZER
 function highlightSortingAlgorithm(name) {
   console.log("Selected:", name);
-
-  // 👉 Replace this with your visualizer logic
-  // Example:
-  // currentAlgorithm = name;
-  // updateVisualizerUI(name);
 }
 
-// MODAL CONTROL
-const modal = document.getElementById("complexityModal");
-const openBtn = document.getElementById("openComplexity");
-const closeBtn = document.getElementById("closeComplexity");
+function openComplexityModal() {
+  if (modal) {
+    modal.style.display = "block";
+    setTimeout(async () => {
+      // Auto-run benchmark on first open so chart has data
+      const hasData = complexityTimingData.avg && 
+        Object.values(complexityTimingData.avg).some(t => t && t.length > 0);
+      
+      if (!hasData) {
+        const defaultSize = 500;
+        const defaultArr = generateTestArray(defaultSize, 'random');
+        complexityInputData = defaultArr;
+        
+        // Show loading state
+        if (btnAnalyzeInput) {
+          btnAnalyzeInput.textContent = 'Running initial benchmark...';
+          btnAnalyzeInput.disabled = true;
+        }
+        
+        try {
+          await runTimingBenchmark(defaultSize, 'random', null);
+          
+          // Update summary
+          if (complexitySummarySize) complexitySummarySize.textContent = defaultSize + ' elements';
+          if (complexitySummaryType) complexitySummaryType.textContent = 'Raw Time Measurement';
+          if (complexitySummarySorted) complexitySummarySorted.textContent = 'N/A (Actual timing)';
+          
+          const rankedByPerformance = getRankedByPerformance();
+          if (complexityRankedCount) complexityRankedCount.textContent = `${rankedByPerformance.length} algorithms analyzed`;
+          renderPerformanceRanking(rankedByPerformance);
+          
+          if (rankedByPerformance.length > 0) {
+            selectComplexityAlgorithm(rankedByPerformance[0].title);
+          }
+        } catch (e) {
+          console.error('Auto-benchmark error:', e);
+          // Fall back to theoretical ranking
+          const ranked = rankAlgorithmsForInputData(defaultArr);
+          updateComplexitySummary(complexityInputStats);
+          renderRankingTable(ranked);
+          if (ranked.length > 0) {
+            selectComplexityAlgorithm(ranked[0].title);
+          }
+        } finally {
+          if (btnAnalyzeInput) {
+            btnAnalyzeInput.textContent = 'Analyze Input';
+            btnAnalyzeInput.disabled = false;
+          }
+        }
+      }
+      
+      if (chart) {
+        chart.resize();
+        updateChart(true);
+      }
+    }, 150);
+  }
+}
 
-openBtn.onclick = () => {
-  modal.style.display = "block";
-  setTimeout(() => {
-    chart.resize();
-    chart.update();
-  }, 100);
-};
-closeBtn.onclick = () => modal.style.display = "none";
-window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+// ========== RAW TIME COMPLEXITY MEASUREMENT SYSTEM ==========
+function measureAlgorithmTime(algorithmKey, arr) {
+  // Get the algorithm's raw implementation
+  const algo = algorithms[algorithmKey];
+  if (!algo || !algo.runRaw) return null;
+  
+  // Create a copy of the array to sort
+  const arrCopy = [...arr];
+  
+  // Measure execution time
+  const startTime = performance.now();
+  try {
+    algo.runRaw(arrCopy);
+  } catch (e) {
+    console.error(`Error running ${algo.title}:`, e);
+    return null;
+  }
+  const endTime = performance.now();
+  
+  return endTime - startTime;
+}
 
+function generateTestArray(size, type = 'random') {
+  const arr = [];
+  if (type === 'random') {
+    for (let i = 0; i < size; i++) {
+      arr.push(Math.floor(Math.random() * 10000));
+    }
+  } else if (type === 'sorted') {
+    for (let i = 0; i < size; i++) {
+      arr.push(i);
+    }
+  } else if (type === 'reverse') {
+    for (let i = 0; i < size; i++) {
+      arr.push(size - i);
+    }
+  }
+  return arr;
+}
 
+async function runTimingBenchmark(inputSize, inputType = 'random', customArray = null) {
+  // Reset all timing data
+  complexityTimingData = { best: {}, avg: {}, worst: {} };
+  algorithms_complexity.forEach(algo => {
+    complexityTimingData.best[algo.name] = [];
+    complexityTimingData.avg[algo.name] = [];
+    complexityTimingData.worst[algo.name] = [];
+  });
+  
+  const algoKeys = Object.keys(algorithms);
+  
+  // Define input generators for each case
+  const caseGenerators = {
+    best: (size) => {
+      // Best case: already sorted array
+      if (customArray && customArray.length >= size) {
+        const slice = customArray.slice(0, size);
+        return slice.sort((a, b) => a - b);
+      }
+      return generateTestArray(size, 'sorted');
+    },
+    avg: (size) => {
+      // Average case: random array (or user's custom data)
+      if (customArray && customArray.length >= size) {
+        return customArray.slice(0, size);
+      }
+      return generateTestArray(size, 'random');
+    },
+    worst: (size) => {
+      // Worst case: reverse sorted array
+      if (customArray && customArray.length >= size) {
+        const slice = customArray.slice(0, size);
+        return slice.sort((a, b) => b - a);
+      }
+      return generateTestArray(size, 'reverse');
+    }
+  };
+  
+  for (const key of algoKeys) {
+    const algo = algorithms[key];
+    if (!algo.runRaw) continue;
+    
+    const complexityAlgo = algorithms_complexity.find(a => 
+      a.name.toLowerCase() === algo.title.toLowerCase()
+    );
+    if (!complexityAlgo) continue;
+    
+    // Run benchmark for each case
+    for (const caseType of ['best', 'avg', 'worst']) {
+      const timings = [];
+      let startSize = Math.min(10, Math.max(1, inputSize));
+      let step = Math.max(1, Math.floor(inputSize / 20));
+      
+      let isTooSlow = false;
+      let baseTime = 0;
+      let baseSize = 0;
+      
+      for (let size = startSize; size <= inputSize; size += step) {
+        if (isTooSlow) {
+          const ratio = size / baseSize;
+          const extrapolatedTime = baseTime * (ratio * ratio);
+          timings.push({ x: size, y: extrapolatedTime });
+          continue;
+        }
+
+        const testArr = caseGenerators[caseType](size);
+        const time = measureAlgorithmTime(key, testArr);
+        
+        if (time !== null) {
+          timings.push({ x: size, y: time });
+          
+          if (time > 50) {
+            isTooSlow = true;
+            baseTime = time;
+            baseSize = size;
+          }
+        }
+        
+        // Yield to main thread to prevent UI freezing
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+      
+      if (timings.length > 0) {
+        complexityTimingData[caseType][complexityAlgo.name] = timings;
+      }
+    }
+  }
+  
+  return complexityTimingData;
+}
+
+// ========== DOM INITIALIZATION - RUN WHEN DOM IS READY ==========
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Initialize all complexity data
+  initComplexityFunctions();
+  initComplexityDOMElements();
+
+  // Get canvas context
+  const canvasEl = document.getElementById('complexityChart');
+  if (!canvasEl) {
+    console.error('Canvas element not found');
+    return;
+  }
+  ctx = canvasEl.getContext('2d');
+
+  // CREATE BUTTONS
+  const toggleContainer = document.getElementById("algoToggle");
+  if (!toggleContainer) {
+    console.error('algoToggle container not found');
+  } else {
+    console.log('algoToggle container found, adding ' + algorithms_complexity.length + ' buttons');
+    algorithms_complexity.forEach(algo => {
+      const btn = document.createElement("button");
+      btn.className = "algo-btn active transition-all duration-300";
+      if (!activeAlgorithms.has(algo.name)) {
+          btn.classList.remove("active");
+          btn.classList.add("opacity-40", "scale-95");
+      }
+      btn.innerText = algo.name;
+
+      btn.onclick = () => {
+        // Toggle algorithm visibility
+        if (activeAlgorithms.has(algo.name)) {
+          activeAlgorithms.delete(algo.name);
+          btn.classList.remove("active", "active-highlight");
+          btn.classList.add("opacity-40", "scale-95");
+          
+          // Clear selectedAlgorithm if we just disabled it
+          if (selectedAlgorithm === algo.name) {
+              selectedAlgorithm = null;
+          }
+        } else {
+          activeAlgorithms.add(algo.name);
+          btn.classList.add("active");
+          btn.classList.remove("opacity-40", "scale-95");
+          
+          selectedAlgorithm = algo.name;
+          document.querySelectorAll(".algo-btn").forEach(b => b.classList.remove("active-highlight"));
+          btn.classList.add("active-highlight");
+          
+          highlightSortingAlgorithm(algo.name);
+          selectComplexityAlgorithm(algo.name);
+        }
+
+        updateChart(true);
+      };
+
+      toggleContainer.appendChild(btn);
+    });
+  }
+
+  // CASE TOGGLE WITH ANIMATION
+  document.querySelectorAll(".case-btn").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll(".case-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      selectedCase = btn.dataset.case === "average" ? "avg" : btn.dataset.case;
+
+      updateChart(true); // animate
+    };
+  });
+
+  // CREATE CHART
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      datasets: getDatasets()
+    },
+    options: {
+      layout: {
+        padding: { right: 120 }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 800,
+        easing: "easeInOutQuart"
+      },
+      plugins: {
+        legend: {
+          labels: { color: "#fff" },
+          display: true,
+          position: 'top',
+          onClick: function(e, legendItem, legend) {
+              const label = legendItem.text.split(' (')[0];
+              
+              if (activeAlgorithms.has(label)) {
+                  activeAlgorithms.delete(label);
+              } else {
+                  activeAlgorithms.add(label);
+              }
+              
+              // Sync buttons visually
+              document.querySelectorAll(".algo-btn").forEach(b => {
+                  if (b.innerText === label) {
+                      if (activeAlgorithms.has(label)) {
+                         b.classList.add("active");
+                         b.classList.remove("opacity-40", "scale-95");
+                      } else {
+                         b.classList.remove("active", "active-highlight");
+                         b.classList.add("opacity-40", "scale-95");
+                      }
+                  }
+              });
+              updateChart(true);
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const algo = context.dataset.label.split(' (')[0];
+              const time = context.parsed.y.toFixed(3);
+              const size = context.parsed.x;
+              return `${algo}: ${time} ms (n=${size})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+          title: {
+            display: true,
+            text: 'Array Size (number of elements)',
+            color: '#94a3b8',
+            font: { size: 12 }
+          },
+          ticks: { 
+            color: "#aaa",
+            callback: function(value) {
+              return value.toLocaleString();
+            }
+          },
+          grid: { color: "rgba(255,255,255,0.05)" }
+        },
+        y: {
+          type: "linear",
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Execution Time (milliseconds)',
+            color: '#94a3b8',
+            font: { size: 12 }
+          },
+          ticks: { 
+            color: "#aaa",
+            callback: function(value) {
+              if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+              if (value >= 1000) return (value / 1000).toFixed(1) + 'K';
+              return value;
+            }
+          },
+          grid: { color: "rgba(255,255,255,0.05)" }
+        }
+      }
+    },
+    plugins: [{
+      id: 'inlineAlgorithmLabels',
+      afterDatasetsDraw: (chart) => {
+        const { ctx: canvasCtx, data } = chart;
+        canvasCtx.save();
+        
+        let pendingLabels = [];
+
+        data.datasets.forEach((dataset, i) => {
+          if (dataset.hidden || dataset.type === 'bar') return;
+          const meta = chart.getDatasetMeta(i);
+          if (!meta || meta.hidden || !meta.data || meta.data.length === 0) return;
+          const lastPoint = meta.data[meta.data.length - 1];
+          if (!lastPoint || !lastPoint.x || isNaN(lastPoint.y)) return;
+          
+          pendingLabels.push({
+            text: dataset.label.split(' (')[0],
+            x: lastPoint.x,
+            targetY: lastPoint.y,
+            y: lastPoint.y,
+            color: dataset.borderWidth === 3 ? '#ffffff' : dataset.borderColor,
+            font: dataset.borderWidth === 3 ? 'bold 11px "Space Grotesk", sans-serif' : '10px "Space Grotesk", sans-serif',
+            alpha: dataset.borderWidth === 3 ? 1.0 : 0.8
+          });
+        });
+        
+        pendingLabels.sort((a, b) => a.y - b.y);
+        
+        const LABEL_HEIGHT = 14; 
+        let overlapping = true;
+        let resolveIterations = 0;
+        
+        while (overlapping && resolveIterations < 50) {
+            overlapping = false;
+            for (let i = 0; i < pendingLabels.length - 1; i++) {
+                let current = pendingLabels[i];
+                let next = pendingLabels[i + 1];
+                
+                const distance = next.y - current.y;
+                if (distance < LABEL_HEIGHT) {
+                    overlapping = true;
+                    const adjust = (LABEL_HEIGHT - distance) / 2;
+                    current.y -= adjust;
+                    next.y += adjust;
+                }
+            }
+            resolveIterations++;
+        }
+        
+        pendingLabels.forEach(p => {
+          if (Math.abs(p.y - p.targetY) > 3) {
+              canvasCtx.beginPath();
+              canvasCtx.moveTo(p.x + 2, p.targetY);
+              canvasCtx.lineTo(p.x + 6, p.y);
+              canvasCtx.strokeStyle = p.color;
+              canvasCtx.globalAlpha = 0.3;
+              canvasCtx.lineWidth = 1;
+              canvasCtx.stroke();
+          }
+          
+          canvasCtx.fillStyle = p.color;
+          canvasCtx.font = p.font;
+          canvasCtx.globalAlpha = p.alpha;
+          canvasCtx.fillText(p.text, p.x + 8, p.y + 4);
+        });
+        canvasCtx.restore();
+      }
+    }]
+  });
+
+  // Bind event listeners
+  console.log('Binding event listeners...');
+  if (btnAnalyzeInput) {
+    console.log('Found btnAnalyzeInput, binding click listener');
+    btnAnalyzeInput.addEventListener('click', analyzeComplexityInput);
+  } else {
+    console.error('btnAnalyzeInput not found!');
+  }
+  
+  // Case buttons (Best/Average/Worst) are handled by the .case-btn handler above
+
+  // Reset button in the input source section
+  const btnComplexityReset = document.getElementById('btn-complexity-reset');
+  if (btnComplexityReset) {
+    btnComplexityReset.addEventListener('click', resetComplexityAll);
+  }
+
+  if (complexityAutoSize) {
+    complexityAutoSize.addEventListener('input', () => {
+      if (complexityAutoSizeLabel) complexityAutoSizeLabel.textContent = complexityAutoSize.value;
+    });
+  }
+
+  if (complexityFileInput) {
+    complexityFileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Validate file size (max 5MB)
+      const MAX_FILE_SIZE = 5 * 1024 * 1024;
+      if (file.size > MAX_FILE_SIZE) {
+        alert('File is too large. Maximum file size is 5MB.');
+        complexityFileLabel.textContent = 'File too large';
+        if (btnComplexityResetFile) btnComplexityResetFile.classList.add('hidden');
+        return;
+      }
+      
+      complexityFileLabel.textContent = file.name;
+      if (btnComplexityResetFile) btnComplexityResetFile.classList.remove('hidden');
+      if (complexityFileUploadLabel) complexityFileUploadLabel.classList.add('border-cyan-500/30');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          let text = e.target.result;
+          const arr = [];
+          
+          // Fast native extraction of numbers, bypassing slow comment regexes
+          const matches = text.match(/-?\d+(\.\d+)?/g);
+          if (matches) {
+            for (let i = 0; i < matches.length; i++) {
+              arr.push(Number(matches[i]));
+            }
+          }
+          
+          if (arr.length === 0) {
+            alert('Uploaded file did not contain numeric values.');
+            complexityInputData = [];
+          } else {
+            complexityInputData = arr;
+            complexityFileUploaded = true;
+            console.log('Successfully loaded', arr.length, 'values from complexity file');
+          }
+        } catch (err) {
+          console.error('Error parsing complexity file:', err);
+          alert('Error parsing file: ' + err.message);
+          complexityFileLabel.textContent = 'Parse error';
+          complexityInputData = [];
+        }
+      };
+      reader.onerror = () => {
+        alert('Error reading file. Please try again.');
+        console.error('FileReader error');
+        complexityFileLabel.textContent = 'Read error';
+        complexityInputData = [];
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  if (btnComplexityResetFile) {
+    btnComplexityResetFile.addEventListener('click', () => {
+      if (complexityFileInput) complexityFileInput.value = '';
+      complexityFileLabel.textContent = 'No file selected';
+      btnComplexityResetFile.classList.add('hidden');
+      if (complexityFileUploadLabel) complexityFileUploadLabel.classList.remove('border-cyan-500/30');
+      complexityInputData = [];
+      complexityFileUploaded = false;
+    });
+  }
+
+  if (openBtn) openBtn.onclick = () => { console.log('openBtn clicked'); openComplexityModal(); };
+  if (openCardBtn) { 
+    console.log('Found openCardBtn');
+    openCardBtn.onclick = () => { console.log('openCardBtn clicked'); openComplexityModal(); };
+  } else {
+    console.error('openCardBtn not found');
+  }
+  
+  if (complexityCard) {
+    complexityCard.onclick = (e) => {
+      console.log('complexityCard clicked');
+      if (!e.target.closest('button')) openComplexityModal();
+    };
+  } else {
+    console.error('complexityCard not found');
+  }
+  
+  if (closeBtn) closeBtn.onclick = () => { console.log('closeBtn clicked'); modal.style.display = "none"; };
+  else console.error('closeBtn not found');
+  
+  if (modal) {
+    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = "none"; });
+  } else {
+    console.error('modal not found');
+  }
+  
+  console.log('DOMContentLoaded initialization complete');
+
+}); // END OF DOMContentLoaded
 
 /* STITCH DESIGNED GAMIFIED LEARNING FEATURE */
 (function() {
