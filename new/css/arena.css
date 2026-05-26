@@ -1,0 +1,287 @@
+/* ============================================================
+   ARENA — Sort bars, responsive arena sections
+   ============================================================ */
+
+/* Ensure bars never collapse smaller than 1px on tight layouts */
+.sort-bar {
+  min-width: 1px;
+  flex-shrink: 0;
+}
+
+/* Arena page: smaller min-height on phones */
+@media (max-width: 639px) {
+  .arena-section {
+    min-height: 260px !important;
+  }
+}
+
+/* ============================================================
+   HOME PAGE — Card hover effects & neon utilities
+   ============================================================ */
+.neon-glow-cyan {
+  box-shadow: 0 0 15px -2px rgba(0, 238, 255, 0.4);
+}
+
+.feature-card,
+#home-page .glass {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+#home-page .grid .glass:hover {
+  transform: translateY(-4px);
+}
+
+.feature-card-overlay {
+  backdrop-filter: blur(8px);
+}
+
+/* Home card buttons — smooth hover transition */
+.home-card-btn {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+/* ============================================================
+   ALGORITHM MODAL — Responsive typography
+   ============================================================ */
+@media (max-width: 640px) {
+  #algo-title {
+    font-size: 2.25rem !important; /* text-4xl */
+    line-height: 1.1 !important;
+  }
+}
+
+/* Code & Bench utilities */
+.algo-code-snippet { tab-size: 4; }
+
+.bench-progress-bar {
+  width: 0%;
+  min-width: 4px;
+}
+
+/* Neon button */
+.neon-btn {
+  background: linear-gradient(45deg, #00f7ff, #ff007f);
+  border: none;
+  color: #000;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+}
+
+.neon-btn:hover {
+  box-shadow: 0 0 20px rgba(0, 247, 255, 0.8);
+}
+
+/* ============================================================
+   MINI-VISUALIZER — Bar glow animations
+   ============================================================ */
+@keyframes dvis-compare-glow {
+  0%   { box-shadow: 0 0 4px #00eeff60; }
+  50%  { box-shadow: 0 0 16px #00eeffcc, 0 0 30px #00eeff40; }
+  100% { box-shadow: 0 0 4px #00eeff60; }
+}
+
+@keyframes dvis-swap-glow {
+  0%   { box-shadow: 0 0 4px #10b98160; }
+  50%  { box-shadow: 0 0 16px #10b981cc, 0 0 30px #10b98140; }
+  100% { box-shadow: 0 0 4px #10b98160; }
+}
+
+@keyframes dvis-set-glow {
+  0%   { box-shadow: 0 0 4px #d946ef60; }
+  50%  { box-shadow: 0 0 16px #d946efcc, 0 0 30px #d946ef40; }
+  100% { box-shadow: 0 0 4px #d946ef60; }
+}
+
+.dvis-comparing {
+  animation: dvis-compare-glow 0.4s ease-in-out infinite;
+}
+
+.dvis-swapping {
+  animation: dvis-swap-glow 0.35s ease-in-out infinite;
+}
+
+.dvis-setting {
+  animation: dvis-set-glow 0.35s ease-in-out infinite;
+}
+
+/* Execution Tracker — active line highlight */
+.exec-line-active {
+  background: rgba(0, 238, 255, 0.08) !important;
+  border-left-color: #00eeff !important;
+  box-shadow: inset 3px 0 8px -2px rgba(0, 238, 255, 0.3);
+}
+
+#detail-exec-code div {
+  border-left: 3px solid transparent;
+  padding: 0 8px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   BATTLE ARENA — Premium Animations
+   ═══════════════════════════════════════════════ */
+
+/* Gradient animated title */
+.battle-title-gradient {
+  background: linear-gradient(90deg, #f59e0b, #fb923c, #f59e0b, #fbbf24);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: battle-title-shimmer 4s ease-in-out infinite;
+}
+@keyframes battle-title-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Swords icon pulse */
+.battle-icon-pulse {
+  animation: battle-icon-float 3s ease-in-out infinite;
+}
+@keyframes battle-icon-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(5deg); }
+}
+
+/* Card entrance animation */
+@keyframes battle-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.battle-card {
+  animation: battle-card-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Running state — pulsing border */
+.battle-card-running {
+  opacity: 1 !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  box-shadow: 0 0 20px -5px rgba(245, 158, 11, 0.15),
+              inset 0 0 20px -10px rgba(245, 158, 11, 0.05);
+  animation: battle-running-pulse 1.5s ease-in-out infinite;
+}
+@keyframes battle-running-pulse {
+  0%, 100% { box-shadow: 0 0 20px -5px rgba(245, 158, 11, 0.15); }
+  50% { box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.3); }
+}
+
+/* Completed state — success glow */
+.battle-card-done {
+  opacity: 1 !important;
+  border-color: rgba(34, 197, 94, 0.4) !important;
+  animation: battle-done-glow 0.6s ease-out forwards;
+}
+@keyframes battle-done-glow {
+  0% { box-shadow: 0 0 0 rgba(34, 197, 94, 0); }
+  50% { box-shadow: 0 0 40px -5px rgba(34, 197, 94, 0.35); }
+  100% { box-shadow: 0 0 20px -5px rgba(34, 197, 94, 0.15); }
+}
+
+/* "Add Algorithm" card animated dashed border */
+@keyframes battle-dash-rotate {
+  to { --angle: 360deg; }
+}
+.battle-add-card {
+  position: relative;
+  background: transparent;
+  border: 2px dashed rgba(255,255,255, 0.08);
+  transition: all 0.3s ease;
+}
+.battle-add-card:hover {
+  border-color: rgba(0, 238, 255, 0.25);
+  background: rgba(0, 238, 255, 0.02);
+  transform: scale(1.01);
+}
+.battle-add-card:hover .battle-add-icon {
+  transform: scale(1.15) rotate(90deg);
+  color: #00eeff;
+}
+.battle-add-icon {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+}
+
+/* Card header accent gradient */
+.battle-card-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+}
+
+/* Bar shimmer on completion */
+@keyframes battle-bar-complete {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.6); }
+  100% { filter: brightness(1); }
+}
+
+/* Picker dropdown entrance */
+@keyframes battle-picker-enter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.battle-picker-open {
+  animation: battle-picker-enter 0.2s ease-out forwards;
+}
+
+/* Status text animation */
+@keyframes battle-status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.battle-status-sorting {
+  animation: battle-status-pulse 1s ease-in-out infinite;
+}
+
+/* Run button idle glow */
+.battle-btn-run {
+  position: relative;
+  overflow: hidden;
+}
+.battle-btn-run::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 60%
+  );
+  animation: battle-btn-shine 3s ease-in-out infinite;
+}
+@keyframes battle-btn-shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Remove button hover */
+.battle-remove-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.battle-card:hover .battle-remove-btn {
+  opacity: 1;
+}
+
+/* Rank badge animation */
+@keyframes battle-rank-pop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.battle-rank-badge {
+  animation: battle-rank-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}

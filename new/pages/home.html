@@ -1,0 +1,459 @@
+<!-- =====================  HOME PAGE  ===================== -->
+<div id="home-page" class="hidden flex-1 w-full h-full flex flex-col animate-fade-in fade-transition relative">
+  <!-- Animated background particles (Home) -->
+  <canvas id="home-particles" class="absolute inset-0 w-full h-full pointer-events-none z-[-1]"></canvas>
+  <!-- Radial ambient glows -->
+  <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[150px] pointer-events-none animate-pulse z-[-1]"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-secondary/5 blur-[150px] pointer-events-none animate-pulse z-[-1]" style="animation-delay:1.5s;"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#22d3ee]/5 blur-[120px] pointer-events-none z-[-1]"></div>
+  <header class="h-16 sm:h-20 glass border-b border-white/10 px-4 sm:px-8 flex items-center justify-between z-10 flex-shrink-0">
+    <!-- Hamburger (mobile only) -->
+    <button id="btn-hamburger-home"
+      class="lg:hidden touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2"
+      aria-label="Open menu">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <div class="flex items-center gap-2">
+      <span class="text-lg sm:text-xl font-bold text-white">Visual</span>
+      <span class="text-lg sm:text-xl font-light text-slate-500">Algorithms</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 text-slate-500">
+        <span class="material-symbols-outlined text-xl hover:text-white transition-colors cursor-pointer">settings_input_component</span>
+        <span class="material-symbols-outlined text-xl hover:text-white transition-colors cursor-pointer">notifications_active</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-1 overflow-y-auto custom-scrollbar">
+    <div class="p-4 sm:p-8 space-y-10 sm:space-y-12">
+
+      <!-- ══════════════════ HERO SECTION ══════════════════ -->
+      <section class="grid grid-cols-12 gap-4 sm:gap-8 items-center py-4 sm:py-8">
+        <!-- Left: Welcome Text -->
+        <div class="col-span-12 lg:col-span-7 space-y-4">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+            Welcome to <span class="text-primary drop-shadow-[0_0_10px_rgba(0,238,255,0.4)]">Visual Algorithms</span>
+          </h1>
+          <p class="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl">
+            Explore, visualize, and master sorting algorithms through an immersive interactive experience.
+            Compare real-time performance, analyze time complexity, and benchmark algorithms head-to-head
+            in a stunning visual dashboard designed for the next generation of software architects.
+          </p>
+        </div>
+
+        <!-- Right: Stat Badges -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col gap-4 mt-4 lg:mt-0">
+          <!-- Stat Badge 1 -->
+          <div class="glass p-4 sm:p-5 rounded-2xl flex items-center gap-4 border-l-4 border-primary hover:bg-white/5 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+              <span class="material-symbols-outlined text-2xl">emoji_events</span>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-[0.1em]">Library Cap</p>
+              <p class="text-lg sm:text-xl font-bold text-white">12+ Algorithms</p>
+            </div>
+          </div>
+          <!-- Stat Badge 2 -->
+          <div class="glass p-4 sm:p-5 rounded-2xl flex items-center gap-4 border-l-4 border-secondary hover:bg-white/5 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary flex-shrink-0">
+              <span class="material-symbols-outlined text-2xl">star</span>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-[0.1em]">Engine Performance</p>
+              <p class="text-lg sm:text-xl font-bold text-white">Real-Time Visualization</p>
+            </div>
+          </div>
+          <!-- Stat Badge 3 -->
+          <div class="glass p-4 sm:p-5 rounded-2xl flex items-center gap-4 border-l-4 border-cyan-400 hover:bg-white/5 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-cyan-400/10 flex items-center justify-center text-cyan-400 flex-shrink-0">
+              <span class="material-symbols-outlined text-2xl">bar_chart</span>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-[0.1em]">Data Insights</p>
+              <p class="text-lg sm:text-xl font-bold text-white">Advanced Benchmarking</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════ SORTING LIBRARY GRID ══════════════════ -->
+      <section class="space-y-4 sm:space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white">Sorting Library</h2>
+          <div class="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Sort By: Complexity</span>
+            <span class="material-symbols-outlined text-base cursor-pointer hover:text-white transition-colors">filter_list</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 pb-4 sm:pb-8">
+          <!-- Card 1: Quick Sort -->
+          <div id="card-quick-sort" class="glass rounded-2xl p-5 hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-primary/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/60 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/50 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/70 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary/60 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Quick Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-primary rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Divide and conquer strategy — highly efficient partitioning algorithm for rapid sorting.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-primary group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Merge Sort -->
+          <div id="card-merge-sort" class="glass rounded-2xl p-5 hover:border-secondary/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-secondary/40 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary/60 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary/50 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary/70 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/60 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Merge Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-secondary rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Stable, comparison-based algorithm that divides data into atomic units before merging.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-secondary group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Bubble Sort -->
+          <div id="card-bubble-sort" class="glass rounded-2xl p-5 hover:border-amber-500/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-amber-500/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500/60 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500/80 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500/70 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-500/50 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Bubble Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-amber-500 rounded text-xs font-medium">O(n²)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Simple comparison sort — adjacent elements are repeatedly swapped if in wrong order.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-amber-500/10 text-amber-500 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-amber-500 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Heap Sort -->
+          <div id="card-heap-sort" class="glass rounded-2xl p-5 hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-primary h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/60 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/80 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/40 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-primary/70 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-secondary/50 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Heap Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-primary rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Binary heap based sorting that provides consistent performance and in-place sorting.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-primary group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Selection Sort -->
+          <div id="card-selection-sort" class="glass rounded-2xl p-5 hover:border-indigo-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-indigo-400/40 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400/80 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400/60 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400/50 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-indigo-400/70 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Selection Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-indigo-400 rounded text-xs font-medium">O(n²)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Simple O(n²) comparison sort — repeatedly finds the minimum and moves it to the front.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-indigo-400/10 text-indigo-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-indigo-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Insertion Sort -->
+          <div id="card-insertion-sort" class="glass rounded-2xl p-5 hover:border-emerald-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-emerald-400/80 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400/40 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400/60 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400/80 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400/50 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-emerald-400/70 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Insertion Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-emerald-400 rounded text-xs font-medium">O(n²)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Simple O(n²) insertion sort — efficient for small data sets, builds sorted array one item at a time.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-emerald-400/10 text-emerald-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-emerald-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 7: Tim Sort -->
+          <div id="card-tim-sort" class="glass rounded-2xl p-5 hover:border-violet-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-violet-400/60 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400/80 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400/50 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400/70 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-violet-400 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Tim Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-violet-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Hybrid stable sort derived from merge sort and insertion sort — Python & Java's default.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-violet-400/10 text-violet-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-violet-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 8: Intro Sort -->
+          <div id="card-intro-sort" class="glass rounded-2xl p-5 hover:border-amber-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-amber-400/80 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400/40 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400/60 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400/70 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400/50 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-amber-400 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Intro Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-amber-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Hybrid sort combining quicksort, heapsort, and insertion sort — used in C++ STL.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-amber-400/10 text-amber-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-amber-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 9: Shell Sort -->
+          <div id="card-shell-sort" class="glass rounded-2xl p-5 hover:border-cyan-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-cyan-400 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400/70 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400/50 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400/80 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400/40 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400/60 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-cyan-400 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Shell Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-cyan-400 rounded text-xs font-medium">O(n log²n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Generalized insertion sort using gap sequences — efficient for medium-sized datasets.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-cyan-400/10 text-cyan-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-cyan-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 10: PDQ Sort -->
+          <div id="card-pdq-sort" class="glass rounded-2xl p-5 hover:border-fuchsia-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-fuchsia-400/50 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400/80 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400/40 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400/70 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400/60 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-fuchsia-400 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">PDQ Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-fuchsia-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Pattern-Defeating Quicksort — optimized quicksort variant resistant to adversarial inputs.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-fuchsia-400/10 text-fuchsia-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-fuchsia-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 11: Dual Pivot Quick Sort -->
+          <div id="card-dual-pivot-quick-sort" class="glass rounded-2xl p-5 hover:border-rose-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-rose-400/40 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400/70 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400/50 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400/80 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400/60 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-rose-400 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Dual Pivot Quick</h3>
+              <span class="px-2 py-1 bg-white/5 text-rose-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Uses two pivots for three-way partitioning — Java's Arrays.sort() default for primitives.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-rose-400/10 text-rose-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-rose-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 12: Block Sort -->
+          <div id="card-block-sort" class="glass rounded-2xl p-5 hover:border-teal-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-teal-400/70 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400/80 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400/50 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400/60 h-1/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-teal-400 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Block Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-teal-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              In-place stable merge sort using block rearrangement — O(1) extra memory complexity.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-teal-400/10 text-teal-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-teal-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+          <!-- Card 13: Dual Fusion Sort -->
+          <div id="card-dual-fusion-sort" class="glass rounded-2xl p-5 hover:border-orange-400/30 transition-all group cursor-pointer relative overflow-hidden">
+            <div class="h-24 w-full flex items-end gap-1 mb-4">
+              <div class="bg-orange-400 h-2/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400/60 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400/80 h-3/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400/40 h-1/4 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400/70 h-1/2 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400/50 h-2/3 w-full rounded-t-sm animate-equalizer transition-all"></div>
+              <div class="bg-orange-400 h-full w-full rounded-t-sm animate-equalizer transition-all"></div>
+            </div>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-xl font-bold text-white">Dual Fusion Sort</h3>
+              <span class="px-2 py-1 bg-white/5 text-orange-400 rounded text-xs font-medium">O(n log n)</span>
+            </div>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5 line-clamp-2">
+              Advanced hybrid combining dual-pivot partitioning with adaptive merge strategies.
+            </p>
+            <div class="flex items-center justify-between">
+              <button class="home-card-btn flex items-center gap-2 bg-orange-400/10 text-orange-400 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider group-hover:bg-orange-400 group-hover:text-background-dark transition-all">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                Select to Explore
+              </button>
+              <span class="material-symbols-outlined text-slate-600 hover:text-white transition-colors cursor-pointer">settings</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Footer Status Bar -->
+  <footer class="h-10 bg-[#030f1d] flex items-center px-4 sm:px-8 border-t border-white/5 flex-shrink-0">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+      <span class="text-xs text-primary font-medium">System Ready</span>
+    </div>
+    <div class="ml-auto flex items-center gap-6">
+      <span class="text-xs text-slate-600">v1.24.0-STABLE</span>
+      <span class="text-xs text-slate-600">LOC: GLOBAL_CLUSTER_01</span>
+    </div>
+  </footer>
+</div>

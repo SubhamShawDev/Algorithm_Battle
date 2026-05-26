@@ -1,0 +1,200 @@
+<!-- =====================  ARENA PAGE  ===================== -->
+<div id="arena-page" class="hidden flex-1 w-full h-full flex-col fade-transition">
+
+  <!-- Arena Header -->
+  <header class="h-16 sm:h-20 glass border-b border-white/10 px-3 sm:px-8 flex items-center justify-between z-10 animate-slide-up stagger-2 flex-shrink-0">
+    <!-- Left cluster -->
+    <div class="flex items-center gap-2 sm:gap-6 min-w-0">
+      <!-- Hamburger (mobile only) -->
+      <button id="btn-hamburger-arena"
+        class="lg:hidden touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-1 flex-shrink-0"
+        aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h2 class="hidden sm:flex text-lg font-bold items-center gap-2 flex-shrink-0">
+        <span class="text-primary">Comparison</span>
+        <span class="text-slate-500 font-light">Arena</span>
+      </h2>
+      <!-- Desktop slider row (hidden on mobile) -->
+      <div class="hidden lg:flex items-center gap-4 glass rounded-full px-4 py-2 border-white/5">
+        <div class="flex items-center gap-3">
+          <span class="text-[10px] font-bold text-slate-500 uppercase">Speed</span>
+          <input id="slider-speed" type="range"
+            class="w-24 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="1"
+            max="100" value="50">
+        </div>
+        <div class="h-4 w-px bg-white/10 mx-2"></div>
+        <div class="flex items-center gap-3">
+          <span class="text-[10px] font-bold text-slate-500 uppercase">Size</span>
+          <input id="slider-size" type="range"
+            class="w-24 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="10"
+            max="200" value="50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right cluster: controls -->
+    <div class="flex items-center gap-1 sm:gap-2">
+      <!-- Mobile: controls toggle button -->
+      <button id="btn-toggle-controls"
+        class="lg:hidden touch-target size-9 sm:size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
+        title="Speed / Size">
+        <span class="material-symbols-outlined text-lg">tune</span>
+      </button>
+      <button id="btn-replay"
+        class="touch-target size-9 sm:size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-white transition-all cursor-pointer">
+        <span class="material-symbols-outlined">replay</span>
+      </button>
+      <button id="btn-play"
+        class="h-9 sm:h-10 px-3 sm:px-6 rounded-lg bg-primary text-background-dark font-bold flex items-center gap-1 sm:gap-2 hover:brightness-110 transition-all cursor-pointer">
+        <span class="material-symbols-outlined fill-1">play_arrow</span>
+        <span class="hidden sm:inline text-sm">Begin Sorting</span>
+      </button>
+      <button id="btn-pause"
+        class="touch-target size-9 sm:size-10 rounded-lg glass border-white/10 flex items-center justify-center hover:bg-white/10 text-white transition-all cursor-pointer">
+        <span class="material-symbols-outlined">pause</span>
+      </button>
+
+      <!-- User avatar (desktop only) -->
+      <div class="hidden md:flex items-center gap-3 border-l border-white/10 pl-4 sm:pl-6 ml-2">
+        <div class="text-right">
+          <p class="text-xs font-bold text-white leading-none">Admin Dev</p>
+          <p class="text-[10px] text-slate-500 font-medium">Lvl 42 Coder</p>
+        </div>
+        <div class="size-9 rounded-full glass border border-primary/30 p-0.5 overflow-hidden">
+          <img class="w-full h-full rounded-full object-cover" alt="User avatar"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAFpdZNP-24HZ2pYsAxDwfSk233Q-DmHA9uWZ7Mlxuuk68NZldB1MwpYlVJIpzs0lW-bsn2eLIHky5T8-CPQE4v1NsdiGjQqYWyDDDvPQZxxg-o5b4VVQgR9IPYia83SGzG90TyC7Eh3-6O2BXMi3WFHbTlvKBibAUagM8DAdkhwT1vZQXGhowjIXpixZsnjEib9_i18G83DkPfVc7gBYxowbQ47OW3Hm1hxVEgoD3Yg6hVLweN3UTUTcMAT5v4gqPE5nKyYOtpZrt" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile collapsible controls panel -->
+  <div id="mobile-controls-panel" class="lg:hidden glass border-b border-white/10 px-4 flex-shrink-0">
+    <div class="py-3 flex flex-col gap-3">
+      <div class="flex items-center gap-4">
+        <span class="text-[10px] font-bold text-slate-500 uppercase w-12 shrink-0">Speed</span>
+        <input id="slider-speed-mobile" type="range"
+          class="flex-1 h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="1"
+          max="100" value="50">
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-[10px] font-bold text-slate-500 uppercase w-12 shrink-0">Size</span>
+        <input id="slider-size-mobile" type="range"
+          class="flex-1 h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary" min="10"
+          max="200" value="50">
+      </div>
+    </div>
+  </div>
+
+  <!-- Arena body: side-by-side or stacked -->
+  <div class="flex-1 flex flex-col md:flex-row overflow-y-auto lg:overflow-hidden p-3 sm:p-6 gap-3 sm:gap-6 min-h-0">
+    <!-- LEFT ARENA -->
+    <section
+      class="arena-section flex-1 flex flex-col gap-3 sm:gap-4 relative min-h-[260px] sm:min-h-[350px] animate-scale-in stagger-3 hover:scale-[1.01] transition-transform duration-300">
+      <div class="flex items-center justify-between px-2 cursor-pointer group" id="selector-left">
+        <div class="flex flex-col">
+          <span id="left-algo-label" class="text-primary text-[10px] font-bold uppercase tracking-widest">Algorithm A (Click to Change)</span>
+          <h3 class="text-base sm:text-xl font-bold group-hover:text-primary transition-colors" id="title-left">Quick Sort</h3>
+        </div>
+        <div class="flex gap-2 sm:gap-4">
+          <div class="text-right">
+            <p class="text-slate-500 text-[10px] uppercase font-bold">Complexity</p>
+            <p class="text-xs sm:text-sm font-mono text-primary" id="complexity-left">O(n log n)</p>
+          </div>
+          <div class="text-right">
+            <p class="text-slate-500 text-[10px] uppercase font-bold">Comparisons</p>
+            <p class="text-xs sm:text-sm font-mono text-white" id="ops-left">0</p>
+          </div>
+        </div>
+      </div>
+      <div id="arena-left"
+        class="flex-1 glass neon-border-cyan rounded-2xl flex items-end justify-center p-3 sm:p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
+          style="background-image: radial-gradient(circle at 50% 120%, rgba(0,238,255,0.15), transparent 70%);">
+        </div>
+      </div>
+    </section>
+
+    <!-- VS DIVIDER -->
+    <div id="vs-divider-desktop" class="hidden md:block w-px bg-white/10 relative flex-shrink-0">
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass size-12 rounded-full border-white/10 flex items-center justify-center text-slate-500 font-bold italic z-10">
+        VS</div>
+    </div>
+    <div id="vs-divider-mobile" class="block md:hidden h-px w-full bg-white/10 relative my-1 flex-shrink-0">
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass size-8 rounded-full border-white/10 flex items-center justify-center text-slate-500 font-bold italic z-10 text-[10px]">
+        VS</div>
+    </div>
+
+    <!-- SINGLE ALGORITHM CODE SECTION -->
+    <section id="single-code-section"
+      class="hidden arena-section flex-1 flex-col gap-3 sm:gap-4 relative min-h-[260px] sm:min-h-[350px] animate-scale-in stagger-4 hover:scale-[1.01] transition-transform duration-300">
+      <div class="flex items-center justify-between px-2 cursor-pointer group">
+        <div class="flex flex-col">
+          <span class="text-amber-400 text-[10px] font-bold uppercase tracking-widest">Active Execution</span>
+          <h3 class="text-base sm:text-xl font-bold group-hover:text-amber-400 transition-colors">Line-by-Line Tracking</h3>
+        </div>
+        <div class="flex gap-4">
+          <div class="text-right">
+            <p class="text-slate-500 text-[10px] uppercase font-bold">Code Language</p>
+            <p class="text-xs sm:text-sm font-mono text-amber-500">JavaScript</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 bg-[#0d1117] border border-white/10 rounded-2xl flex flex-col relative overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar flex-1 overflow-y-auto p-4">
+          <pre id="single-code-display" class="text-xs sm:text-sm font-mono leading-7 text-slate-300"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT ARENA -->
+    <section id="arena-right-section"
+      class="arena-section flex-1 flex flex-col gap-3 sm:gap-4 relative min-h-[260px] sm:min-h-[350px] animate-scale-in stagger-4 hover:scale-[1.01] transition-transform duration-300">
+      <div class="flex items-center justify-between px-2 cursor-pointer group" id="selector-right">
+        <div class="flex flex-col">
+          <span class="text-secondary text-[10px] font-bold uppercase tracking-widest">Algorithm B (Click to Change)</span>
+          <h3 class="text-base sm:text-xl font-bold group-hover:text-secondary transition-colors" id="title-right">Merge Sort</h3>
+        </div>
+        <div class="flex gap-2 sm:gap-4">
+          <div class="text-right">
+            <p class="text-slate-500 text-[10px] uppercase font-bold">Complexity</p>
+            <p class="text-xs sm:text-sm font-mono text-secondary" id="complexity-right">O(n log n)</p>
+          </div>
+          <div class="text-right">
+            <p class="text-slate-500 text-[10px] uppercase font-bold">Comparisons</p>
+            <p class="text-xs sm:text-sm font-mono text-white" id="ops-right">0</p>
+          </div>
+        </div>
+      </div>
+      <div id="arena-right"
+        class="flex-1 glass neon-border-pink rounded-2xl flex items-end justify-center p-3 sm:p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
+          style="background-image: radial-gradient(circle at 50% 120%, rgba(255,0,127,0.15), transparent 70%);">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer
+    class="h-12 sm:h-16 glass border-t border-white/10 px-4 sm:px-8 flex items-center justify-between text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest animate-slide-up stagger-5 flex-shrink-0">
+    <div class="flex gap-4 sm:gap-8">
+      <div class="flex items-center gap-2">
+        <span class="size-2 rounded-full bg-primary animate-pulse hidden sm:block"></span>
+        <span id="array-size-display">Array Buffer: 50 Elements</span>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <span class="material-symbols-outlined text-[12px] sm:text-[14px]">timer</span>
+        <span id="base-speed-display">Base Yield: 50ms</span>
+      </div>
+    </div>
+    <div class="flex gap-3 sm:gap-4">
+      <button class="hover:text-primary transition-colors">Export</button>
+      <span class="text-white/10">|</span>
+      <button class="hover:text-primary transition-colors hidden sm:block">Documentation</button>
+    </div>
+  </footer>
+</div><!-- /arena-page -->

@@ -1,0 +1,233 @@
+      <!-- =====================  BENCHMARK PAGE  ===================== -->
+      <div id="benchmark-page" class="hidden flex-col fade-transition bg-[#0d1117] fixed inset-0 z-[100]">
+        <!-- Bench Header -->
+        <header class="h-16 sm:h-20 glass border-b border-white/10 px-4 sm:px-8 flex items-center justify-between z-10 flex-shrink-0">
+          <div class="flex items-center gap-3">
+            <button id="btn-bench-back" class="touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2" aria-label="Back">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+              <span class="text-emerald-400">Benchmark</span>
+              <span class="text-slate-500 font-light">Laboratory</span>
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-slate-500 bg-white/5 px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 border border-white/5 shadow-inner">
+              PRO ENGINE 2.0
+            </span>
+          </div>
+        </header>
+
+        <!-- Bench Body -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-10 flex flex-col gap-8 custom-scrollbar relative">
+          <!-- Ambient Background Gradients for Pro Feel -->
+          <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+          <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
+
+          <!-- STEP 1: Data Source Section -->
+          <section class="glass rounded-2xl p-6 border border-white/10 shadow-2xl relative z-10">
+            <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+              <div class="size-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">1</div>
+              <div>
+                <h3 class="text-white font-bold text-base uppercase tracking-wider">Define Data Source</h3>
+                <p class="text-slate-400 text-xs mt-1">Provide up to 100,000 array elements for maximum performance testing</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Auto Generate option -->
+              <div class="bg-black/20 rounded-xl p-5 border border-white/5 hover:border-emerald-500/30 transition-all group flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-lg">casino</span> Auto-Generate
+                    </span>
+                    <span id="bench-gen-val" class="text-white font-mono font-bold bg-white/10 px-2 py-1 rounded text-xs select-none">10,000</span>
+                  </div>
+                  <input type="range" id="bench-gen-slider" min="10" max="100000" step="10" value="10000" class="w-full accent-emerald-500 mb-6 mt-2 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" />
+                </div>
+                <div class="flex gap-2 w-full">
+                  <button id="btn-bench-generate" class="flex-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-background-dark font-bold py-3 rounded-lg transition-all text-sm flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">memory</span> Generate Array Buffer
+                  </button>
+                  <button id="btn-bench-gen-reset" class="w-12 bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:bg-rose-500 hover:text-white font-bold py-3 rounded-lg transition-all flex items-center justify-center" title="Reset Generated Buffer">
+                    <span class="material-symbols-outlined text-base">restart_alt</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- File Upload option -->
+              <div class="bg-black/20 rounded-xl p-5 border border-white/5 hover:border-cyan-500/30 transition-all group border-dashed flex flex-col justify-between relative overflow-hidden">
+                 <div>
+                   <div class="flex items-center gap-2 mb-4">
+                    <span class="text-sm text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <span class="material-symbols-outlined text-lg">upload_file</span> Custom Source (.txt/.csv)
+                    </span>
+                  </div>
+                </div>
+                <div class="relative w-full h-[60px] flex items-center mt-auto">
+                    <label class="absolute inset-0 flex items-center justify-center gap-2 border-2 border-dashed border-white/10 rounded-lg hover:border-cyan-400/50 hover:bg-white/5 transition-all text-sm text-slate-400 cursor-pointer w-full group overflow-hidden bg-black/40">
+                      <span class="material-symbols-outlined text-xl group-hover:text-cyan-400 transition-colors shrink-0">cloud_upload</span>
+                      <span id="bench-standalone-file-label" class="group-hover:text-white transition-colors truncate px-2 font-mono text-xs max-w-[80%]">Click to browse file...</span>
+                      <input type="file" id="bench-standalone-file" accept=".txt,.csv" class="hidden" />
+                    </label>
+                    <div id="bench-file-actions" class="hidden absolute top-1/2 right-2 -translate-y-1/2 z-20 items-center justify-end bg-black/80 p-1 rounded-md">
+                       <button id="btn-bench-standalone-delete-file" class="text-rose-400 hover:text-white hover:bg-rose-500 rounded p-1 transition-all flex items-center" title="Clear Upload">
+                          <span class="material-symbols-outlined text-sm">close</span>
+                       </button>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Buffer Status (Hidden until data is ready) -->
+            <div id="bench-data-status" class="hidden mt-6 bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/20 rounded-xl p-4 flex sm:flex-row flex-col items-start sm:items-center justify-between gap-4">
+               <div class="flex items-center gap-3">
+                 <span class="material-symbols-outlined text-emerald-400 animate-pulse">check_circle</span>
+                 <p class="text-sm text-emerald-400 font-medium tracking-wide">Data Array Buffer Loaded & Ready</p>
+               </div>
+               <div class="text-white font-mono font-bold text-xl bg-black/30 px-4 py-1.5 rounded-lg border border-white/5" id="bench-s-n">0 <span class="text-[10px] text-slate-500 uppercase tracking-widest ml-1">Elements</span></div>
+            </div>
+          </section>
+
+          <!-- STEP 2: Algorithm Execution Center -->
+          <section id="bench-algo-section" class="glass rounded-2xl p-6 border border-white/10 shadow-2xl relative z-10 opacity-50 pointer-events-none transition-all duration-500">
+             <div class="flex items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4 flex-col sm:flex-row items-start sm:items-center">
+              <div class="flex items-center gap-3">
+               <div class="size-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">2</div>
+               <div>
+                  <h3 class="text-white font-bold text-base uppercase tracking-wider">Execute Benchmarks</h3>
+                  <p class="text-slate-400 text-xs mt-1">Select an individual algorithm or run the full test suite</p>
+               </div>
+              </div>
+              <button id="btn-bench-run-all" class="bg-gradient-to-r w-full sm:w-auto from-cyan-500 to-emerald-500 hover:brightness-110 text-background-dark font-bold px-6 py-2.5 rounded-lg transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
+                <span class="material-symbols-outlined text-sm">rocket</span> Run Full Suite
+              </button>
+            </div>
+
+            <div id="bench-algo-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 mb-6">
+              <!-- populated by JS -->
+            </div>
+
+            <button id="btn-bench-standalone-run" class="w-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-bold h-12 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-cyan-500 hover:text-background-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed group" disabled>
+                <span class="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">play_arrow</span>
+                Run Selected Algorithm (<span id="bench-standalone-algo-name" class="font-mono text-xs tracking-wider">NONE</span>)
+            </button>
+          </section>
+
+          <!-- STEP 3: Results Dashboard -->
+          <section id="bench-standalone-results" class="hidden glass border-white/10 rounded-2xl p-6 relative z-10 flex-col gap-6">
+             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                 <div class="size-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0">3</div>
+                 <h3 class="text-white font-bold text-base uppercase tracking-wider">Analytics Laboratory</h3>
+                </div>
+                <!-- Time Comparison Unit Selector -->
+                <div class="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-between sm:justify-start">
+                    <button data-unit="ms" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 transition-all shadow-sm">ms</button>
+                    <button data-unit="Âµs" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-400 hover:text-emerald-400 transition-all">Âµs</button>
+                    <button data-unit="ns" class="bench-s-unit-btn flex-1 sm:flex-none text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-400 hover:text-emerald-400 transition-all">ns</button>
+                </div>
+             </div>
+
+             <!-- Single Run Result Grid -->
+             <div id="bench-single-results-view" class="hidden flex-col gap-6">
+                <!-- Status Row -->
+                <div class="flex items-center gap-2 text-sm font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-lg" id="bench-s-status-container">
+                    <span class="material-symbols-outlined text-lg">check_circle</span> <span id="bench-s-status">BENCHMARK SUCCESS</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-emerald-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Actual Execution</p>
+                      <div class="flex items-baseline gap-1 relative z-10">
+                        <p id="bench-s-actual-time" class="text-emerald-400 font-mono font-bold text-3xl">0.00</p>
+                        <span id="bench-s-actual-unit" class="text-[10px] text-emerald-400/60 font-bold">ms</span>
+                      </div>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-cyan-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Comparisons Operations</p>
+                      <p id="bench-s-comparisons" class="text-cyan-400 font-mono font-bold text-3xl relative z-10">0</p>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-5 border border-white/5 hover:border-amber-500/30 transition-colors relative overflow-hidden group">
+                      <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <p class="text-[9px] text-slate-500 font-bold uppercase mb-2 relative z-10">Swaps / Write Operations</p>
+                      <p id="bench-s-swaps" class="text-amber-400 font-mono font-bold text-3xl relative z-10">0</p>
+                    </div>
+                </div>
+
+                <!-- Theory vs Actual Bar -->
+                <div class="bg-black/20 rounded-xl p-6 border border-white/5">
+                   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                       <span class="material-symbols-outlined text-slate-500 text-sm">bar_chart</span>
+                       Performance Profile vs Theoretical Average
+                     </p>
+                     <span id="bench-s-diff-badge" class="text-[10px] font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 shrink-0">â€”</span>
+                   </div>
+                   <div class="flex flex-col gap-5">
+                     <div class="flex flex-col gap-2">
+                       <div class="flex justify-between text-[10px] font-mono font-bold text-emerald-400 items-baseline">
+                         <span class="tracking-widest uppercase">Actual Measured Time</span>
+                         <span id="bench-s-bar-actual-label" class="text-xs"></span>
+                       </div>
+                       <div class="w-full h-4 bg-white/5 rounded-full overflow-hidden relative">
+                         <div id="bench-s-bar-actual" class="absolute left-0 top-0 bottom-0 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(16,185,129,0.3)]" style="width: 0%; min-width: 4px"></div>
+                       </div>
+                     </div>
+                     <div class="flex flex-col gap-2">
+                       <div class="flex justify-between text-[10px] font-mono font-bold text-cyan-400 items-baseline">
+                         <span class="tracking-widest uppercase opacity-80">Theoretical Estimate Time</span>
+                         <span id="bench-s-bar-theory-label" class="text-xs opacity-80"></span>
+                       </div>
+                       <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden relative">
+                         <div id="bench-s-bar-theory" class="absolute left-0 top-0 bottom-0 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-1000 ease-out opacity-70" style="width: 0%; min-width: 4px"></div>
+                       </div>
+                     </div>
+                   </div>
+                  <div class="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-white/5">
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-emerald-500/70 font-bold uppercase tracking-widest">Best Case</p>
+                      <p id="bench-s-theory-best" class="text-emerald-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-amber-500/70 font-bold uppercase tracking-widest">Avg Case</p>
+                      <p id="bench-s-theory-avg" class="text-amber-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                    <div class="text-center bg-white/5 rounded-lg py-2">
+                      <p class="text-[8px] text-rose-500/70 font-bold uppercase tracking-widest">Worst Case</p>
+                      <p id="bench-s-theory-worst" class="text-rose-400 font-mono font-bold text-xs mt-0.5">â€”</p>
+                    </div>
+                  </div>
+                </div>
+             </div>
+
+             <!-- Full Suite Results View (Leaderboard) -->
+             <div id="bench-suite-results-view" class="hidden flex-col gap-4">
+                 <!-- Suite Summary -->
+                 <div class="flex items-center gap-2 text-sm font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-lg">fact_check</span> 
+                    <span>SUITE COMPLETED: </span>
+                    <span id="bench-suite-count" class="text-white ml-2">13</span> Algorithms Evaluated on
+                    <span id="bench-suite-n" class="text-white ml-1 font-mono">0</span> Items
+                 </div>
+
+                 <div class="bg-black/30 border border-white/5 rounded-xl overflow-hidden mt-2">
+                   <div class="grid grid-cols-12 gap-3 text-[9px] text-slate-500 font-bold uppercase tracking-wider px-5 py-3 border-b border-white/5 bg-white/5">
+                      <div class="col-span-1 hidden sm:block">Rank</div>
+                      <div class="col-span-12 sm:col-span-4">Algorithm</div>
+                      <div class="col-span-5 sm:col-span-3 text-right">Time</div>
+                      <div class="col-span-7 sm:col-span-4 pl-4 sm:pl-6">Relative Performance</div>
+                   </div>
+                   <div id="bench-suite-leaderboard" class="flex flex-col p-2">
+                      <!-- populated by js -->
+                   </div>
+                 </div>
+             </div>
+
+          </section>
+
+        </div>
+      </div><!-- /benchmark-page -->

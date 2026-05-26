@@ -1,0 +1,8 @@
+/* ============================================================
+   GAME MODE — "You Are The Algorithm" gamified UI
+   ============================================================ */
+.game-btn { background: linear-gradient(135deg, #ff006e, #00f5d4); color: white; }
+.heat-block { width: 14px; height: 14px; border-radius: 3px; transition: transform 0.2s, opacity 0.2s; }
+.heat-block:hover { transform: scale(1.2); }
+.ai-panel.active { display: block; opacity: 1; transform: scale(1); }
+.game-mode-active #vis-arena { border-color: #ff006e; box-shadow: inset 0 0 50px rgba(255,0,110,0.1); }

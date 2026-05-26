@@ -1,0 +1,93 @@
+/* ============================================================
+   PERFORMANCE MATRICES DASHBOARD — Gauges, heatmaps,
+   conflict tables, fusion lab, panel animations
+   ============================================================ */
+
+/* P-Index Circular Gauge */
+.pm-gauge-ring {
+  background: conic-gradient(
+    #d946ef var(--gauge-percent, 0%),
+    rgba(255, 255, 255, 0.05) var(--gauge-percent, 0%)
+  );
+  border-radius: 50%;
+  position: relative;
+}
+.pm-gauge-ring::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  background: #0B0F19;
+  border-radius: 50%;
+}
+.pm-gauge-ring > span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Heatmap Cells */
+.pm-heatmap-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: crosshair;
+  min-height: 8px;
+}
+.pm-heatmap-cell:hover {
+  transform: scale(1.6);
+  z-index: 10;
+  position: relative;
+  box-shadow: 0 0 8px rgba(0, 251, 251, 0.4);
+  outline: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Conflict Table */
+.pm-conflict-table td,
+#pm-conflict-tbody td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.pm-conflict-table tr:hover td,
+#pm-conflict-tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Ranking Table */
+#pm-ranking-tbody td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+#pm-ranking-tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* PM Glass variant */
+.pm-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.75rem;
+}
+
+/* PM Fusion selects */
+#pm-fusion-algo-a option,
+#pm-fusion-algo-b option {
+  background: #1a1a2e;
+  color: #e5e1e4;
+}
+
+/* Smooth panel transitions */
+.pm-panel {
+  animation: pmFadeIn 0.35s ease-out;
+}
+@keyframes pmFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Highlight selected algorithm globally */
+.active-highlight {
+  box-shadow: 0 0 12px #00ffa6 !important;
+  border-color: #00ffa6 !important;
+}

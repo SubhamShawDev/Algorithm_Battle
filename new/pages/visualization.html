@@ -1,0 +1,157 @@
+<!-- =====================  VISUALIZATION PAGE  ===================== -->
+<div id="visualization-page" class="hidden flex-col fade-transition overflow-hidden bg-[#050B14] fixed inset-0 z-[100]">
+  <!-- Vis Header -->
+  <header class="h-16 glass border-b border-white/10 px-4 sm:px-6 flex items-center justify-between z-10 flex-shrink-0 bg-background/50 backdrop-blur-xl">
+    <div class="flex items-center gap-3">
+      <button id="btn-vis-back" class="touch-target text-slate-400 hover:text-white transition-colors rounded-lg p-2 -ml-2 hover:bg-white/5" aria-label="Back">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h2 class="text-lg font-bold flex items-center gap-2 tracking-wide">
+        <span class="text-amber-500 material-symbols-outlined text-xl">bolt</span>
+        <span class="text-white">Live</span>
+        <span class="text-slate-400 font-light">Visualizer</span>
+      </h2>
+    </div>
+    <!-- Global stats (optional) -->
+    <div class="hidden sm:flex items-center gap-4 text-xs font-mono font-bold tracking-widest text-slate-500 uppercase">
+       <span>Comparisons: <span id="vis-ops" class="text-amber-400 ml-1">0</span></span>
+       <span>|</span>
+       <span>Array Size: <span id="vis-array-size" class="text-white ml-1">30</span></span>
+    </div>
+  </header>
+
+  <!-- Main Workspace (Desktop: Row, Mobile: Col) -->
+  <div class="flex-1 flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
+    
+    <!-- LEFT SIDEBAR: ControlsBox -->
+    <aside class="w-full md:w-80 flex-shrink-0 glass border-r border-white/10 flex flex-col justify-between overflow-y-auto custom-scrollbar md:h-full z-10 shadow-xl">
+      <div class="p-6 flex flex-col gap-8">
+        <!-- Algorithm Dropdown -->
+        <div class="flex flex-col gap-2 relative">
+          <label class="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">change_history</span>
+            Select Algorithm
+          </label>
+          <div class="relative">
+            <select id="vis-algo-select" class="w-full h-12 bg-[#0A101C] border border-white/10 rounded-xl px-4 text-sm font-semibold text-white appearance-none cursor-pointer focus:outline-none focus:border-amber-500/50 hover:border-white/20 transition-colors shadow-inner">
+              <option value="" disabled selected>Choose an algorithm...</option>
+              <!-- populated by JS -->
+            </select>
+            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_content</span>
+          </div>
+        </div>
+
+        <!-- Array Size Slider -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">straighten</span>
+              Array Limit
+            </label>
+            <span id="vis-size-label" class="text-xs font-mono font-bold text-white bg-white/5 px-2 py-0.5 rounded-md border border-white/10">30</span>
+          </div>
+          <input id="vis-size-slider" type="range" class="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-500" min="5" max="100" value="30">
+          <div class="flex justify-between text-[9px] font-mono text-slate-600 px-1">
+            <span>5</span>
+            <span>100</span>
+          </div>
+        </div>
+
+        <!-- Speed Slider -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">speed</span>
+              Animation Speed
+            </label>
+            <span id="vis-speed-label" class="text-[9px] font-bold text-amber-500/70 border border-amber-500/20 px-1.5 py-0.5 rounded uppercase">Speed: 50</span>
+          </div>
+          <input id="vis-speed-slider" type="range" class="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-500" min="1" max="100" value="50">
+        </div>
+
+        <!-- Algorithm Stats (Dynamically Updated) -->
+        <div id="vis-algo-info-panel" class="hidden flex-col gap-3 mt-4 glass p-4 rounded-xl border border-white/5 bg-black/20">
+          <h4 class="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-2 mb-1">
+            <span class="material-symbols-outlined text-sm">info</span>
+            Complexity
+          </h4>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 font-medium">Time (Worst)</span>
+            <span id="vis-info-worst" class="font-mono text-rose-400 font-bold">O(n²)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 font-medium">Time (Best)</span>
+            <span id="vis-info-best" class="font-mono text-emerald-400 font-bold">O(n)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 font-medium">Space</span>
+            <span id="vis-info-space" class="font-mono text-sky-400 font-bold">O(1)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="p-6 border-t border-white/10 bg-white/[0.02] flex flex-col gap-3">
+        <button id="btn-vis-start" class="w-full h-12 bg-amber-500 hover:bg-amber-400 text-[#050B14] font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)] disabled:opacity-40 disabled:cursor-not-allowed group">
+          <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">play_arrow</span>
+          START SORTING
+        </button>
+        <div class="flex items-center gap-3">
+          <button id="btn-vis-stop" class="flex-1 h-10 glass border border-white/10 hover:border-rose-500/50 hover:bg-rose-500/10 text-slate-300 hover:text-rose-400 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined text-base">stop</span>
+            STOP
+          </button>
+          <button id="btn-vis-restart" class="flex-1 h-10 glass border border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-slate-300 hover:text-cyan-400 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined text-base">replay</span>
+            RESET
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT AREA: Workspace (Chart + Code) -->
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+       <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none"></div>
+       
+       <!-- Visualization Arena -->
+       <section class="flex-1 p-4 md:p-8 flex flex-col relative z-10 min-h-[300px]">
+          <div class="flex items-center justify-between mb-4">
+             <h3 id="vis-algo-title" class="text-white font-bold text-lg flex items-center gap-2">
+               <span class="material-symbols-outlined text-amber-500 text-sm">monitoring</span>
+               Awaiting Selection
+             </h3>
+          </div>
+          <!-- The Container where bars render -->
+          <div id="vis-arena" class="flex-1 glass border border-white/5 rounded-2xl flex items-end justify-center p-6 relative overflow-hidden shadow-2xl">
+             <!-- Ambient Glow -->
+             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+             
+             <!-- Placeholder Text -->
+             <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 text-sm opacity-50">
+               <span class="material-symbols-outlined text-5xl mb-3 opacity-20 relative animate-pulse">account_tree</span>
+               Choose an algorithm from the sidebar
+             </div>
+          </div>
+       </section>
+
+       <!-- Scrollable Code Trace Window -->
+       <section id="vis-code-section" class="h-64 md:h-80 border-t border-white/10 bg-[#0A0D14]/90 backdrop-blur-md flex flex-col relative z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+          <div class="flex items-center justify-between px-6 py-2 border-b border-white/5 bg-black/20">
+             <div class="flex items-center gap-2">
+               <span class="material-symbols-outlined text-amber-500 text-sm">terminal</span>
+               <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Execution Trace</span>
+             </div>
+             <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/50"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/50"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></span>
+             </div>
+          </div>
+          <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+             <pre id="vis-code-display" class="text-[13px] font-mono leading-relaxed text-slate-400"><span class="italic text-slate-600">// No algorithm selected to trace...</span></pre>
+          </div>
+       </section>
+    </main>
+
+  </div>
+</div><!-- /visualization-page -->

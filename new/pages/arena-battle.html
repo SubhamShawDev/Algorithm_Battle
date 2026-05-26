@@ -1,0 +1,85 @@
+  <!-- =====================  BATTLE ARENA (Full Screen Multi-Compare)  ===================== -->
+  <div id="battle-arena"
+    class="hidden fixed inset-0 z-[100] flex flex-col bg-[#030810] opacity-0 transition-opacity duration-500">
+
+    <!-- Ambient background effects -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <div class="absolute top-0 left-1/4 w-[600px] h-[600px] bg-amber-500/[0.03] rounded-full blur-[120px] animate-pulse"></div>
+      <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-500/[0.03] rounded-full blur-[100px] animate-pulse" style="animation-delay:2s;"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-rose-500/[0.02] rounded-full blur-[140px]"></div>
+      <!-- Animated grid overlay -->
+      <div class="absolute inset-0 opacity-[0.02]"
+        style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
+    </div>
+
+    <!-- TOP HEADER BAR -->
+    <header class="h-16 flex items-center justify-between px-4 sm:px-8 border-b border-white/10 bg-[#0A1020]/70 backdrop-blur-2xl flex-shrink-0 z-20 relative">
+      <div class="flex items-center gap-4">
+        <button id="battle-back-btn"
+          class="touch-target flex items-center gap-2 text-slate-400 hover:text-primary transition-all hover:bg-white/5 rounded-xl px-3 py-2 cursor-pointer group">
+          <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform duration-300">arrow_back</span>
+          <span class="text-sm font-medium hidden sm:inline">Back</span>
+        </button>
+        <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <span class="material-symbols-outlined text-amber-500 text-2xl battle-icon-pulse">swords</span>
+            <div class="absolute inset-0 bg-amber-500/30 rounded-full blur-lg animate-pulse"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="battle-title-gradient text-sm sm:text-base font-black tracking-wide uppercase">Algorithm Battle Arena</span>
+            <span class="text-[9px] text-slate-500 tracking-[0.3em] uppercase font-medium">Side-by-side comparison engine</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5">
+          <span id="battle-slot-count" class="text-[10px] text-slate-400 font-bold tracking-wider">1 / 13</span>
+          <span class="text-[8px] text-slate-500 uppercase">Algorithms</span>
+        </div>
+        <div class="relative">
+          <span class="size-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+          <span class="absolute inset-0 size-2.5 rounded-full bg-amber-500/50 animate-ping"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- GLOBAL CONTROLS BAR -->
+    <div class="flex flex-wrap items-center gap-3 px-4 sm:px-8 py-3 border-b border-white/5 bg-[#060D1A]/60 backdrop-blur-xl z-10 relative">
+      <button id="battle-run-all"
+        class="battle-btn-run h-10 px-5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-[#050B14] font-black rounded-xl flex items-center gap-2 transition-all text-xs tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-[1.03] active:scale-95">
+        <span class="material-symbols-outlined text-lg">play_arrow</span>
+        Run All
+      </button>
+      <button id="battle-stop-all"
+        class="h-10 px-4 glass border border-white/10 hover:border-rose-500/50 hover:bg-rose-500/10 text-slate-300 hover:text-rose-400 font-bold text-xs rounded-xl flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-95">
+        <span class="material-symbols-outlined text-base">stop</span>
+        Stop All
+      </button>
+      <button id="battle-reset-all"
+        class="h-10 px-4 glass border border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-slate-300 hover:text-cyan-400 font-bold text-xs rounded-xl flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-95">
+        <span class="material-symbols-outlined text-base">replay</span>
+        Reset
+      </button>
+      <div class="h-7 w-px bg-white/10 hidden sm:block"></div>
+      <div class="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1.5">
+        <span class="material-symbols-outlined text-slate-500 text-sm">data_array</span>
+        <label class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Size</label>
+        <input id="battle-size" type="range" class="w-20 h-1 bg-white/10 rounded-full accent-amber-500 cursor-pointer" min="5" max="60" value="25">
+        <span id="battle-size-val" class="text-[10px] text-amber-400 font-mono w-5 text-right">25</span>
+      </div>
+      <div class="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1.5">
+        <span class="material-symbols-outlined text-slate-500 text-sm">speed</span>
+        <label class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Speed</label>
+        <input id="battle-speed" type="range" class="w-20 h-1 bg-white/10 rounded-full accent-amber-500 cursor-pointer" min="1" max="100" value="60">
+        <span id="battle-speed-val" class="text-[10px] text-amber-400 font-mono w-6 text-right">60</span>
+      </div>
+    </div>
+
+    <!-- DYNAMIC GRID OF ALGORITHM CARDS -->
+    <div id="battle-grid" class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-5 lg:p-6 z-10 relative">
+      <div id="battle-grid-inner" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 auto-rows-min">
+        <!-- Cards are dynamically inserted here by JS -->
+      </div>
+    </div>
+  </div>

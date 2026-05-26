@@ -1,0 +1,148 @@
+<!-- =====================  GAME PAGE (YOU ARE THE ALGORITHM)  ===================== -->
+<div id="game-page" class="hidden flex-1 w-full h-full flex flex-col fade-transition bg-[#050a14]">
+  
+  <!-- Game Header -->
+  <header class="flex items-center justify-between p-4 sm:p-6 border-b border-white/5 bg-black/20 backdrop-blur-md">
+    <div class="flex items-center gap-4">
+      <button id="btn-back-to-home" class="touch-target glass p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">You Are The Algorithm</h1>
+        <p class="text-xs text-secondary/80 font-mono">Gamified Strategy Engine</p>
+      </div>
+    </div>
+    
+    <!-- Top Stats Bar -->
+    <div class="flex gap-4 sm:gap-8 bg-black/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-white/5 shadow-inner">
+      <div class="flex flex-col items-center">
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Comparisons</span>
+        <span id="game-comparisons" class="text-lg font-mono text-white font-bold">0</span>
+      </div>
+      <div class="w-px bg-white/10"></div>
+      <div class="flex flex-col items-center">
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Swaps</span>
+        <span id="game-swaps" class="text-lg font-mono text-white font-bold">0</span>
+      </div>
+      <div class="w-px bg-white/10"></div>
+      <div class="flex flex-col items-center">
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Score</span>
+        <span id="game-score" class="text-lg font-mono text-emerald-400 font-bold">100</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Game Arena (Center Stage) -->
+  <div class="flex-1 p-6 flex flex-col relative items-center justify-center min-h-0">
+    
+    <!-- Dynamic Feedback text -->
+    <div id="game-feedback" class="absolute top-8 left-1/2 -translate-x-1/2 text-sm sm:text-base font-bold text-amber-400 tracking-wider uppercase drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] transition-all text-center whitespace-nowrap">
+      SELECT TWO BARS TO SWAP
+    </div>
+    
+    <!-- Array Container -->
+    <div id="game-array-container" class="flex items-end justify-center gap-2 w-full max-w-4xl h-64 sm:h-80 border-b border-white/20 pb-4 relative z-10 transition-all duration-300">
+      <!-- Bars will be injected here via JS -->
+    </div>
+
+  </div>
+
+  <!-- Bottom Utility Panel -->
+  <div class="h-64 shrink-0 bg-black/40 border-t border-white/5 p-4 sm:p-6 flex flex-col gap-4 relative z-20">
+    <div class="flex justify-between items-start gap-4 h-full max-w-7xl mx-auto w-full">
+      
+      <!-- Controls -->
+      <div class="flex flex-col gap-3 w-1/4">
+        <button id="game-btn-swap" class="game-btn w-full py-4 rounded-xl border-none flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(255,0,110,0.3)] bg-gradient-to-r from-[#ff006e] to-[#00f5d4] hover:scale-[1.02] transition-transform text-white font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined">swap_horiz</span> Swap
+        </button>
+        <button id="game-btn-compare" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/10 hover:border-white/30 text-white hover:bg-white/5 font-bold uppercase tracking-widest mt-2 transition-all">
+          <span class="material-symbols-outlined">visibility</span> Compare Only
+        </button>
+        <button id="game-btn-reset" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/5 hover:bg-white/5 text-slate-400 hover:text-white font-bold tracking-widest mt-auto transition-all">
+          <span class="material-symbols-outlined text-sm">restart_alt</span> Reset Level
+        </button>
+      </div>
+      
+      <!-- Analysis Panel -->
+      <div class="flex-1 glass rounded-2xl border border-white/10 p-5 h-full flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-base">psychology</span>
+            Real-Time Strategy Analysis
+          </h3>
+          <div class="px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20">
+            <span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Live</span>
+          </div>
+        </div>
+        
+        <div class="flex gap-8 mb-4">
+          <div class="min-w-[200px]">
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Detected Algorithm</p>
+            <p id="game-strategy-txt" class="text-xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(255,0,110,0.6)]">- - -</p>
+          </div>
+          <!-- Mini Efficiency Graph/Bar -->
+          <div class="flex-1 flex flex-col justify-center">
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2 flex justify-between">
+              <span>Sorting Efficiency</span>
+              <span id="game-eff-pct" class="text-emerald-400 font-bold">100%</span>
+            </p>
+            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+              <div id="game-eff-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-full transition-all duration-500"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-auto relative group/heatmap" id="heatmap-wrapper">
+          <div id="heatmap-trigger" class="cursor-pointer inline-block w-full">
+            <p class="text-[10px] text-slate-500 group-hover/heatmap:text-slate-300 transition-colors font-bold uppercase tracking-widest mb-2 flex justify-between items-center">
+              Decision Heatmap 📊
+              <span class="material-symbols-outlined text-[14px] text-primary animate-pulse opacity-0 group-hover/heatmap:opacity-100 transition-opacity">info</span>
+            </p>
+            <div id="game-heatmap" class="flex gap-1 overflow-x-auto pb-1 h-8 items-end pointer-events-none">
+              <!-- Heat blocks -->
+            </div>
+          </div>
+
+          <!-- AI FINGERPRINT TOOLTIP -->
+          <div id="ai-fingerprint-tooltip" class="absolute bottom-full -right-2 mb-4 w-[280px] sm:w-[320px] glass rounded-2xl border border-primary/30 p-4 sm:p-5 shadow-[0_10px_50px_rgba(0,238,255,0.2)] opacity-0 pointer-events-none transition-all duration-300 translate-y-4 z-50 bg-[#0B0F19]/95 backdrop-blur-2xl group-hover/heatmap:opacity-100 group-hover/heatmap:translate-y-0 group-hover/heatmap:pointer-events-auto">
+            <!-- Glowing accent -->
+            <div class="absolute -top-px left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+            
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">AI Fingerprint</p>
+            
+            <!-- Live Stats box -->
+            <div class="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 shadow-inner">
+              <h4 class="text-xs text-white font-bold mb-2">Live Stats</h4>
+              <div class="flex flex-col gap-1.5 text-xs">
+                 <div class="flex justify-between">
+                   <span class="text-slate-400">Score:</span>
+                   <span id="tooltip-score" class="text-emerald-400 font-bold tracking-wider">100</span>
+                 </div>
+                 <div class="flex justify-between">
+                   <span class="text-slate-400">Strategy:</span>
+                   <span id="tooltip-strategy" class="text-amber-400 font-bold tracking-wider">Optimal ⚡</span>
+                 </div>
+              </div>
+            </div>
+            
+            <!-- Decision Heatmap Matrix -->
+            <div class="mb-4">
+              <h4 class="text-[10px] text-white font-bold mb-2 flex items-center gap-1 uppercase tracking-widest">Decision Heatmap 📊</h4>
+              <div id="tooltip-heatmap-grid" class="grid grid-cols-12 gap-[2px] bg-black/60 p-2 rounded-lg border border-white/5">
+                <!-- Grid items populated by JS -->
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="flex items-start gap-2 text-[9px] text-slate-500 font-medium leading-tight">
+              <span class="material-symbols-outlined text-[12px] text-primary/70 shrink-0">sports_esports</span>
+              <span>Game Mode Activated: Analyzing your sort efficiency</span>
+              <span class="text-primary text-[10px] ml-auto shrink-0">✨</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

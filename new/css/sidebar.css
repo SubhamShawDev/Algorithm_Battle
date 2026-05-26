@@ -1,0 +1,90 @@
+/* ============================================================
+   SIDEBAR — Mobile drawer, overlay, responsive behavior
+   ============================================================ */
+
+/* On large screens the sidebar is always visible in normal flow */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: relative !important;
+    transform: translateX(0) !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+  }
+  #sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* On smaller screens the sidebar is a fixed off-canvas drawer */
+@media (max-width: 1023px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 300px;
+    max-width: 85vw;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 200;
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    /* safe-area on the left for landscape notched phones */
+    padding-left: env(safe-area-inset-left);
+    /* kill the entry animation so sidebar starts fully hidden */
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  #sidebar.is-open {
+    transform: translateX(0);
+  }
+}
+
+/* Overlay backdrop */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#sidebar-overlay.is-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ============================================================
+   MOBILE CONTROLS PANEL (speed / size sliders)
+   ============================================================ */
+#mobile-controls-panel {
+  /* Start fully collapsed; CSS-only approach: max-height transition */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+#mobile-controls-panel.is-open {
+  max-height: 140px;
+}
+
+/* ============================================================
+   SIDEBAR — Collapsible algo list & nav active states
+   ============================================================ */
+#algo-list-container {
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Active sidebar nav indicator */
+.sidebar-nav-item.active {
+  border-left-color: #00eeff;
+  background: rgba(0, 238, 255, 0.08);
+}
+
+.sidebar-nav-item {
+  transition: all 0.2s ease;
+}

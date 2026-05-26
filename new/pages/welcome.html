@@ -1,0 +1,47 @@
+<!-- =====================  WELCOME / LANDING PAGE  ===================== -->
+<div id="welcome-page" class="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden" style="background: #050a14;">
+  <!-- Animated background particles -->
+  <canvas id="welcome-particles" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+  <!-- Radial ambient glows -->
+  <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[150px] pointer-events-none animate-pulse"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-secondary/10 blur-[150px] pointer-events-none animate-pulse" style="animation-delay:1.5s;"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#22d3ee]/5 blur-[120px] pointer-events-none"></div>
+  
+  <!-- Central content -->
+  <div class="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl mx-auto">
+    <!-- Logo icon -->
+    <div class="welcome-logo mb-8 size-24 bg-gradient-to-br from-primary via-[#22d3ee] to-secondary rounded-2xl flex items-center justify-center shadow-[0_0_60px_rgba(0,238,255,0.3)] rotate-6 hover:rotate-0 transition-transform duration-500">
+      <span class="material-symbols-outlined text-5xl text-[#050a14] font-bold">query_stats</span>
+    </div>
+    
+    <!-- Welcome heading with gradient text -->
+    <h1 class="welcome-title text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6 leading-[1.1]">
+      <span class="block text-white/90">Welcome to</span>
+      <span class="block bg-gradient-to-r from-primary via-[#22d3ee] to-secondary bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(0,238,255,0.4)]">Visual Algorithms</span>
+    </h1>
+    
+    <!-- Subtext -->
+    <p class="welcome-subtitle text-slate-400 text-lg sm:text-xl max-w-xl leading-relaxed mb-10">
+      Explore, visualize, and master sorting algorithms through an immersive, interactive arena experience.
+    </p>
+    
+    <!-- Enter button -->
+    <button id="btn-enter-app" class="welcome-cta group relative px-10 py-4 bg-gradient-to-r from-primary to-[#22d3ee] text-[#050a14] font-black text-lg rounded-xl hover:brightness-110 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_40px_rgba(0,238,255,0.4)] cursor-pointer uppercase tracking-widest">
+      <span class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">rocket_launch</span>
+        Enter
+      </span>
+      <!-- Button glow pulse -->
+      <div class="absolute inset-0 rounded-xl bg-primary/20 blur-xl -z-10 animate-pulse"></div>
+    </button>
+    
+    <!-- Bottom hint -->
+    <div class="welcome-hint mt-12 flex items-center gap-2 text-slate-600 text-xs tracking-widest uppercase">
+      <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span>12+ Algorithms • Real-Time Visualization • Benchmarking Lab</span>
+    </div>
+  </div>
+  
+  <!-- Bottom decorative line -->
+  <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+</div>
