@@ -4,7 +4,7 @@ const algorithms = {
         desc: "A highly efficient sorting algorithm that uses a divide-and-conquer strategy to quickly sort items within an array. It works by selecting a 'pivot' element and partitioning the other elements into two sub-arrays.",
         best: 'O(n log n)',
         avg: 'O(n log n)',
-        worst: 'O(n)',
+        worst: 'O(n^2)',
         space: 'O(n)',
         chars: [
             { icon: 'check_circle', text: 'In-place algorithm' },
@@ -372,10 +372,13 @@ const algorithms = {
         chars: [{ icon: 'cancel', text: 'Requires O(n) memory' }, { icon: 'check_circle', text: 'Stable sort' }],
         apps: "The standard sorting algorithm used in Python, Java's Arrays.sort(), Android, and V8 (Chrome/Node.js).",
         run: async (api) => {
-            const RUN = 32;
+            await api.markLine(1);
+            const RUN = Math.min(8, Math.floor(api.arr.length / 4) || 2);
+            await api.markLine(13);
             let n = api.arr.length;
             async function insertionSort(left, right) {
                 for (let i = left + 1; i <= right; i++) {
+                    await api.markLine(17);
                     let j = i;
                     while (j > left && await api.compare(j - 1, j) > 0) {
                         await api.swap(j, j - 1);
@@ -384,6 +387,7 @@ const algorithms = {
                 }
             }
             async function merge(l, m, r) {
+                await api.markLine(25);
                 let len1 = m - l + 1, len2 = r - m;
                 let left = new Array(len1), right = new Array(len2);
                 for (let x = 0; x < len1; x++) left[x] = api.arr[l + x];
@@ -398,14 +402,27 @@ const algorithms = {
                 while (i < len1) { await api.set(k, left[i]); i++; k++; }
                 while (j < len2) { await api.set(k, right[j]); j++; k++; }
             }
-            for (let i = 0; i < n; i += RUN) await insertionSort(i, Math.min((i + RUN - 1), (n - 1)));
+            await api.markLine(16);
+            for (let i = 0; i < n; i += RUN) {
+                await api.markLine(17);
+                await insertionSort(i, Math.min((i + RUN - 1), (n - 1)));
+            }
+            await api.markLine(20);
             for (let size = RUN; size < n; size = 2 * size) {
+                await api.markLine(21);
                 for (let left = 0; left < n; left += 2 * size) {
+                    await api.markLine(22);
                     let mid = left + size - 1;
+                    await api.markLine(23);
                     let right = Math.min((left + 2 * size - 1), (n - 1));
-                    if (mid < right) await merge(left, mid, right);
+                    await api.markLine(24);
+                    if (mid < right) {
+                        await api.markLine(25);
+                        await merge(left, mid, right);
+                    }
                 }
             }
+            await api.markLine(29);
         },
         runRaw: (arr) => {
             const RUN = 32;
@@ -452,6 +469,7 @@ const algorithms = {
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Standard sort algorithm in many implementations of the C++ Standard Template Library (STL).",
         run: async (api) => {
+            await api.markLine(2);
             let n = api.arr.length;
             let depthLimit = 2 * Math.floor(Math.log2(n));
 
@@ -467,6 +485,7 @@ const algorithms = {
                 }
             }
             async function heapSort(start, end) {
+                await api.markLine(14);
                 let length = end - start + 1;
                 for (let i = Math.floor(length / 2) - 1; i >= 0; i--) await heapify(length, i, start);
                 for (let i = length - 1; i > 0; i--) {
@@ -475,6 +494,7 @@ const algorithms = {
                 }
             }
             async function partition(low, high) {
+                await api.markLine(17);
                 let i = low - 1;
                 for (let j = low; j < high; j++) {
                     if (await api.compare(j, high) <= 0) {
@@ -486,8 +506,11 @@ const algorithms = {
                 return i + 1;
             }
             async function sort(low, high, depthLimit) {
+                await api.markLine(8);
                 let size = high - low + 1;
-                if (size < 16) {
+                await api.markLine(9);
+                if (size < 8) {
+                    await api.markLine(10);
                     for (let i = low + 1; i <= high; i++) {
                         let j = i;
                         while (j > low && await api.compare(j - 1, j) > 0) {
@@ -497,14 +520,20 @@ const algorithms = {
                     }
                     return;
                 }
+                await api.markLine(13);
                 if (depthLimit === 0) {
+                    await api.markLine(14);
                     await heapSort(low, high);
                     return;
                 }
+                await api.markLine(17);
                 let pi = await partition(low, high);
+                await api.markLine(18);
                 await sort(low, pi - 1, depthLimit - 1);
+                await api.markLine(19);
                 await sort(pi + 1, high, depthLimit - 1);
             }
+            await api.markLine(3);
             await sort(0, n - 1, depthLimit);
         },
         runRaw: (arr) => {
@@ -571,16 +600,26 @@ const algorithms = {
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Used in hardware/embedded systems where memory space is tightly restricted and a simple robust algorithm is needed.",
         run: async (api) => {
+            await api.markLine(2);
             let n = api.arr.length;
+            await api.markLine(4);
             for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+                await api.markLine(5);
                 for (let i = gap; i < n; i++) {
+                    await api.markLine(6);
                     let j = i;
+                    await api.markLine(8);
                     while (j >= gap && await api.compare(j - gap, j) > 0) {
+                        await api.markLine(9);
                         await api.swap(j, j - gap);
                         j -= gap;
+                        await api.markLine(8);
                     }
+                    await api.markLine(11);
                 }
+                await api.markLine(4);
             }
+            await api.markLine(14);
         },
         runRaw: (arr) => {
             let n = arr.length;
@@ -603,42 +642,63 @@ const algorithms = {
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Used in Rust and recent Go standard libraries as the default sorting mechanism.",
         run: async (api) => {
+            await api.markLine(76);
             let n = api.arr.length;
             async function insertionSort(l, r) {
+                await api.markLine(9);
                 for (let i = l + 1; i <= r; i++) {
+                    await api.markLine(10);
                     let j = i;
+                    await api.markLine(12);
                     while (j > l && await api.compare(j - 1, j) > 0) {
+                        await api.markLine(13);
                         await api.swap(j, j - 1);
                         j--;
                     }
+                    await api.markLine(16);
                 }
             }
             async function heapify(sz, index, start) {
+                await api.markLine(21);
                 let limit = start + sz;
                 let cur = start + index;
                 let largest = cur;
                 let l = start + 2 * index + 1;
                 let r = start + 2 * index + 2;
+                await api.markLine(27);
                 if (l < limit && await api.compare(l, largest) > 0) largest = l;
+                await api.markLine(28);
                 if (r < limit && await api.compare(r, largest) > 0) largest = r;
+                await api.markLine(30);
                 if (largest !== cur) {
+                    await api.markLine(31);
                     await api.swap(cur, largest);
+                    await api.markLine(32);
                     await heapify(sz, largest - start, start);
                 }
             }
             async function heapSort(l, r) {
+                await api.markLine(37);
                 let sz = r - l + 1;
+                await api.markLine(38);
                 for (let idx = Math.floor(sz / 2) - 1; idx >= 0; idx--) await heapify(sz, idx, l);
+                await api.markLine(41);
                 for (let idx = sz - 1; idx > 0; idx--) {
+                    await api.markLine(42);
                     await api.swap(l, l + idx);
+                    await api.markLine(43);
                     await heapify(idx, 0, l);
                 }
             }
             async function sort(l, r, badAllowed) {
+                await api.markLine(83);
                 let sz = r - l + 1;
-                if (sz < 16) { await insertionSort(l, r); return; }
-                if (badAllowed === 0) { await heapSort(l, r); return; }
+                await api.markLine(84);
+                if (sz < 8) { await api.markLine(85); await insertionSort(l, r); return; }
+                await api.markLine(88);
+                if (badAllowed === 0) { await api.markLine(89); await heapSort(l, r); return; }
 
+                await api.markLine(93);
                 let mid = l + Math.floor(sz / 2);
                 if (await api.compare(l, mid) > 0) await api.swap(l, mid);
                 if (await api.compare(l, r) > 0) await api.swap(l, r);
@@ -653,11 +713,14 @@ const algorithms = {
                     if (i >= j) break;
                     await api.swap(i, j);
                 }
+                await api.markLine(67);
                 await api.swap(i, pIdx);
 
                 let lSize = i - l;
+                await api.markLine(101);
                 if (lSize < sz / 8) badAllowed--;
 
+                await api.markLine(98);
                 await sort(l, i - 1, badAllowed);
                 await sort(i + 1, r, badAllowed);
             }
@@ -733,30 +796,51 @@ const algorithms = {
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'cancel', text: 'Not stable' }],
         apps: "Used extensively in Java 7+ for sorting arrays of primitive data types.",
         run: async (api) => {
+            await api.markLine(1);
             async function sort(low, high) {
+                await api.markLine(2);
                 if (low < high) {
-                    if (await api.compare(low, high) > 0) await api.swap(low, high);
+                    await api.markLine(13);
+                    if (await api.compare(low, high) > 0) {
+                        await api.markLine(14);
+                        await api.swap(low, high);
+                    }
+                    await api.markLine(17);
                     let j = low + 1, g = high - 1, k = low + 1;
+                    await api.markLine(19);
                     while (k <= g) {
+                        await api.markLine(20);
                         if (await api.compare(k, low) < 0) {
+                            await api.markLine(21);
                             await api.swap(k, j);
                             j++;
                         } else if (await api.compare(k, high) >= 0) {
+                            await api.markLine(24);
                             while (await api.compare(g, high) > 0 && k < g) g--;
+                            await api.markLine(25);
                             await api.swap(k, g);
                             g--;
+                            await api.markLine(27);
                             if (await api.compare(k, low) < 0) {
+                                await api.markLine(28);
                                 await api.swap(k, j);
                                 j++;
                             }
                         }
+                        await api.markLine(32);
                         k++;
                     }
+                    await api.markLine(34);
                     j--; g++;
+                    await api.markLine(36);
                     await api.swap(low, j);
+                    await api.markLine(37);
                     await api.swap(high, g);
+                    await api.markLine(5);
                     await sort(low, j - 1);
+                    await api.markLine(6);
                     await sort(j + 1, g - 1);
+                    await api.markLine(7);
                     await sort(g + 1, high);
                 }
             }
@@ -802,9 +886,12 @@ const algorithms = {
         chars: [{ icon: 'check_circle', text: 'In-place algorithm' }, { icon: 'check_circle', text: 'Stable sort' }],
         apps: "Situations requiring O(1) space and stability, conceptually bridging Merge and Insertion sort capabilities.",
         run: async (api) => {
+            await api.markLine(3);
             let n = api.arr.length;
+            await api.markLine(4);
             let blockSize = Math.max(2, Math.floor(Math.sqrt(n)));
             async function insertionSort(l, r) {
+                await api.markLine(7);
                 for (let i = l + 1; i <= r; i++) {
                     let j = i;
                     while (j > l && await api.compare(j - 1, j) > 0) {
@@ -812,10 +899,41 @@ const algorithms = {
                     }
                 }
             }
+            async function merge(l, m, r) {
+                await api.markLine(14);
+                let n1 = m - l + 1, n2 = r - m;
+                let L = new Array(n1), R = new Array(n2);
+                for (let i = 0; i < n1; i++) L[i] = api.arr[l + i];
+                for (let j = 0; j < n2; j++) R[j] = api.arr[m + 1 + j];
+                let i = 0, j = 0, k = l;
+                while (i < n1 && j < n2) {
+                    api.ops++; api.updateOps();
+                    api.bars[k].classList.add('bg-white'); await api.sleep(); api.bars[k].classList.remove('bg-white');
+                    if (L[i] <= R[j]) { await api.set(k, L[i]); i++; }
+                    else { await api.set(k, R[j]); j++; }
+                    k++;
+                }
+                while (i < n1) { await api.set(k, L[i]); i++; k++; }
+                while (j < n2) { await api.set(k, R[j]); j++; k++; }
+            }
+            await api.markLine(6);
             for (let i = 0; i < n; i += blockSize) {
+                await api.markLine(7);
                 await insertionSort(i, Math.min(i + blockSize - 1, n - 1));
             }
-            await insertionSort(0, n - 1);
+            await api.markLine(10);
+            for (let size = blockSize; size < n; size *= 2) {
+                await api.markLine(11);
+                for (let left = 0; left < n; left += 2 * size) {
+                    await api.markLine(12);
+                    let mid = Math.min(left + size - 1, n - 1);
+                    await api.markLine(13);
+                    let right = Math.min(left + 2 * size - 1, n - 1);
+                    await api.markLine(14);
+                    if (mid < right) await merge(left, mid, right);
+                }
+            }
+            await api.markLine(17);
         },
         runRaw: (arr) => {
             let n = arr.length;
@@ -831,10 +949,30 @@ const algorithms = {
                     arr[j + 1] = key;
                 }
             }
+            function merge(l, m, r) {
+                let len1 = m - l + 1, len2 = r - m;
+                let left = new Array(len1), right = new Array(len2);
+                for (let i = 0; i < len1; i++) left[i] = arr[l + i];
+                for (let i = 0; i < len2; i++) right[i] = arr[m + 1 + i];
+                let i = 0, j = 0, k = l;
+                while (i < len1 && j < len2) {
+                    if (left[i] <= right[j]) { arr[k] = left[i]; i++; }
+                    else { arr[k] = right[j]; j++; }
+                    k++;
+                }
+                while (i < len1) { arr[k] = left[i]; i++; k++; }
+                while (j < len2) { arr[k] = right[j]; j++; k++; }
+            }
             for (let i = 0; i < n; i += blockSize) {
                 insertionSort(i, Math.min(i + blockSize - 1, n - 1));
             }
-            insertionSort(0, n - 1);
+            for (let size = blockSize; size < n; size *= 2) {
+                for (let left = 0; left < n; left += 2 * size) {
+                    let mid = Math.min(left + size - 1, n - 1);
+                    let right = Math.min(left + 2 * size - 1, n - 1);
+                    if (mid < right) merge(left, mid, right);
+                }
+            }
         }
     },
     'dual-fusion-sort': {
@@ -844,13 +982,19 @@ const algorithms = {
         chars: [{ icon: 'cancel', text: 'Requires some extra space' }, { icon: 'check_circle', text: 'Stable sort' }],
         apps: "Highly specialized edge-case environments focused on cache performance bridging.",
         run: async (api) => {
+            await api.markLine(1);
             let n = api.arr.length;
             async function sort(l, r) {
+                await api.markLine(3);
                 if (l >= r) return;
+                await api.markLine(9);
                 let mid = l + Math.floor((r - l) / 2);
+                await api.markLine(10);
                 await sort(l, mid);
+                await api.markLine(11);
                 await sort(mid + 1, r);
 
+                await api.markLine(13);
                 let end_low = mid, start_high = mid + 1;
                 while (l <= end_low && start_high <= r) {
                     if (await api.compare(l, start_high) <= 0) {
@@ -872,18 +1016,19 @@ const algorithms = {
                 sort(l, mid);
                 sort(mid + 1, r);
 
-                let end_low = mid, start_high = mid + 1;
-                while (l <= end_low && start_high <= r) {
-                    if (arr[l] <= arr[start_high]) {
-                        l++;
-                    } else {
-                        let valueIdx = start_high;
-                        let val = arr[valueIdx];
-                        for (let i = valueIdx; i > l; i--) arr[i] = arr[i - 1];
-                        arr[l] = val;
-                        l++; end_low++; start_high++;
-                    }
+                // Buffer-based dual-direction merge for O(n) merge step
+                let len1 = mid - l + 1, len2 = r - mid;
+                let left = new Array(len1), right = new Array(len2);
+                for (let i = 0; i < len1; i++) left[i] = arr[l + i];
+                for (let i = 0; i < len2; i++) right[i] = arr[mid + 1 + i];
+                let i = 0, j = 0, k = l;
+                while (i < len1 && j < len2) {
+                    if (left[i] <= right[j]) { arr[k] = left[i]; i++; }
+                    else { arr[k] = right[j]; j++; }
+                    k++;
                 }
+                while (i < len1) { arr[k] = left[i]; i++; k++; }
+                while (j < len2) { arr[k] = right[j]; j++; k++; }
             }
             sort(0, n - 1);
         }
@@ -896,6 +1041,9 @@ class RawSortAPI {
         this.arr = [...arr];
         this.comparisons = 0;
         this.swaps = 0;
+        // Stub bars so algorithms that directly access api.bars[k] don't crash
+        const noopEl = { classList: { add(){}, remove(){} }, style: {} };
+        this.bars = new Proxy([], { get: (t, p) => noopEl });
     }
     async compare(i, j) { this.comparisons++; return this.arr[i] - this.arr[j]; }
     async swap(i, j) {
@@ -906,6 +1054,8 @@ class RawSortAPI {
     }
     async set(i, val) { this.swaps++; this.arr[i] = val; }
     async sleep() { return; }
+    async markLine() { return; }
+    updateOps() { return; }
 }
 
 let currentModalAlgoId = null;
@@ -921,22 +1071,22 @@ function computeTheoretical(n, complexityStr) {
     if (!n || n <= 0) return 'â€”';
     let ops = 0;
     const s = complexityStr.replace(/\s/g, '');
-    if (s === 'O(nlogn)' || s === 'O(n log n)') {
-        ops = n * Math.log2(n);
-    } else if (s === 'O(n)' || s === 'O(n^2)') {
-        ops = n * n;
+    if (s === 'O(1)') {
+        ops = 1;
+    } else if (s === 'O(logn)') {
+        ops = Math.log2(n);
     } else if (s === 'O(n)') {
         ops = n;
-    } else if (s === 'O(logn)' || s === 'O(log n)') {
-        ops = Math.log2(n);
-    } else if (s === 'O(1)') {
-        ops = 1;
+    } else if (s === 'O(nlogn)') {
+        ops = n * Math.log2(n);
+    } else if (s === 'O(n^2)' || s === 'O(n2)') {
+        ops = n * n;
     } else if (s === 'O(n/2)') {
         ops = (n * n) / 2;
     } else {
-        // Try to parse generically
-        if (s.includes('n')) ops = n * n;
-        else if (s.includes('nlogn') || s.includes('n log n')) ops = n * Math.log2(n);
+        // Generic fallback - check from most specific to least
+        if (s.includes('nlogn') || s.includes('nlog')) ops = n * Math.log2(n);
+        else if (s.includes('n^2') || s.includes('n2')) ops = n * n;
         else if (s.includes('n')) ops = n;
         else return complexityStr;
     }
@@ -961,14 +1111,14 @@ function displayTimeInUnit(ms, unit) {
 function computeTheoreticalOps(n, complexityStr) {
     if (!n || n <= 0) return 0;
     const s = complexityStr.replace(/\s/g, '');
-    if (s === 'O(nlogn)' || s === 'O(nlog n)') return n * Math.log2(n);
-    if (s === 'O(n)' || s === 'O(n^2)') return n * n;
-    if (s === 'O(n)') return n;
-    if (s === 'O(logn)' || s === 'O(logn)') return Math.log2(n);
     if (s === 'O(1)') return 1;
-    // generic fallbacks
-    if (s.includes('n') || s.includes('n^2')) return n * n;
+    if (s === 'O(logn)') return Math.log2(n);
+    if (s === 'O(n)') return n;
+    if (s === 'O(nlogn)') return n * Math.log2(n);
+    if (s === 'O(n^2)' || s === 'O(n2)') return n * n;
+    // Generic fallbacks - check from most specific to least
     if (s.includes('nlogn') || s.includes('nlog')) return n * Math.log2(n);
+    if (s.includes('n^2') || s.includes('n2')) return n * n;
     if (s.includes('n')) return n;
     return n;
 }

@@ -8,26 +8,39 @@
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <div>
-        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">You Are The Algorithm</h1>
-        <p class="text-xs text-secondary/80 font-mono">Gamified Strategy Engine</p>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight uppercase flex items-center gap-2">
+          <span class="material-symbols-outlined text-2xl text-amber-500">sports_esports</span>
+          You Are The Algorithm
+        </h1>
+        <p class="text-xs text-secondary/80 font-mono">Sort the array manually — prove your strategy!</p>
       </div>
     </div>
     
     <!-- Top Stats Bar -->
-    <div class="flex gap-4 sm:gap-8 bg-black/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-white/5 shadow-inner">
+    <div class="flex gap-3 sm:gap-6 bg-black/40 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-white/5 shadow-inner">
       <div class="flex flex-col items-center">
-        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Comparisons</span>
-        <span id="game-comparisons" class="text-lg font-mono text-white font-bold">0</span>
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Timer</span>
+        <span id="game-timer" class="text-lg font-mono text-white font-bold move-counter">0:00</span>
+      </div>
+      <div class="w-px bg-white/10"></div>
+      <div class="flex flex-col items-center">
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Moves</span>
+        <span id="game-moves" class="text-lg font-mono text-white font-bold move-counter">0</span>
+      </div>
+      <div class="w-px bg-white/10"></div>
+      <div class="flex flex-col items-center">
+        <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Compares</span>
+        <span id="game-comparisons" class="text-lg font-mono text-white font-bold move-counter">0</span>
       </div>
       <div class="w-px bg-white/10"></div>
       <div class="flex flex-col items-center">
         <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Swaps</span>
-        <span id="game-swaps" class="text-lg font-mono text-white font-bold">0</span>
+        <span id="game-swaps" class="text-lg font-mono text-cyan-400 font-bold move-counter">0</span>
       </div>
       <div class="w-px bg-white/10"></div>
       <div class="flex flex-col items-center">
         <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Score</span>
-        <span id="game-score" class="text-lg font-mono text-emerald-400 font-bold">100</span>
+        <span id="game-score" class="text-lg font-mono text-emerald-400 font-bold move-counter">0</span>
       </div>
     </div>
   </header>
@@ -36,15 +49,26 @@
   <div class="flex-1 p-6 flex flex-col relative items-center justify-center min-h-0">
     
     <!-- Dynamic Feedback text -->
-    <div id="game-feedback" class="absolute top-8 left-1/2 -translate-x-1/2 text-sm sm:text-base font-bold text-amber-400 tracking-wider uppercase drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] transition-all text-center whitespace-nowrap">
-      SELECT TWO BARS TO SWAP
+    <div id="game-feedback" class="game-feedback-text absolute top-6 left-1/2 -translate-x-1/2 text-sm sm:text-base font-bold text-amber-400 tracking-wider uppercase drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] text-center whitespace-nowrap z-20">
+      SELECT TWO BARS, THEN SWAP OR COMPARE
     </div>
     
+    <!-- Difficulty Selector -->
+    <div class="absolute top-6 right-6 flex gap-2 z-20">
+      <span id="game-level-label" class="text-[10px] uppercase tracking-widest text-slate-600 font-bold self-center mr-2">Medium</span>
+      <button class="diff-btn" data-diff="easy">Easy</button>
+      <button class="diff-btn active" data-diff="medium">Medium</button>
+      <button class="diff-btn" data-diff="hard">Hard</button>
+      <button class="diff-btn" data-diff="expert">Expert</button>
+    </div>
+
     <!-- Array Container -->
     <div id="game-array-container" class="flex items-end justify-center gap-2 w-full max-w-4xl h-64 sm:h-80 border-b border-white/20 pb-4 relative z-10 transition-all duration-300">
       <!-- Bars will be injected here via JS -->
     </div>
 
+    <!-- Ambient glow behind bars -->
+    <div class="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-indigo-500/[0.04] rounded-full blur-[100px] pointer-events-none"></div>
   </div>
 
   <!-- Bottom Utility Panel -->
@@ -53,14 +77,14 @@
       
       <!-- Controls -->
       <div class="flex flex-col gap-3 w-1/4">
-        <button id="game-btn-swap" class="game-btn w-full py-4 rounded-xl border-none flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(255,0,110,0.3)] bg-gradient-to-r from-[#ff006e] to-[#00f5d4] hover:scale-[1.02] transition-transform text-white font-bold uppercase tracking-widest">
+        <button id="game-btn-swap" class="game-btn-primary w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm">
           <span class="material-symbols-outlined">swap_horiz</span> Swap
         </button>
-        <button id="game-btn-compare" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/10 hover:border-white/30 text-white hover:bg-white/5 font-bold uppercase tracking-widest mt-2 transition-all">
-          <span class="material-symbols-outlined">visibility</span> Compare Only
+        <button id="game-btn-compare" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/10 hover:border-amber-500/30 hover:bg-amber-500/5 text-white hover:text-amber-400 font-bold uppercase tracking-widest text-xs transition-all">
+          <span class="material-symbols-outlined">visibility</span> Compare
         </button>
-        <button id="game-btn-reset" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/5 hover:bg-white/5 text-slate-400 hover:text-white font-bold tracking-widest mt-auto transition-all">
-          <span class="material-symbols-outlined text-sm">restart_alt</span> Reset Level
+        <button id="game-btn-reset" class="glass w-full py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/5 hover:bg-white/5 text-slate-400 hover:text-white font-bold tracking-widest text-xs mt-auto transition-all">
+          <span class="material-symbols-outlined text-sm">restart_alt</span> New Game
         </button>
       </div>
       
@@ -81,14 +105,14 @@
             <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Detected Algorithm</p>
             <p id="game-strategy-txt" class="text-xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(255,0,110,0.6)]">- - -</p>
           </div>
-          <!-- Mini Efficiency Graph/Bar -->
+          <!-- Efficiency Bar (Inversion-based) -->
           <div class="flex-1 flex flex-col justify-center">
             <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2 flex justify-between">
-              <span>Sorting Efficiency</span>
-              <span id="game-eff-pct" class="text-emerald-400 font-bold">100%</span>
+              <span>Sorting Progress</span>
+              <span id="game-eff-pct" class="text-emerald-400 font-bold">0%</span>
             </p>
-            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-              <div id="game-eff-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-full transition-all duration-500"></div>
+            <div class="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div id="game-eff-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-0 transition-all duration-500 rounded-full"></div>
             </div>
           </div>
         </div>
@@ -117,11 +141,11 @@
               <div class="flex flex-col gap-1.5 text-xs">
                  <div class="flex justify-between">
                    <span class="text-slate-400">Score:</span>
-                   <span id="tooltip-score" class="text-emerald-400 font-bold tracking-wider">100</span>
+                   <span id="tooltip-score" class="text-emerald-400 font-bold tracking-wider">0</span>
                  </div>
                  <div class="flex justify-between">
                    <span class="text-slate-400">Strategy:</span>
-                   <span id="tooltip-strategy" class="text-amber-400 font-bold tracking-wider">Optimal ⚡</span>
+                   <span id="tooltip-strategy" class="text-amber-400 font-bold tracking-wider">- - - ⚡</span>
                  </div>
               </div>
             </div>
@@ -145,4 +169,5 @@
       </div>
     </div>
   </div>
+
 </div>

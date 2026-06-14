@@ -25,6 +25,8 @@
         maxSlots: 13,
         finishOrder: [],      // tracks completion order for rank badges
         sharedArray: null,    // same array for fair comparison
+        isPaused: false,
+        resolvers: [],
     };
 
     /* ─── Helpers ─── */
@@ -69,12 +71,18 @@
         async sleep() {
             if (this.aborted) throw new Error("Aborted");
             await new Promise(r => setTimeout(r, Math.max(battleDelay(), 2)));
+            while (BATTLE.isPaused) {
+                await new Promise(r => BATTLE.resolvers.push(r));
+                if (this.aborted) throw new Error("Aborted");
+            }
         }
 
         async compare(i, j) {
             this.ops++; this.updateOps(); this.updateTime();
             this.bars[i].style.background = BCOLORS.compare;
             this.bars[j].style.background = BCOLORS.compare;
+            this.bars[i].style.transform = 'scaleY(1.04)';
+            this.bars[j].style.transform = 'scaleY(1.04)';
             this.bars[i].classList.add('dvis-comparing');
             this.bars[j].classList.add('dvis-comparing');
             await this.sleep();
@@ -82,6 +90,8 @@
             this.bars[j].classList.remove('dvis-comparing');
             this.bars[i].style.background = this.slot.barColor;
             this.bars[j].style.background = this.slot.barColor;
+            this.bars[i].style.transform = '';
+            this.bars[j].style.transform = '';
             return this.arr[i] - this.arr[j];
         }
 
@@ -92,6 +102,8 @@
             this.bars[j].style.height = `${this.arr[j]}%`;
             this.bars[i].style.background = BCOLORS.swap;
             this.bars[j].style.background = BCOLORS.swap;
+            this.bars[i].style.transform = 'scaleY(1.08)';
+            this.bars[j].style.transform = 'scaleY(1.08)';
             this.bars[i].classList.add('dvis-swapping');
             this.bars[j].classList.add('dvis-swapping');
             await this.sleep();
@@ -99,6 +111,8 @@
             this.bars[j].classList.remove('dvis-swapping');
             this.bars[i].style.background = this.slot.barColor;
             this.bars[j].style.background = this.slot.barColor;
+            this.bars[i].style.transform = '';
+            this.bars[j].style.transform = '';
         }
 
         async set(i, val) {
@@ -106,10 +120,12 @@
             this.arr[i] = val;
             this.bars[i].style.height = `${val}%`;
             this.bars[i].style.background = BCOLORS.set;
+            this.bars[i].style.transform = 'scaleY(1.06)';
             this.bars[i].classList.add('dvis-setting');
             await this.sleep();
             this.bars[i].classList.remove('dvis-setting');
             this.bars[i].style.background = this.slot.barColor;
+            this.bars[i].style.transform = '';
         }
 
         async markLine() {
@@ -140,7 +156,7 @@
         slot.array.forEach(val => {
             const bar = document.createElement('div');
             bar.className = 'b-bar flex-1 rounded-t-sm';
-            bar.style.cssText = `height:${val}%;background:${accent};margin:0 ${gap};transition:height 60ms ease,background 80ms ease;opacity:0.85;`;
+            bar.style.cssText = `height:${val}%;background:${accent};margin:0 ${gap};transition:height 60ms ease,background 80ms ease,transform 80ms ease,box-shadow 0.15s ease;`;
             arena.appendChild(bar);
             slot.bars.push(bar);
         });
@@ -355,17 +371,11 @@
                 const rank = BATTLE.finishOrder.indexOf(slot.index) + 1;
                 const elapsed = (performance.now() - slot.api.startTime).toFixed(0);
 
-                // Celebration: sweep bars green
-                const accent = ACCENT_COLORS[slot.index % ACCENT_COLORS.length];
+                // Celebration: persistent green sweep
                 slot.bars.forEach((bar, i) => {
                     setTimeout(() => {
                         bar.style.background = BCOLORS.done;
-                        bar.style.filter = 'brightness(1.4)';
-                        setTimeout(() => {
-                            bar.style.background = accent;
-                            bar.style.filter = '';
-                            bar.style.opacity = '0.9';
-                        }, 500);
+                        bar.style.boxShadow = `0 0 10px ${BCOLORS.done}60`;
                     }, i * 12);
                 });
 
@@ -411,6 +421,9 @@
 
     /* ─── Stop / Reset ─── */
     function stopAll() {
+        BATTLE.isPaused = false;
+        BATTLE.resolvers.forEach(r => r());
+        BATTLE.resolvers = [];
         BATTLE.slots.forEach(slot => {
             if (slot.api) slot.api.aborted = true;
             slot.isPlaying = false;
@@ -422,6 +435,49 @@
                 status.className = 'text-[9px] text-slate-500 font-mono uppercase tracking-wider';
             }
         });
+        // Update pause button
+        const pauseBtn = document.getElementById('battle-pause-all');
+        if (pauseBtn) {
+            pauseBtn.innerHTML = '<span class="material-symbols-outlined text-base">pause</span>Pause';
+        }
+    }
+
+    function pauseAll() {
+        if (!BATTLE.slots.some(s => s.isPlaying)) return;
+        const pauseBtn = document.getElementById('battle-pause-all');
+        if (BATTLE.isPaused) {
+            // Resume
+            BATTLE.isPaused = false;
+            BATTLE.resolvers.forEach(r => r());
+            BATTLE.resolvers = [];
+            if (pauseBtn) {
+                pauseBtn.innerHTML = '<span class="material-symbols-outlined text-base">pause</span>Pause';
+            }
+            BATTLE.slots.forEach(slot => {
+                if (slot.isPlaying) {
+                    const status = document.getElementById('battle-status-' + slot.index);
+                    if (status) {
+                        status.textContent = 'SORTING\u2026';
+                        status.className = 'text-[9px] text-amber-400 font-mono uppercase tracking-wider battle-status-sorting';
+                    }
+                }
+            });
+        } else {
+            // Pause
+            BATTLE.isPaused = true;
+            if (pauseBtn) {
+                pauseBtn.innerHTML = '<span class="material-symbols-outlined text-base">play_arrow</span>Resume';
+            }
+            BATTLE.slots.forEach(slot => {
+                if (slot.isPlaying) {
+                    const status = document.getElementById('battle-status-' + slot.index);
+                    if (status) {
+                        status.textContent = 'PAUSED';
+                        status.className = 'text-[9px] text-sky-400 font-mono uppercase tracking-wider';
+                    }
+                }
+            });
+        }
     }
 
     function resetAll() {
@@ -470,7 +526,7 @@
         setTimeout(() => {
             arena.classList.add('hidden');
             if (appShell) appShell.classList.remove('hidden');
-            const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page', 'game-page'];
+            const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
             allPIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -499,6 +555,9 @@
         if (runAllBtn)   runAllBtn.addEventListener('click', runAll);
         if (stopAllBtn)  stopAllBtn.addEventListener('click', stopAll);
         if (resetAllBtn) resetAllBtn.addEventListener('click', resetAll);
+
+        const pauseBtn = document.getElementById('battle-pause-all');
+        if (pauseBtn) pauseBtn.addEventListener('click', pauseAll);
 
         if (sizeSlider) sizeSlider.addEventListener('input', () => {
             if (sizeVal) sizeVal.textContent = sizeSlider.value;

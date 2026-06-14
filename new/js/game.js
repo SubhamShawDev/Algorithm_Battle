@@ -1,241 +1,101 @@
-/* STITCH DESIGNED GAMIFIED LEARNING FEATURE */
-(function() {
-  let isGameMode = false;
-  let score = 0;
-  let heatmapData = [];
-  let moveLogGame = [];
-  let selectedIndices = [];
-  let compCount = 0;
-  let swapCount = 0;
-  
-  window.toggleGameMode = function() {
-    isGameMode = !isGameMode;
-    const aiPanel = document.getElementById('aiPanel');
-    
-    if (isGameMode) {
-      if(aiPanel) {
-        aiPanel.classList.remove('hidden');
-        // trigger reflow
-        void aiPanel.offsetWidth;
-        aiPanel.classList.add('opacity-100');
-      }
-      
-      // Auto-navigate to arena if not there
-      const btnGoArena = document.getElementById('btn-go-arena');
-      if (btnGoArena) btnGoArena.click();
+/* ============================================================
+   GAME ENGINE — "You Are The Algorithm" 
+   Premium Gamified Sorting Experience
+   ============================================================ */
+(function () {
+  'use strict';
 
-      score = 0;
-      compCount = 0;
-      swapCount = 0;
-      heatmapData = [];
-      moveLogGame = [];
-      selectedIndices = [];
-      document.getElementById('score').innerText = '0';
-      document.getElementById('strategy').innerText = 'UNKNOWN';
-      document.getElementById('feedback').innerText = 'Game Mode Active! Select two bars to swap.';
-      
-      updateHeatmapGame();
-    } else {
-      if(aiPanel) {
-        aiPanel.classList.remove('opacity-100');
-        setTimeout(() => aiPanel.classList.add('hidden'), 300);
-      }
-      selectedIndices = [];
-      
-      // Clear visual selections from bars
-      document.querySelectorAll('.bar, [style*="height"]').forEach(b => b.style.boxShadow = '');
-    }
+  const pageGame = document.getElementById('game-page');
+  if (!pageGame) return;
+
+  // ─── Constants ───
+  const DIFFICULTIES = {
+    easy:   { bars: 6,  label: 'Easy',   multiplier: 1,   color: '#4ade80' },
+    medium: { bars: 10, label: 'Medium', multiplier: 1.5, color: '#fbbf24' },
+    hard:   { bars: 16, label: 'Hard',   multiplier: 2.5, color: '#f87171' },
+    expert: { bars: 24, label: 'Expert', multiplier: 4,   color: '#a78bfa' },
   };
 
-  // Close button binding
-  setTimeout(() => {
-    const cb = document.getElementById('close-game-btn');
-    if (cb) cb.addEventListener('click', () => { if(isGameMode) window.toggleGameMode(); });
-  }, 1000);
-
-  // Bind the Hero Button explicitly
-  setTimeout(() => {
-    const heroBtn = document.getElementById('btn-hero-gameMode');
-    if(heroBtn) heroBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if(!isGameMode) window.toggleGameMode();
-    });
-  }, 1000);
-
-  // Catch clicks globally for the game
-  document.addEventListener('click', (e) => {
-    if (!isGameMode) return;
-    
-    const bar = e.target.closest('.bar') || e.target.closest('[style*="height"]');
-    if (!bar) return;
-    
-    const container = bar.parentElement;
-    if (!container || (!container.id.includes('array') && !container.id.includes('vis'))) return;
-
-    const barsList = Array.from(container.children);
-    const index = barsList.indexOf(bar);
-    
-    if (index === -1) return;
-    
-    // Selection logic
-    if (selectedIndices.includes(index)) {
-      selectedIndices = selectedIndices.filter(i => i !== index);
-      bar.style.boxShadow = ''; // deselect
-    } else {
-      if (selectedIndices.length < 2) {
-        selectedIndices.push(index);
-        bar.style.boxShadow = '0 0 15px #00f5d4, inset 0 0 10px #00f5d4';
-      }
-    }
-    
-    // Compare & Swap logic
-    if (selectedIndices.length === 2) {
-      document.getElementById('feedback').innerText = 'Analyzing Neural Pathway...';
-      const idx1 = selectedIndices[0];
-      const idx2 = selectedIndices[1];
-      
-      compCount++;
-      swapCount++;
-      
-      setTimeout(() => {
-        let diff = Math.abs(idx1 - idx2);
-        let moveType = diff === 1 ? 'bubble' : (diff > 1 && diff < 5 ? 'insertion' : 'selection');
-        moveLogGame.push(moveType);
-        
-        let points = 0;
-        let cHex = "#ef476f"; 
-        if (moveType === 'bubble') { 
-          points = 10; cHex = "#00f5d4"; 
-        } else if (moveType === 'insertion') {
-          points = 25; cHex = "#ffb703"; 
-        } else {
-          points = 40; cHex = "#f72585"; 
-        }
-        
-        heatmapData.push(cHex);
-        score += points;
-        
-        let strategyStr = "MIXED";
-        let bCount = moveLogGame.filter(m=>m==='bubble').length;
-        let iCount = moveLogGame.filter(m=>m==='insertion').length;
-        let sCount = moveLogGame.filter(m=>m==='selection').length;
-        let maxCount = Math.max(bCount, iCount, sCount);
-        if(bCount === maxCount && bCount > 0) strategyStr = "BUBBLE SORT ??";
-        else if(iCount === maxCount) strategyStr = "INSERTION SORT ?";
-        else if(sCount === maxCount) strategyStr = "QUICK/SELECT ?";
-        
-        document.getElementById('strategy').innerText = strategyStr;
-        document.getElementById('strategy').style.color = cHex;
-        document.getElementById('strategy').style.textShadow = '0 10px ' + cHex;
-        
-        // Count animation logic
-        let currentScore = parseInt(document.getElementById('score').innerText);
-        animateValue("score", currentScore, score, 500);
-
-        document.getElementById('feedback').innerText = (points > 20 ? 'Optimal Meta! +' : 'Move logged. +') + points + ' XP';
-        
-        updateHeatmapGame();
-        
-        const b1 = barsList[idx1];
-        const b2 = barsList[idx2];
-        const inner1 = b1.innerHTML;
-        const inner2 = b2.innerHTML;
-        const h1 = b1.style.height;
-        const h2 = b2.style.height;
-        
-        b1.style.height = h2;
-        b1.innerHTML = inner2;
-        b2.style.height = h1;
-        b2.innerHTML = inner1;
-        
-        b1.style.boxShadow = '';
-        b2.style.boxShadow = '';
-        selectedIndices = [];
-      }, 300);
-    }
-  });
-
-  function updateHeatmapGame() {
-    let container = document.getElementById("heatmap");
-    if (!container) return;
-    container.innerHTML = "";
-    heatmapData.forEach(colorHex => {
-      let block = document.createElement("div");
-      block.className = "w-[12px] h-[12px] rounded-sm transition-transform duration-300 transform scale-0 animate-scale-in";
-      block.style.backgroundColor = colorHex;
-      block.style.boxShadow = '0 8px ' + colorHex;
-      // Animate block appearance
-      setTimeout(()=> { block.classList.remove('scale-0'); block.classList.add('scale-100'); }, 10);
-      container.appendChild(block);
-    });
-  }
-
-  function animateValue(id, start, end, duration) {
-    if (start === end) return;
-    var range = end - start;
-    var current = start;
-    var increment = end > start ? 1 : -1;
-    var stepTime = Math.abs(Math.floor(duration / range));
-    var obj = document.getElementById(id);
-    var timer = setInterval(function() {
-        current += increment;
-        obj.innerHTML = current;
-        if (current == end) {
-            clearInterval(timer);
-        }
-    }, stepTime);
-  }
-})();
-
-// ==========================================
-// GAME PAGE ENGINE (YOU ARE THE ALGORITHM)
-// ==========================================
-(function() {
-  const pageHome = document.getElementById('home-page');
-  const pageGame = document.getElementById('game-page');
-  const btnHero = document.getElementById('btn-hero-gameMode');
-  const btnBack = document.getElementById('btn-back-to-home');
-  
-  if (!pageGame) return; // Prevent crashes if HTML is missing
-  
-  // State
-  let isGameActive = false;
+  // ─── State ───
   let gameArray = [];
   let selectedIndices = [];
-  let numBars = 10;
-  
-  let stats = { compares: 0, swaps: 0, score: 100 };
-  let moveHistory = []; // Tracks actions
-  let heatmapData = []; // Heatmap colors
-  
-  // Navigation
-  if (btnHero) {
-    btnHero.addEventListener('click', () => {
-      // Hide all top level pages, show game page
-      document.querySelectorAll('.flex-1 > div[id$="-page"]').forEach(p => {
-        if (!p.id.includes('game-page')) p.classList.add('hidden');
-      });
-      pageGame.classList.remove('hidden');
-      pageGame.classList.add('flex');
-      isGameActive = true;
-      initGame();
+  let isGameActive = false;
+  let isAnimating = false;
+  let difficulty = 'medium';
+  let initialInversions = 0;
+
+  let stats = {
+    compares: 0,
+    swaps: 0,
+    score: 0,
+    goodSwaps: 0,
+    badSwaps: 0,
+  };
+
+  let moveHistory = [];
+  let heatmapData = [];
+  let startTime = 0;
+  let timerInterval = null;
+  let isVictory = false;
+
+  // ─── DOM Cache ───
+  const DOM = {};
+  function cacheDOM() {
+    DOM.container = document.getElementById('game-array-container');
+    DOM.comparisons = document.getElementById('game-comparisons');
+    DOM.swaps = document.getElementById('game-swaps');
+    DOM.score = document.getElementById('game-score');
+    DOM.feedback = document.getElementById('game-feedback');
+    DOM.strategy = document.getElementById('game-strategy-txt');
+    DOM.effBar = document.getElementById('game-eff-bar');
+    DOM.effPct = document.getElementById('game-eff-pct');
+    DOM.heatmap = document.getElementById('game-heatmap');
+    DOM.tooltipScore = document.getElementById('tooltip-score');
+    DOM.tooltipStrategy = document.getElementById('tooltip-strategy');
+    DOM.tooltipGrid = document.getElementById('tooltip-heatmap-grid');
+    DOM.timer = document.getElementById('game-timer');
+    DOM.moves = document.getElementById('game-moves');
+    DOM.level = document.getElementById('game-level-label');
+  }
+
+  // ─── Navigation ───
+  const btnHero = document.getElementById('btn-hero-gameMode');
+  const btnBack = document.getElementById('btn-back-to-home');
+  const btnNavGame = document.getElementById('btn-nav-game');
+
+  function showGamePage() {
+    const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
+    allPIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === 'game-page') {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      } else {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      }
     });
   }
 
-  // Sidebar "Fun with Sorting" button
-  const btnNavGame = document.getElementById('btn-nav-game');
-  if (btnNavGame) {
-    btnNavGame.addEventListener('click', () => {
+  if (btnHero) {
+    btnHero.addEventListener('click', () => {
+      showGamePage();
       isGameActive = true;
-      // Give DOM a tick to ensure the page is visible before rendering bars
       setTimeout(() => initGame(), 50);
     });
   }
-  
+
+  if (btnNavGame) {
+    btnNavGame.addEventListener('click', () => {
+      isGameActive = true;
+      setTimeout(() => initGame(), 50);
+    });
+  }
+
   if (btnBack) {
     btnBack.addEventListener('click', () => {
-      // Hide all pages, show home
-      const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page', 'game-page'];
+      const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
       allPIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -248,54 +108,127 @@
         }
       });
       isGameActive = false;
-      // Reset sidebar active state to Home
+      clearInterval(timerInterval);
       const homeBtn = document.getElementById('btn-home');
       if (homeBtn) homeBtn.click();
     });
   }
-  
-  // Game Logic
+
+  // ─── Difficulty Buttons ───
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.diff-btn');
+    if (!btn || !btn.dataset.diff) return;
+    difficulty = btn.dataset.diff;
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    initGame();
+  });
+
+  // ─── Action Buttons ───
+  const btnSwap = document.getElementById('game-btn-swap');
+  const btnComp = document.getElementById('game-btn-compare');
+  const btnReset = document.getElementById('game-btn-reset');
+
+  if (btnSwap) btnSwap.addEventListener('click', () => performAction('swap'));
+  if (btnComp) btnComp.addEventListener('click', () => performAction('compare'));
+  if (btnReset) btnReset.addEventListener('click', () => initGame());
+
+  // ─── Inversion Counter ───
+  function countInversions(arr) {
+    let inv = 0;
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        if (arr[i] > arr[j]) inv++;
+      }
+    }
+    return inv;
+  }
+
+  function isSorted(arr) {
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] < arr[i - 1]) return false;
+    }
+    return true;
+  }
+
+  // ─── Initialize Game ───
   function initGame() {
+    cacheDOM();
+
+    const diff = DIFFICULTIES[difficulty];
     gameArray = [];
     selectedIndices = [];
-    stats = { compares: 0, swaps: 0, score: 100 };
+    isVictory = false;
+    isAnimating = false;
+    stats = { compares: 0, swaps: 0, score: 0, goodSwaps: 0, badSwaps: 0 };
     moveHistory = [];
     heatmapData = [];
-    
-    for(let i=0; i<numBars; i++) {
-       gameArray.push(Math.floor(Math.random() * 90) + 10);
-    }
-    
+
+    // Generate array ensuring it's not already sorted
+    do {
+      gameArray = [];
+      for (let i = 0; i < diff.bars; i++) {
+        gameArray.push(Math.floor(Math.random() * 85) + 10);
+      }
+    } while (isSorted(gameArray));
+
+    initialInversions = countInversions(gameArray);
+
+    // Timer
+    startTime = Date.now();
+    clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+
+    // Update UI
+    if (DOM.level) DOM.level.textContent = diff.label;
     updateUI();
     renderBars();
-    setFeedback("SELECT TWO BARS TO SWAP OR COMPARE");
-    document.getElementById('game-strategy-txt').innerText = "- - -";
-    document.getElementById('game-heatmap').innerHTML = "";
+    setFeedback('SELECT TWO BARS, THEN SWAP OR COMPARE', '#fbbf24');
+    if (DOM.strategy) {
+      DOM.strategy.textContent = '- - -';
+      DOM.strategy.style.color = '';
+      DOM.strategy.style.textShadow = '';
+    }
+    if (DOM.heatmap) DOM.heatmap.innerHTML = '';
+    if (DOM.tooltipGrid) DOM.tooltipGrid.innerHTML = '';
+
+    // Remove any victory overlay
+    const existing = DOM.container?.parentElement?.querySelector('.game-victory-overlay');
+    if (existing) existing.remove();
   }
-  
+
+  // ─── Render Bars ───
   function renderBars() {
-    const container = document.getElementById('game-array-container');
-    if(!container) return;
-    container.innerHTML = '';
-    
+    if (!DOM.container) return;
+    DOM.container.innerHTML = '';
+
+    const gap = gameArray.length > 16 ? '3px' : '6px';
+    DOM.container.style.gap = gap;
+
     gameArray.forEach((val, i) => {
       const bar = document.createElement('div');
-      bar.className = 'w-10 sm:w-16 rounded-t-lg flex flex-col justify-end items-center transition-all duration-300 cursor-pointer hover:brightness-125';
-      bar.style.height = val + "%";
-      bar.style.backgroundColor = selectedIndices.includes(i) ? '#00f5d4' : '#2b2dc0';
-      if (selectedIndices.includes(i)) bar.style.boxShadow = '0 0 15px #00f5d4';
-      
+      bar.className = 'game-bar flex-1';
+      bar.style.height = val + '%';
+
+      if (selectedIndices.includes(i)) {
+        bar.classList.add('selected');
+      }
+
+      // Value label
       const label = document.createElement('span');
-      label.className = 'text-white text-[10px] font-bold mb-1';
-      label.innerText = val;
-      
+      label.className = 'bar-label';
+      label.textContent = val;
       bar.appendChild(label);
+
       bar.addEventListener('click', () => handleBarClick(i));
-      container.appendChild(bar);
+      DOM.container.appendChild(bar);
     });
   }
-  
+
+  // ─── Bar Click Handler ───
   function handleBarClick(idx) {
+    if (isAnimating || isVictory) return;
+
     if (selectedIndices.includes(idx)) {
       selectedIndices = selectedIndices.filter(i => i !== idx);
     } else {
@@ -305,176 +238,343 @@
     }
     renderBars();
   }
-  
-  // Buttons
-  const btnSwap = document.getElementById('game-btn-swap');
-  const btnComp = document.getElementById('game-btn-compare');
-  const btnReset = document.getElementById('game-btn-reset');
-  
-  if (btnSwap) btnSwap.addEventListener('click', () => performAction('swap'));
-  if (btnComp) btnComp.addEventListener('click', () => performAction('compare'));
-  if (btnReset) btnReset.addEventListener('click', initGame);
-  
+
+  // ─── Perform Action ───
   function performAction(type) {
+    if (isAnimating || isVictory) return;
     if (selectedIndices.length !== 2) {
-      setFeedback("Must select exactly 2 bars!");
+      setFeedback('⚠️ SELECT EXACTLY 2 BARS FIRST!', '#f87171');
+      shakeContainer();
       return;
     }
-    
+
     let [i, j] = selectedIndices;
-    if (i > j) { let temp = i; i = j; j = temp; }
-    
+    if (i > j) { let t = i; i = j; j = t; }
+
+    const inversionsBefore = countInversions(gameArray);
+    const diff = DIFFICULTIES[difficulty];
+
     if (type === 'compare') {
       stats.compares++;
-      setFeedback("Compared elements.");
+      isAnimating = true;
+
+      // Visual compare flash
+      const bars = DOM.container.children;
+      if (bars[i]) bars[i].classList.add('comparing');
+      if (bars[j]) bars[j].classList.add('comparing');
+
+      // Show comparison result
+      const result = gameArray[i] <= gameArray[j] ? 'IN ORDER ✓' : 'OUT OF ORDER ✗';
+      const color = gameArray[i] <= gameArray[j] ? '#4ade80' : '#f87171';
+      setFeedback(`COMPARED: ${gameArray[i]} vs ${gameArray[j]} → ${result}`, color);
+
+      // Small score bonus for strategic comparing
+      const pts = Math.round(1 * diff.multiplier);
+      stats.score += pts;
+      showScorePopup(bars[i], '+' + pts, true);
+
       moveHistory.push({ type: 'compare', diff: j - i });
+      heatmapData.push('#118ab2');
+
+      setTimeout(() => {
+        if (bars[i]) bars[i].classList.remove('comparing');
+        if (bars[j]) bars[j].classList.remove('comparing');
+        selectedIndices = [];
+        isAnimating = false;
+        renderBars();
+        updateUI();
+      }, 600);
+
     } else if (type === 'swap') {
       stats.swaps++;
-      let temp = gameArray[i];
-      gameArray[i] = gameArray[j];
-      gameArray[j] = temp;
-      setFeedback("Swapped!");
-      moveHistory.push({ type: 'swap', diff: j - i, v1: gameArray[j], v2: gameArray[i] }); 
-    }
-    
-    selectedIndices = [];
-    analyzeMove(type, j - i);
-    renderBars();
-    updateUI();
-  }
-  
-  function analyzeMove(type, diff) {
-    let pts = 0;
-    let color = "#ef476f"; // Red (bad)
-    
-    if (type === 'swap') {
-      if (diff === 1) {
-        // Adjacent swap (Bubble sort style)
-        pts = 5; color = "#ffd166"; // Yellow
+      isAnimating = true;
+
+      // Perform swap
+      let temp = gameArray[i]; gameArray[i] = gameArray[j]; gameArray[j] = temp;
+
+      const inversionsAfter = countInversions(gameArray);
+      const improved = inversionsAfter < inversionsBefore;
+      const swapDist = j - i;
+
+      // Score calculation
+      let pts = 0;
+      if (improved) {
+        // Good swap — more points for larger distance
+        pts = Math.round((5 + swapDist * 3) * diff.multiplier);
+        stats.goodSwaps++;
+        heatmapData.push('#00f5d4');
+        moveHistory.push({ type: 'swap', diff: swapDist, quality: 'good' });
       } else {
-        // Long distance swap (Selection/Quick style)
-        pts = 15; color = "#00f5d4"; // Green
+        // Bad swap — penalty
+        pts = -Math.round((3 + swapDist) * diff.multiplier);
+        stats.badSwaps++;
+        heatmapData.push('#ef476f');
+        moveHistory.push({ type: 'swap', diff: swapDist, quality: 'bad' });
       }
-    } else if (type === 'compare') {
-      pts = 2; color = "#118ab2"; // Blue
-    }
-    
-    heatmapData.push(color);
-    stats.score += pts;
-    if (stats.score > 200) stats.score = 200; // Cap
-    
-    updateStrategyDetection();
-    renderHeatmap();
-  }
-  
-  function updateStrategyDetection() {
-    if (moveHistory.length < 3) return;
-    
-    let swaps = moveHistory.filter(m => m.type === 'swap');
-    if (swaps.length === 0) return;
-    
-    let adjacent = swaps.filter(m => m.diff === 1).length;
-    let long = swaps.filter(m => m.diff > 2).length;
-    
-    let strategy = "MIXED APPROACH";
-    let stColor = "#fff";
-    
-    if (adjacent / swaps.length >= 0.7) {
-      strategy = "BUBBLE SORT";
-      stColor = "#ffb703";
-    } else if (long / swaps.length >= 0.5) {
-      strategy = "SELECTION SORT";
-      stColor = "#00f5d4";
-    }
-    
-    const sElem = document.getElementById('game-strategy-txt');
-    if(sElem) {
-      sElem.innerText = strategy;
-      sElem.style.color = stColor;
-      sElem.style.textShadow = '0 0 10px ' + stColor;
-    }
-  }
-  
-  function renderHeatmap() {
-    const hm = document.getElementById('game-heatmap');
-    if(!hm) return;
-    hm.innerHTML = "";
-    
-    // Limits
-    let displayData = heatmapData.slice(-30);
-    displayData.forEach(c => {
-      let b = document.createElement('div');
-      b.className = "w-4 h-full rounded-sm opacity-80 shrink-0";
-      b.style.backgroundColor = c;
-      hm.appendChild(b);
-    });
-    hm.scrollLeft = hm.scrollWidth;
-    
-    // Update Tooltip Heatmap grid
-    renderTooltipHeatmap();
-  }
-  
-  function renderTooltipHeatmap() {
-    const tg = document.getElementById('tooltip-heatmap-grid');
-    if(!tg) return;
-    // We only need to generate it once or we can give it dynamic ripples. Let's just generate a nice static-looking matrix with varying opacities if it's empty, and just mildly update it.
-    if(tg.children.length === 0) {
-      const colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
-      for (let i = 0; i < 48; i++) {
-        let span = document.createElement('div');
-        let col = colors[Math.floor(Math.random() * colors.length)];
-        let op = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
-        span.className = `w-full aspect-square rounded-[2px] ${col}`;
-        span.style.opacity = op;
-        tg.appendChild(span);
-      }
-    } else {
-      // randomly shift a few blocks to make it feel "live"
-      for (let i = 0; i < 5; i++) {
-         let idx = Math.floor(Math.random() * 48);
-         let colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
-         let span = tg.children[idx];
-         if(span) {
-            span.className = `w-full aspect-square rounded-[2px] ${colors[Math.floor(Math.random() * colors.length)]} transition-colors duration-500`;
-            span.style.opacity = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
-         }
-      }
-    }
-  }
-  
-  function updateUI() {
-    if(document.getElementById('game-comparisons')) document.getElementById('game-comparisons').innerText = stats.compares;
-    if(document.getElementById('game-swaps')) document.getElementById('game-swaps').innerText = stats.swaps;
-    
-    // Update Score
-    if(document.getElementById('game-score')) document.getElementById('game-score').innerText = stats.score;
-    if(document.getElementById('tooltip-score')) document.getElementById('tooltip-score').innerText = stats.score;
-    
-    // Update Strategy in tooltip if available
-    if(document.getElementById('tooltip-strategy')) {
-      const stratElem = document.getElementById('game-strategy-txt');
-      if(stratElem) document.getElementById('tooltip-strategy').innerText = stratElem.innerText + " ⚡";
+      stats.score += pts;
+
+      // Animate swap
+      const bars = DOM.container.children;
+      const barI = bars[selectedIndices[0] < selectedIndices[1] ? selectedIndices[0] : selectedIndices[1]];
+      const barJ = bars[selectedIndices[0] < selectedIndices[1] ? selectedIndices[1] : selectedIndices[0]];
+
+      if (barI) barI.classList.add('swapping-right');
+      if (barJ) barJ.classList.add('swapping-left');
+
+      setTimeout(() => {
+        // Flash color based on quality
+        selectedIndices = [];
+        renderBars();
+
+        const newBars = DOM.container.children;
+        if (newBars[i]) newBars[i].classList.add(improved ? 'good-swap' : 'bad-swap');
+        if (newBars[j]) newBars[j].classList.add(improved ? 'good-swap' : 'bad-swap');
+
+        showScorePopup(newBars[i], (pts >= 0 ? '+' : '') + pts, pts >= 0);
+
+        const fb = improved
+          ? `GREAT SWAP! ${gameArray[i]} ↔ ${gameArray[j]} (+${pts} XP)`
+          : `BAD MOVE! Disorder increased (${pts} XP)`;
+        setFeedback(fb, improved ? '#4ade80' : '#f87171');
+
+        setTimeout(() => {
+          if (newBars[i]) newBars[i].classList.remove('good-swap', 'bad-swap');
+          if (newBars[j]) newBars[j].classList.remove('good-swap', 'bad-swap');
+          isAnimating = false;
+          updateUI();
+
+          // Check win
+          if (isSorted(gameArray)) {
+            triggerVictory();
+          }
+        }, 400);
+      }, 350);
     }
 
-    // Bar
-    const b = document.getElementById('game-eff-bar');
-    const p = document.getElementById('game-eff-pct');
-    let pct = Math.max(0, Math.min(100, Math.floor(stats.score / 2)));
-    if(b) b.style.width = pct + "%";
-    if(p) p.innerText = pct + "%";
+    analyzeStrategy();
+    renderHeatmap();
+    renderTooltipHeatmap();
   }
-  
-  function setFeedback(txt) {
-    const f = document.getElementById('game-feedback');
-    if(f) {
-      f.innerText = txt;
-      f.style.transform = 'translate(-50%, -10px)';
-      f.style.opacity = '1';
-      setTimeout(() => {
-        f.style.transform = 'translate(-50%, 0)';
-      }, 200);
+
+  // ─── Shake on error ───
+  function shakeContainer() {
+    if (!DOM.container) return;
+    DOM.container.style.animation = 'none';
+    void DOM.container.offsetWidth;
+    DOM.container.style.animation = 'shake 0.4s ease';
+    setTimeout(() => DOM.container.style.animation = '', 400);
+
+    // Add shake keyframes if not exists
+    if (!document.getElementById('game-shake-style')) {
+      const style = document.createElement('style');
+      style.id = 'game-shake-style';
+      style.textContent = `@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }`;
+      document.head.appendChild(style);
     }
+  }
+
+  // ─── Score Popup ───
+  function showScorePopup(bar, text, positive) {
+    if (!bar) return;
+    const popup = document.createElement('div');
+    popup.className = `score-popup ${positive ? 'positive' : 'negative'}`;
+    popup.textContent = text;
+    bar.style.position = 'relative';
+    bar.appendChild(popup);
+    setTimeout(() => popup.remove(), 900);
+  }
+
+  // ─── Victory ───
+  function triggerVictory() {
+    isVictory = true;
+    clearInterval(timerInterval);
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    const diff = DIFFICULTIES[difficulty];
+
+    // Time bonus
+    const timeBonus = Math.max(0, Math.round((120 - parseFloat(elapsed)) * diff.multiplier));
+    stats.score += timeBonus;
+
+    // Efficiency bonus
+    const effBonus = Math.round(((stats.goodSwaps / Math.max(1, stats.swaps)) * 50) * diff.multiplier);
+    stats.score += effBonus;
+
+    setFeedback('🎉 ARRAY SORTED! YOU WIN!', '#4ade80');
+
+    // Green sweep on bars
+    const bars = DOM.container.children;
+    for (let i = 0; i < bars.length; i++) {
+      setTimeout(() => {
+        bars[i].classList.add('sorted');
+      }, i * 60);
+    }
+
+    // Victory overlay
+    setTimeout(() => {
+      const overlay = document.createElement('div');
+      overlay.className = 'game-victory-overlay';
+      overlay.innerHTML = `
+        <div class="victory-title">🏆 SORTED!</div>
+        <div class="victory-stats">
+          ${diff.label} Mode · ${elapsed}s · ${stats.swaps} swaps · ${stats.compares} compares
+        </div>
+        <div class="victory-stats" style="color:#4ade80; margin-top:8px; font-size:16px;">
+          Final Score: ${stats.score} XP
+          ${timeBonus > 0 ? `<span style="color:#22d3ee;"> (+${timeBonus} time bonus)</span>` : ''}
+        </div>
+        <button id="game-play-again" class="game-btn-primary mt-6 px-8 py-3 rounded-xl text-sm">
+          <span class="material-symbols-outlined text-base align-middle mr-1">replay</span>
+          PLAY AGAIN
+        </button>
+      `;
+      DOM.container.parentElement.appendChild(overlay);
+
+      const playAgain = document.getElementById('game-play-again');
+      if (playAgain) playAgain.addEventListener('click', () => initGame());
+    }, gameArray.length * 60 + 300);
+
+    updateUI();
+  }
+
+  // ─── Strategy Detection ───
+  function analyzeStrategy() {
+    if (moveHistory.length < 3) return;
+
+    const swaps = moveHistory.filter(m => m.type === 'swap');
+    if (swaps.length === 0) return;
+
+    const adjacent = swaps.filter(m => m.diff === 1).length;
+    const medium = swaps.filter(m => m.diff >= 2 && m.diff <= 4).length;
+    const long = swaps.filter(m => m.diff > 4).length;
+
+    let strategy = 'MIXED APPROACH';
+    let stColor = '#94a3b8';
+
+    if (adjacent / swaps.length >= 0.7) {
+      strategy = 'BUBBLE SORT';
+      stColor = '#fbbf24';
+    } else if (medium / swaps.length >= 0.5) {
+      strategy = 'INSERTION SORT';
+      stColor = '#22d3ee';
+    } else if (long / swaps.length >= 0.5) {
+      strategy = 'SELECTION SORT';
+      stColor = '#00f5d4';
+    } else if (adjacent / swaps.length >= 0.4 && long / swaps.length >= 0.3) {
+      strategy = 'QUICK SORT';
+      stColor = '#a78bfa';
+    }
+
+    if (DOM.strategy) {
+      DOM.strategy.textContent = strategy;
+      DOM.strategy.style.color = stColor;
+      DOM.strategy.style.textShadow = '0 0 10px ' + stColor;
+    }
+  }
+
+  // ─── Timer ───
+  function updateTimer() {
+    if (!DOM.timer || isVictory) return;
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    DOM.timer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+    if (elapsed > 90) {
+      DOM.timer.classList.add('timer-danger');
+    } else {
+      DOM.timer.classList.remove('timer-danger');
+    }
+  }
+
+  // ─── Heatmap ───
+  function renderHeatmap() {
+    if (!DOM.heatmap) return;
+    DOM.heatmap.innerHTML = '';
+
+    const displayData = heatmapData.slice(-30);
+    displayData.forEach(c => {
+      const b = document.createElement('div');
+      b.className = 'game-heat-block';
+      b.style.backgroundColor = c;
+      // Height based on last action value
+      b.style.height = (Math.random() * 16 + 8) + 'px';
+      DOM.heatmap.appendChild(b);
+    });
+    DOM.heatmap.scrollLeft = DOM.heatmap.scrollWidth;
+  }
+
+  function renderTooltipHeatmap() {
+    if (!DOM.tooltipGrid) return;
+
+    if (DOM.tooltipGrid.children.length === 0) {
+      const colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
+      for (let i = 0; i < 48; i++) {
+        const span = document.createElement('div');
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        const op = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
+        span.className = `w-full aspect-square rounded-[2px] ${col}`;
+        span.style.opacity = op;
+        DOM.tooltipGrid.appendChild(span);
+      }
+    } else {
+      for (let i = 0; i < 5; i++) {
+        const idx = Math.floor(Math.random() * 48);
+        const colors = ['bg-emerald-400', 'bg-emerald-500', 'bg-teal-400', 'bg-cyan-400', 'bg-yellow-400', 'bg-amber-500', 'bg-rose-500', 'bg-pink-500'];
+        const span = DOM.tooltipGrid.children[idx];
+        if (span) {
+          span.className = `w-full aspect-square rounded-[2px] ${colors[Math.floor(Math.random() * colors.length)]} transition-colors duration-500`;
+          span.style.opacity = [0.4, 0.6, 0.8, 1][Math.floor(Math.random() * 4)];
+        }
+      }
+    }
+  }
+
+  // ─── Update UI ───
+  function updateUI() {
+    if (DOM.comparisons) DOM.comparisons.textContent = stats.compares;
+    if (DOM.swaps) DOM.swaps.textContent = stats.swaps;
+    if (DOM.score) DOM.score.textContent = stats.score;
+    if (DOM.tooltipScore) DOM.tooltipScore.textContent = stats.score;
+    if (DOM.moves) DOM.moves.textContent = stats.compares + stats.swaps;
+
+    // Tooltip strategy
+    if (DOM.tooltipStrategy && DOM.strategy) {
+      DOM.tooltipStrategy.textContent = DOM.strategy.textContent + ' ⚡';
+    }
+
+    // Efficiency bar — based on actual inversions progress
+    const currentInversions = countInversions(gameArray);
+    let pct = 100;
+    if (initialInversions > 0) {
+      pct = Math.round(((initialInversions - currentInversions) / initialInversions) * 100);
+      pct = Math.max(0, Math.min(100, pct));
+    }
+    if (DOM.effBar) DOM.effBar.style.width = pct + '%';
+    if (DOM.effPct) DOM.effPct.textContent = pct + '%';
+
+    // Color the efficiency bar based on progress
+    if (DOM.effBar) {
+      if (pct >= 80) {
+        DOM.effBar.style.background = 'linear-gradient(90deg, #4ade80, #22d3ee)';
+      } else if (pct >= 50) {
+        DOM.effBar.style.background = 'linear-gradient(90deg, #fbbf24, #f59e0b)';
+      } else {
+        DOM.effBar.style.background = 'linear-gradient(90deg, #f87171, #ef4444)';
+      }
+    }
+  }
+
+  // ─── Feedback ───
+  function setFeedback(txt, color) {
+    if (!DOM.feedback) return;
+    DOM.feedback.textContent = txt;
+    if (color) DOM.feedback.style.color = color;
+    DOM.feedback.style.transform = 'translate(-50%, -8px)';
+    DOM.feedback.style.opacity = '1';
+    setTimeout(() => {
+      if (DOM.feedback) DOM.feedback.style.transform = 'translate(-50%, 0)';
+    }, 200);
   }
 
 })();
-

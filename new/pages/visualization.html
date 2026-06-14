@@ -14,9 +14,13 @@
     </div>
     <!-- Global stats (optional) -->
     <div class="hidden sm:flex items-center gap-4 text-xs font-mono font-bold tracking-widest text-slate-500 uppercase">
-       <span>Comparisons: <span id="vis-ops" class="text-amber-400 ml-1">0</span></span>
-       <span>|</span>
-       <span>Array Size: <span id="vis-array-size" class="text-white ml-1">30</span></span>
+       <span>Operations: <span id="vis-ops" class="text-amber-400 ml-1">0</span></span>
+       <span class="text-white/10">|</span>
+       <span>Swaps: <span id="vis-swaps" class="text-emerald-400 ml-1">0</span></span>
+       <span class="text-white/10">|</span>
+       <span>Size: <span id="vis-array-size" class="text-white ml-1">30</span></span>
+       <span class="text-white/10">|</span>
+       <span id="vis-status-badge" class="vis-status-badge ready">Ready</span>
     </div>
   </header>
 
@@ -64,7 +68,7 @@
               <span class="material-symbols-outlined text-sm">speed</span>
               Animation Speed
             </label>
-            <span id="vis-speed-label" class="text-[9px] font-bold text-amber-500/70 border border-amber-500/20 px-1.5 py-0.5 rounded uppercase">Speed: 50</span>
+            <span id="vis-speed-label" class="text-[9px] font-bold text-amber-500/70 border border-amber-500/20 px-1.5 py-0.5 rounded uppercase">Speed: 50%</span>
           </div>
           <input id="vis-speed-slider" type="range" class="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-500" min="1" max="100" value="50">
         </div>
@@ -76,12 +80,16 @@
             Complexity
           </h4>
           <div class="flex justify-between items-center text-xs">
-            <span class="text-slate-500 font-medium">Time (Worst)</span>
-            <span id="vis-info-worst" class="font-mono text-rose-400 font-bold">O(n²)</span>
+            <span class="text-slate-500 font-medium">Best Case</span>
+            <span id="vis-info-best" class="font-mono text-emerald-400 font-bold">O(n)</span>
           </div>
           <div class="flex justify-between items-center text-xs">
-            <span class="text-slate-500 font-medium">Time (Best)</span>
-            <span id="vis-info-best" class="font-mono text-emerald-400 font-bold">O(n)</span>
+            <span class="text-slate-500 font-medium">Average Case</span>
+            <span id="vis-info-avg" class="font-mono text-amber-400 font-bold">O(n²)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-500 font-medium">Worst Case</span>
+            <span id="vis-info-worst" class="font-mono text-rose-400 font-bold">O(n²)</span>
           </div>
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-500 font-medium">Space</span>

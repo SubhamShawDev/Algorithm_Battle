@@ -196,6 +196,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
+    /* --- INJECT ALGORITHM PROPERTY BADGES ON HOME CARDS --- */
+    const algoBadges = {
+        'quick-sort':             [['inplace','In-Place'], ['unstable','Unstable']],
+        'merge-sort':             [['stable','Stable'], ['unstable','O(n) Space']],
+        'bubble-sort':            [['stable','Stable'], ['inplace','In-Place'], ['adaptive','Adaptive']],
+        'heap-sort':              [['inplace','In-Place'], ['unstable','Unstable']],
+        'selection-sort':         [['inplace','In-Place'], ['unstable','Unstable']],
+        'insertion-sort':         [['stable','Stable'], ['inplace','In-Place'], ['adaptive','Adaptive']],
+        'tim-sort':               [['stable','Stable'], ['adaptive','Adaptive'], ['hybrid','Hybrid']],
+        'intro-sort':             [['inplace','In-Place'], ['hybrid','Hybrid']],
+        'shell-sort':             [['inplace','In-Place'], ['unstable','Unstable']],
+        'pdq-sort':               [['inplace','In-Place'], ['unstable','Unstable']],
+        'dual-pivot-quick-sort':  [['inplace','In-Place'], ['unstable','Unstable']],
+        'block-sort':             [['stable','Stable'], ['inplace','In-Place']],
+        'dual-fusion-sort':       [['stable','Stable'], ['hybrid','Hybrid']],
+    };
+
+    algoKeys.forEach(key => {
+        const card = document.getElementById(`card-${key}`);
+        if (!card || !algoBadges[key]) return;
+        const titleRow = card.querySelector('.flex.justify-between.items-start');
+        if (!titleRow) return;
+        // Wrap existing complexity badge + new badges
+        const existingBadge = titleRow.querySelector('span');
+        if (!existingBadge) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex flex-col items-end gap-1';
+        existingBadge.parentElement.insertBefore(wrapper, existingBadge);
+        wrapper.appendChild(existingBadge);
+        const badgeRow = document.createElement('div');
+        badgeRow.className = 'flex gap-1 flex-wrap justify-end';
+        algoBadges[key].forEach(([type, label]) => {
+            const badge = document.createElement('span');
+            badge.className = `algo-badge algo-badge-${type}`;
+            badge.textContent = label;
+            badgeRow.appendChild(badge);
+        });
+        wrapper.appendChild(badgeRow);
+    });
+
+    /* --- SORTING LIBRARY FILTER --- */
+    const complexityRank = { 'O(n)': 1, 'O(n log n)': 2, 'O(n log²n)': 3, 'O(n²)': 4, 'O(n^2)': 4 };
+    const stableSet = new Set(['merge-sort','bubble-sort','insertion-sort','tim-sort','block-sort','dual-fusion-sort']);
+
+    const sortFilter = document.getElementById('algo-sort-filter');
+    if (sortFilter) {
+        sortFilter.addEventListener('change', () => {
+            const grid = document.querySelector('#home-page .grid.grid-cols-1');
+            if (!grid) return;
+            const cards = Array.from(grid.children);
+            const originalOrder = algoKeys.map(k => document.getElementById(`card-${k}`)).filter(Boolean);
+
+            let sorted;
+            switch(sortFilter.value) {
+                case 'complexity-asc':
+                    sorted = [...originalOrder].sort((a, b) => {
+                        const aKey = a.id.replace('card-','');
+                        const bKey = b.id.replace('card-','');
+                        return (complexityRank[algorithms[aKey]?.avg] || 5) - (complexityRank[algorithms[bKey]?.avg] || 5);
+                    });
+                    break;
+                case 'complexity-desc':
+                    sorted = [...originalOrder].sort((a, b) => {
+                        const aKey = a.id.replace('card-','');
+                        const bKey = b.id.replace('card-','');
+                        return (complexityRank[algorithms[bKey]?.avg] || 5) - (complexityRank[algorithms[aKey]?.avg] || 5);
+                    });
+                    break;
+                case 'name-asc':
+                    sorted = [...originalOrder].sort((a, b) => {
+                        const aKey = a.id.replace('card-','');
+                        const bKey = b.id.replace('card-','');
+                        return (algorithms[aKey]?.title || '').localeCompare(algorithms[bKey]?.title || '');
+                    });
+                    break;
+                case 'stable':
+                    sorted = [...originalOrder].sort((a, b) => {
+                        const aStable = stableSet.has(a.id.replace('card-','')) ? 0 : 1;
+                        const bStable = stableSet.has(b.id.replace('card-','')) ? 0 : 1;
+                        return aStable - bStable;
+                    });
+                    break;
+                default:
+                    sorted = originalOrder;
+            }
+            sorted.forEach(card => {
+                card.style.animation = 'none';
+                void card.offsetWidth;
+                card.style.animation = 'fadeSlideIn 0.3s ease forwards';
+                grid.appendChild(card);
+            });
+        });
+    }
 
 
     // Note: btn-start-visualization is now handled by the detail page mini-visualizer in features.js
@@ -1058,9 +1151,9 @@ class SortAPI {
         this.bars = [];
         for (let val of this.arr) {
             let bar = document.createElement('div');
-            // Adding more tailwind for smooth visuals
             let marginClass = this.arr.length > 100 ? '' : (this.arr.length > 50 ? 'mx-[0.5px]' : 'mx-[1px]');
-            bar.className = `${this.colorClass} flex-1 ${marginClass} rounded-t-sm transition-all duration-75`;
+            bar.className = `${this.colorClass} flex-1 ${marginClass} rounded-t-sm`;
+            bar.style.transition = 'height 0.12s ease, background 0.12s ease, transform 0.12s ease, box-shadow 0.15s ease';
             bar.style.height = `${val}%`;
             this.container.appendChild(bar);
             this.bars.push(bar);
@@ -1086,11 +1179,19 @@ class SortAPI {
     async compare(i, j) {
         this.ops++;
         this.updateOps();
-        this.bars[i].classList.add('brightness-150', 'bg-white');
-        this.bars[j].classList.add('brightness-150', 'bg-white');
+        this.bars[i].style.background = 'linear-gradient(180deg, #22d3ee, #06b6d4)';
+        this.bars[i].style.boxShadow = '0 0 12px rgba(6,182,212,0.45)';
+        this.bars[i].style.transform = 'scaleY(1.04)';
+        this.bars[j].style.background = 'linear-gradient(180deg, #22d3ee, #06b6d4)';
+        this.bars[j].style.boxShadow = '0 0 12px rgba(6,182,212,0.45)';
+        this.bars[j].style.transform = 'scaleY(1.04)';
         await this.sleep();
-        this.bars[i].classList.remove('brightness-150', 'bg-white');
-        this.bars[j].classList.remove('brightness-150', 'bg-white');
+        this.bars[i].style.background = '';
+        this.bars[i].style.boxShadow = '';
+        this.bars[i].style.transform = '';
+        this.bars[j].style.background = '';
+        this.bars[j].style.boxShadow = '';
+        this.bars[j].style.transform = '';
         return this.arr[i] - this.arr[j];
     }
 
@@ -1102,7 +1203,19 @@ class SortAPI {
         this.arr[j] = temp;
         this.bars[i].style.height = `${this.arr[i]}%`;
         this.bars[j].style.height = `${this.arr[j]}%`;
+        this.bars[i].style.background = 'linear-gradient(180deg, #34d399, #10b981)';
+        this.bars[j].style.background = 'linear-gradient(180deg, #34d399, #10b981)';
+        this.bars[i].style.boxShadow = '0 0 12px rgba(16,185,129,0.45)';
+        this.bars[j].style.boxShadow = '0 0 12px rgba(16,185,129,0.45)';
+        this.bars[i].style.transform = 'scaleY(1.08)';
+        this.bars[j].style.transform = 'scaleY(1.08)';
         await this.sleep();
+        this.bars[i].style.background = '';
+        this.bars[j].style.background = '';
+        this.bars[i].style.boxShadow = '';
+        this.bars[j].style.boxShadow = '';
+        this.bars[i].style.transform = '';
+        this.bars[j].style.transform = '';
     }
 
     async set(i, val) {
@@ -1110,12 +1223,16 @@ class SortAPI {
         this.updateOps();
         this.arr[i] = val;
         this.bars[i].style.height = `${val}%`;
-        this.bars[i].classList.add('brightness-150', 'bg-white');
+        this.bars[i].style.background = 'linear-gradient(180deg, #e879f9, #d946ef)';
+        this.bars[i].style.boxShadow = '0 0 12px rgba(217,70,239,0.45)';
+        this.bars[i].style.transform = 'scaleY(1.06)';
         await this.sleep();
-        this.bars[i].classList.remove('brightness-150', 'bg-white');
+        this.bars[i].style.background = '';
+        this.bars[i].style.boxShadow = '';
+        this.bars[i].style.transform = '';
     }
 
-        async markLine(lineNum) {
+    async markLine(lineNum) {
         if (this.aborted) throw new Error("Aborted");
         if (STATE.mode !== 'single') return; 
 
@@ -1186,6 +1303,20 @@ async function startSorting() {
     if (!STATE.leftApi.aborted) {
         STATE.isPlaying = false;
         UI.btnPlay.innerHTML = '<span class="material-symbols-outlined fill-1">play_arrow</span><span class="hidden sm:inline">Begin Sorting</span>';
+
+        // Cascading green completion sweep on both arenas
+        const sweepBars = (api) => {
+            if (!api || !api.bars) return;
+            api.bars.forEach((bar, i) => {
+                setTimeout(() => {
+                    bar.style.background = 'linear-gradient(180deg, #4ade80, #16a34a)';
+                    bar.style.boxShadow = '0 0 10px rgba(34,197,94,0.35)';
+                }, i * 10);
+            });
+        };
+        sweepBars(STATE.leftApi);
+        if (STATE.mode !== 'single') sweepBars(STATE.rightApi);
+
         // Clear highlighted line safely
         if (STATE.mode === 'single') {
             document.querySelectorAll('#single-code-display div').forEach(el => {
@@ -1223,22 +1354,31 @@ function openModal(algoId) {
         }
     }
 
-    document.getElementById('algo-title').textContent = data.title;
-    document.getElementById('algo-desc').textContent = data.desc;
-    document.getElementById('algo-best').textContent = data.best;
-    document.getElementById('algo-avg').textContent = data.avg;
-    document.getElementById('algo-worst').textContent = data.worst;
-    document.getElementById('algo-space').textContent = data.space;
-    document.getElementById('algo-apps').textContent = data.apps;
+    const elTitle = document.getElementById('algo-title');
+    const elDesc = document.getElementById('algo-desc');
+    const elBest = document.getElementById('algo-best');
+    const elAvg = document.getElementById('algo-avg');
+    const elWorst = document.getElementById('algo-worst');
+    const elSpace = document.getElementById('algo-space');
+    const elApps = document.getElementById('algo-apps');
+    if (elTitle) elTitle.textContent = data.title;
+    if (elDesc) elDesc.textContent = data.desc;
+    if (elBest) elBest.textContent = data.best;
+    if (elAvg) elAvg.textContent = data.avg;
+    if (elWorst) elWorst.textContent = data.worst;
+    if (elSpace) elSpace.textContent = data.space;
+    if (elApps) elApps.textContent = data.apps;
 
     const charsList = document.getElementById('algo-chars');
-    charsList.innerHTML = '';
-    data.chars.forEach(char => {
-        const li = document.createElement('li');
-        li.className = 'flex items-center gap-2';
-        li.innerHTML = `<span class="material-symbols-outlined text-primary text-sm">${char.icon}</span> ${char.text}`;
-        charsList.appendChild(li);
-    });
+    if (charsList) {
+        charsList.innerHTML = '';
+        data.chars.forEach(char => {
+            const li = document.createElement('li');
+            li.className = 'flex items-center gap-2';
+            li.innerHTML = `<span class="material-symbols-outlined text-primary text-sm">${char.icon}</span> ${char.text}`;
+            charsList.appendChild(li);
+        });
+    }
 
     currentModalAlgoId = algoId;
 
@@ -1346,7 +1486,7 @@ function closeModal() {
         modal.classList.add('hidden');
         if (appShell) appShell.classList.remove('hidden');
         // Ensure home page is showing
-        const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page', 'game-page'];
+        const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
         allPIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1427,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const appShell = document.getElementById('app-shell');
         if (appShell) appShell.classList.remove('hidden');
-        const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page', 'game-page'];
+        const allPIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
         allPIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1522,7 +1662,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ---- Sidebar nav → page routing ---- */
-    const allPageIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'performance-matrices-page', 'game-page'];
+    const allPageIds = ['home-page', 'arena-page', 'visualization-page', 'benchmark-page', 'game-page'];
 
     function showPageById(pageId) {
         closeSidebar();

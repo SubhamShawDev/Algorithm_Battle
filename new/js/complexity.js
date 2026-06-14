@@ -47,7 +47,7 @@ function initComplexityFunctions() {
     { name: "Insertion Sort", best: "n", avg: "n2", worst: "n2", color: "#f72585" },
     { name: "Tim Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#4cc9f0" },
     { name: "Shell Sort", best: "nlogn", avg: "nlog2n", worst: "n2", color: "#90dbf4" },
-    { name: "Block Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#72efdd" },
+    { name: "Block Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#72efdd" },
     { name: "Dual Pivot Quick Sort", best: "nlogn", avg: "nlogn", worst: "n2", color: "#64dfdf" },
     { name: "Pdq Sort", best: "n", avg: "nlogn", worst: "nlogn", color: "#48bfe3" },
     { name: "Intro Sort", best: "nlogn", avg: "nlogn", worst: "nlogn", color: "#5390d9" },
@@ -133,7 +133,6 @@ function computeSortedPortion(arr) {
   let sortedCount = 1;
   for (let i = 1; i < arr.length; i++) {
     if (arr[i] >= arr[i - 1]) sortedCount++;
-    else break;
   }
   return Math.round((sortedCount / arr.length) * 100);
 }
@@ -340,8 +339,8 @@ function sortInputPreview(key, arr, stats) {
   const sampleCount = 20;
   const copy = [...arr];
   let duration = 0;
+  const start = performance.now();
   try {
-    const start = performance.now();
     if (key && algorithms[key] && algorithms[key].runRaw && arr.length <= 1000) {
       algorithms[key].runRaw(copy);
     } else {
@@ -367,7 +366,7 @@ function analyzeComplexityInput() {
     inputSize = complexityInputData.length;
     customArray = complexityInputData;
   } else {
-    inputSize = Number(complexityAutoSize?.value) || 100;
+    inputSize = Number(complexityAutoSize?.value) || 50;
   }
   
   if (inputSize < 10) {
@@ -379,6 +378,10 @@ function analyzeComplexityInput() {
   if (btnAnalyzeInput) btnAnalyzeInput.textContent = 'Analyzing... (Running Benchmarks)';
   if (btnAnalyzeInput) btnAnalyzeInput.disabled = true;
   
+  // Show loading overlay
+  const loadingOverlay = document.getElementById('complexity-loading-overlay');
+  if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+  
   // Run timing benchmark asynchronously
   setTimeout(async () => {
     try {
@@ -389,7 +392,15 @@ function analyzeComplexityInput() {
       const caseLabel = selectedCase === 'best' ? 'Best (Sorted)' : selectedCase === 'worst' ? 'Worst (Reverse)' : 'Average (Random)';
       if (complexitySummarySize) complexitySummarySize.textContent = inputSize + ' elements';
       if (complexitySummaryType) complexitySummaryType.textContent = caseLabel;
-      if (complexitySummarySorted) complexitySummarySorted.textContent = customArray ? 'From file' : 'Auto-generated';
+      if (customArray) {
+        const stats = computeInputStats(customArray);
+        complexityInputStats = stats;
+        if (complexitySummaryPIndex) complexitySummaryPIndex.textContent = `${stats.pIndex}%`;
+        if (complexitySummarySorted) complexitySummarySorted.textContent = `${stats.sortedPortion}%`;
+      } else {
+        if (complexitySummaryPIndex) complexitySummaryPIndex.textContent = selectedCase === 'best' ? '~100%' : selectedCase === 'worst' ? '~0%' : '~50%';
+        if (complexitySummarySorted) complexitySummarySorted.textContent = 'Auto-generated';
+      }
       
       // Update ranking based on performance at largest size
       const rankedByPerformance = getRankedByPerformance();
@@ -415,6 +426,8 @@ function analyzeComplexityInput() {
         btnAnalyzeInput.textContent = 'Analyze Input';
         btnAnalyzeInput.disabled = false;
       }
+      // Hide loading overlay
+      if (loadingOverlay) loadingOverlay.classList.add('hidden');
     }
   }, 100);
 }
@@ -487,9 +500,9 @@ function getRankedByPerformance() {
   // Rank algorithms by actual performance (lower time = better)
   const rankings = [];
   
-  const avgData = complexityTimingData.avg || {};
-  Object.keys(avgData).forEach(algoName => {
-    const timings = avgData[algoName];
+  const caseData = complexityTimingData[selectedCase] || {};
+  Object.keys(caseData).forEach(algoName => {
+    const timings = caseData[algoName];
     if (timings && timings.length > 0) {
       // Get the last (largest) timing value as overall performance
       const lastTiming = timings[timings.length - 1];
@@ -546,7 +559,11 @@ function getDatasets() {
   const caseLabel = selectedCase === 'best' ? 'Best Case' : selectedCase === 'avg' ? 'Average Case' : 'Worst Case';
 
   const datasets = algorithms_complexity.map(a => {
-    const timings = caseData[a.name] || [];
+    const rawTimings = caseData[a.name] || [];
+    // Prepend origin point (0, 0) so every line starts from the origin
+    const timings = rawTimings.length > 0 && (rawTimings[0].x !== 0)
+      ? [{ x: 0, y: 0 }, ...rawTimings]
+      : (rawTimings.length === 0 ? rawTimings : rawTimings);
     return {
       label: `${a.name} (${caseLabel})`,
       data: timings,
@@ -609,6 +626,8 @@ function openComplexityModal() {
         complexityInputData = defaultArr;
         
         // Show loading state
+        const loadingOverlay = document.getElementById('complexity-loading-overlay');
+        if (loadingOverlay) loadingOverlay.classList.remove('hidden');
         if (btnAnalyzeInput) {
           btnAnalyzeInput.textContent = 'Running initial benchmark...';
           btnAnalyzeInput.disabled = true;
@@ -643,6 +662,7 @@ function openComplexityModal() {
             btnAnalyzeInput.textContent = 'Analyze Input';
             btnAnalyzeInput.disabled = false;
           }
+          if (loadingOverlay) loadingOverlay.classList.add('hidden');
         }
       }
       
@@ -705,10 +725,17 @@ async function runTimingBenchmark(inputSize, inputType = 'random', customArray =
   
   const algoKeys = Object.keys(algorithms);
   
+  // Pre-compute test sizes
+  let startSize = Math.min(10, Math.max(1, inputSize));
+  let step = Math.max(1, Math.floor(inputSize / 20));
+  const testSizes = [];
+  for (let size = startSize; size <= inputSize; size += step) {
+    testSizes.push(size);
+  }
+  
   // Define input generators for each case
   const caseGenerators = {
     best: (size) => {
-      // Best case: already sorted array
       if (customArray && customArray.length >= size) {
         const slice = customArray.slice(0, size);
         return slice.sort((a, b) => a - b);
@@ -716,14 +743,12 @@ async function runTimingBenchmark(inputSize, inputType = 'random', customArray =
       return generateTestArray(size, 'sorted');
     },
     avg: (size) => {
-      // Average case: random array (or user's custom data)
       if (customArray && customArray.length >= size) {
         return customArray.slice(0, size);
       }
       return generateTestArray(size, 'random');
     },
     worst: (size) => {
-      // Worst case: reverse sorted array
       if (customArray && customArray.length >= size) {
         const slice = customArray.slice(0, size);
         return slice.sort((a, b) => b - a);
@@ -731,6 +756,15 @@ async function runTimingBenchmark(inputSize, inputType = 'random', customArray =
       return generateTestArray(size, 'reverse');
     }
   };
+  
+  // Pre-generate test arrays for each case and size
+  // This ensures ALL algorithms sort the EXACT SAME input at each size
+  const testArrays = { best: {}, avg: {}, worst: {} };
+  for (const caseType of ['best', 'avg', 'worst']) {
+    for (const size of testSizes) {
+      testArrays[caseType][size] = caseGenerators[caseType](size);
+    }
+  }
   
   for (const key of algoKeys) {
     const algo = algorithms[key];
@@ -744,30 +778,61 @@ async function runTimingBenchmark(inputSize, inputType = 'random', customArray =
     // Run benchmark for each case
     for (const caseType of ['best', 'avg', 'worst']) {
       const timings = [];
-      let startSize = Math.min(10, Math.max(1, inputSize));
-      let step = Math.max(1, Math.floor(inputSize / 20));
       
       let isTooSlow = false;
       let baseTime = 0;
       let baseSize = 0;
       
-      for (let size = startSize; size <= inputSize; size += step) {
+      // Determine the algorithm's complexity class for this case (for proper extrapolation)
+      const complexityClass = complexityAlgo[caseType]; // e.g. "nlogn", "n2", "n"
+      
+      for (const size of testSizes) {
         if (isTooSlow) {
-          const ratio = size / baseSize;
-          const extrapolatedTime = baseTime * (ratio * ratio);
+          // Extrapolate using the algorithm's ACTUAL complexity class
+          let extrapolatedTime;
+          switch (complexityClass) {
+            case 'n':
+              extrapolatedTime = baseTime * (size / baseSize);
+              break;
+            case 'logn':
+              extrapolatedTime = baseTime * (Math.log2(size) / Math.log2(baseSize));
+              break;
+            case 'nlogn':
+              extrapolatedTime = baseTime * (size * Math.log2(size)) / (baseSize * Math.log2(baseSize));
+              break;
+            case 'nlog2n':
+              extrapolatedTime = baseTime * (size * Math.pow(Math.log2(size), 2)) / (baseSize * Math.pow(Math.log2(baseSize), 2));
+              break;
+            case 'n2':
+            default:
+              extrapolatedTime = baseTime * Math.pow(size / baseSize, 2);
+              break;
+          }
           timings.push({ x: size, y: extrapolatedTime });
           continue;
         }
 
-        const testArr = caseGenerators[caseType](size);
-        const time = measureAlgorithmTime(key, testArr);
+        // Use the PRE-GENERATED array (same for all algorithms at this size)
+        const testArr = testArrays[caseType][size];
         
-        if (time !== null) {
-          timings.push({ x: size, y: time });
+        // Warm-up run (discard) — triggers JIT compilation
+        measureAlgorithmTime(key, testArr);
+        
+        // Measure 3 runs and take the median for stability
+        const runs = [];
+        for (let r = 0; r < 3; r++) {
+          const time = measureAlgorithmTime(key, testArr);
+          if (time !== null) runs.push(time);
+        }
+        
+        if (runs.length > 0) {
+          runs.sort((a, b) => a - b);
+          const median = runs[Math.floor(runs.length / 2)];
+          timings.push({ x: size, y: median });
           
-          if (time > 50) {
+          if (median > 50) {
             isTooSlow = true;
-            baseTime = time;
+            baseTime = median;
             baseSize = size;
           }
         }
@@ -918,6 +983,8 @@ document.addEventListener('DOMContentLoaded', function() {
         x: {
           type: 'linear',
           position: 'bottom',
+          beginAtZero: true,
+          min: 0,
           title: {
             display: true,
             text: 'Array Size (number of elements)',
@@ -1105,7 +1172,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnComplexityResetFile) {
     btnComplexityResetFile.addEventListener('click', () => {
       if (complexityFileInput) complexityFileInput.value = '';
-      complexityFileLabel.textContent = 'No file selected';
+      complexityFileLabel.textContent = 'Select file...';
       btnComplexityResetFile.classList.add('hidden');
       if (complexityFileUploadLabel) complexityFileUploadLabel.classList.remove('border-cyan-500/30');
       complexityInputData = [];

@@ -1,6 +1,16 @@
   <div id="complexityModal" class="modal">
     <div class="modal-content">
       
+      <!-- Loading Overlay -->
+      <div id="complexity-loading-overlay" class="complexity-loading-overlay hidden">
+        <div class="complexity-loading-content">
+          <div class="complexity-spinner"></div>
+          <h3 class="complexity-loading-title">Analyzing Algorithms</h3>
+          <p class="complexity-loading-text">Running benchmarks across all sorting algorithms...</p>
+          <p class="complexity-loading-hint">This may take a few seconds for larger inputs</p>
+        </div>
+      </div>
+
       <div class="flex items-center gap-4 mb-6">
         <button id="closeComplexity" class="touch-target bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all rounded-lg p-2.5 flex items-center justify-center border border-white/10 cursor-pointer" title="Back to Home">
           <span class="material-symbols-outlined text-xl">arrow_back</span>
@@ -10,16 +20,17 @@
 
       <div class="complexity-input-panel grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         <div class="glass rounded-2xl p-4 border border-white/10">
-          <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-3">Input Source (Case)</p>
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-3">Case Selection (Chart View)</p>
           <div class="grid grid-cols-3 gap-2 mb-4">
             <button class="case-btn complexity-source-btn" data-case="best">Best Case</button>
             <button class="case-btn complexity-source-btn active" data-case="average">Average Case</button>
             <button class="case-btn complexity-source-btn" data-case="worst">Worst Case</button>
           </div>
           <p class="text-[10px] text-slate-500 mb-3 leading-relaxed">
-            <strong class="text-emerald-400">Best</strong> = Sorted (ascending) &nbsp;|&nbsp; 
-            <strong class="text-amber-400">Average</strong> = Random &nbsp;|&nbsp; 
-            <strong class="text-rose-400">Worst</strong> = Reverse sorted
+            Switches chart view: 
+            <strong class="text-emerald-400">Best</strong> = sorted input &nbsp;|&nbsp; 
+            <strong class="text-amber-400">Average</strong> = random input &nbsp;|&nbsp; 
+            <strong class="text-rose-400">Worst</strong> = reverse sorted input
           </p>
           <div id="complexity-input-auto" class="complexity-input-mode">
             <label class="text-xs text-slate-400 mb-2 flex items-center gap-2"><span class="material-symbols-outlined">casino</span> Array Size</label>
