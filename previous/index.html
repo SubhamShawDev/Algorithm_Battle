@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+  <title>Algorithm Arena Main Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00eeff",
+            "secondary": "#FF007F",
+            "background-light": "#f5f8f8",
+            "background-dark": "#0B0F19",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="font-display text-slate-100 min-h-screen selection:bg-primary/30 animate-fade-in">
+
+  <!-- Welcome page is injected here by page-loader.js -->
+
+  <!-- =====================  SIDEBAR OVERLAY (mobile backdrop)  ===================== -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- =====================  APP SHELL  ===================== -->
+  <div id="app-shell" class="flex flex-row h-screen overflow-hidden" style="display:none;">
+
+    <!-- =====================  SIDEBAR  ===================== -->
+    <aside id="sidebar"
+      class="w-72 glass lg:border-r border-white/10 flex flex-col z-20 flex-shrink-0 animate-slide-right stagger-1">
+      <!-- STATIC HEADER -->
+      <div class="flex flex-col gap-6 p-6 pb-4 shrink-0 border-b border-white/5">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div
+              class="size-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-background-dark flex-shrink-0">
+              <span class="material-symbols-outlined font-bold">query_stats</span>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold tracking-tight text-white leading-none">ARENA</h1>
+              <p class="text-primary text-xs font-medium tracking-widest uppercase">Algorithm Pro</p>
+            </div>
+          </div>
+          <!-- Close button (visible only on mobile) -->
+          <button id="btn-close-sidebar"
+            class="lg:hidden touch-target text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-lg p-2 flex-shrink-0"
+            aria-label="Close menu">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <button id="btn-home"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white cursor-pointer transition-all w-full group touch-target">
+          <span class="material-symbols-outlined text-xl text-primary group-hover:scale-110 transition-transform">home</span>
+          <span class="text-sm font-semibold">Home Dashboard</span>
+        </button>
+      </div>
+      <!-- SCROLLABLE NAV -->
+      <nav class="flex-1 flex flex-col gap-6 p-6 overflow-y-auto custom-scrollbar">
+        <div>
+          <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Sorting Library</p>
+          <div class="flex flex-col gap-2">
+            <div id="btn-quick-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary cursor-pointer hover:brightness-110 hover:scale-105 transition-all touch-target">
+              <span class="material-symbols-outlined text-xl">bolt</span>
+              <span class="text-sm font-semibold">Quick Sort</span>
+            </div>
+            <div id="btn-merge-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-secondary">merge_type</span>
+              <span class="text-sm font-medium text-slate-300">Merge Sort</span>
+            </div>
+            <div id="btn-bubble-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-slate-400">bubble_chart</span>
+              <span class="text-sm font-medium text-slate-300">Bubble Sort</span>
+            </div>
+            <div id="btn-heap-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-slate-400">heap_snapshot_thumbnail</span>
+              <span class="text-sm font-medium text-slate-300">Heap Sort</span>
+            </div>
+            <div id="btn-selection-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-indigo-400">design_services</span>
+              <span class="text-sm font-medium text-slate-300">Selection Sort</span>
+            </div>
+            <div id="btn-insertion-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-emerald-400">input</span>
+              <span class="text-sm font-medium text-slate-300">Insertion Sort</span>
+            </div>
+            <div id="btn-tim-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-violet-400">timer</span>
+              <span class="text-sm font-medium text-slate-300">Tim Sort</span>
+            </div>
+            <div id="btn-intro-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-amber-400">psychology</span>
+              <span class="text-sm font-medium text-slate-300">Intro Sort</span>
+            </div>
+            <div id="btn-shell-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-cyan-400">layers</span>
+              <span class="text-sm font-medium text-slate-300">Shell Sort</span>
+            </div>
+            <div id="btn-pdq-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-fuchsia-400">speed</span>
+              <span class="text-sm font-medium text-slate-300">PDQ Sort</span>
+            </div>
+            <div id="btn-dual-pivot-quick-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-rose-400">compare_arrows</span>
+              <span class="text-sm font-medium text-slate-300">Dual Pivot Quick</span>
+            </div>
+            <div id="btn-block-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-teal-400">view_module</span>
+              <span class="text-sm font-medium text-slate-300">Block Sort</span>
+            </div>
+            <div id="btn-dual-fusion-sort"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:scale-105 transition-all cursor-pointer touch-target">
+              <span class="material-symbols-outlined text-xl text-orange-400">all_inclusive</span>
+              <span class="text-sm font-medium text-slate-300">Dual Fusion Sort</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="p-6 pt-4 border-t border-white/5 shrink-0" style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom));">
+        <div class="glass p-4 rounded-xl border-primary/20 bg-primary/5">
+          <p class="text-xs text-primary font-bold mb-1 tracking-wider uppercase">Status</p>
+          <p class="text-[10px] text-slate-400 leading-relaxed mb-1 flex items-center gap-2">
+            <span class="size-2 rounded-full bg-green-500 animate-pulse"></span> Visualizer Systems Online
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- =====================  MAIN CONTENT  ===================== -->
+    <main id="main-content" class="flex-1 flex flex-col relative overflow-hidden min-w-0">
+      <!-- Page partials (home, game, arena, visualization, benchmark) are loaded here by page-loader.js -->
+    </main>
+  </div><!-- /app-shell -->
+
+  <!-- Modals (algorithm-modal, complexity-modal) are injected here by page-loader.js -->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="page-loader.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
