@@ -128,6 +128,29 @@ function parseInputText(text) {
   }
 }
 
+function analyzePresortedness(arr) {
+  if (!arr || arr.length < 2) return { pIndex: 100, type: 'Sorted' };
+  
+  let sortedPairs = 0;
+  let reversePairs = 0;
+  const total = arr.length - 1;
+  
+  for (let i = 0; i < total; i++) {
+    if (arr[i] <= arr[i + 1]) sortedPairs++;
+    if (arr[i] >= arr[i + 1]) reversePairs++;
+  }
+  
+  const pIndex = Math.round((sortedPairs / total) * 100);
+  
+  let type = 'Random';
+  if (pIndex >= 95) type = 'Sorted';
+  else if (pIndex >= 80) type = 'Nearly Sorted';
+  else if (reversePairs / total >= 0.95) type = 'Reverse Sorted';
+  else if (reversePairs / total >= 0.80) type = 'Nearly Reverse';
+  
+  return { pIndex, type };
+}
+
 function computeSortedPortion(arr) {
   if (!arr || arr.length < 2) return 100;
   let sortedCount = 1;
